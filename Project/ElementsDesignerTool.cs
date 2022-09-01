@@ -59,5 +59,15 @@ namespace WindowsUserInterface
         {
             throw new NotImplementedException();
         }
+
+        public static int ConfigClientSizeWidth(Control i_First, Control i_Last, int i_Margin)
+        {
+            return 0;
+        }
+
+        public static int ConfigClientSizeHeight(Control i_First, Control i_Last, int i_Margin)
+        {
+            return 0;
+        }
     }
 }
