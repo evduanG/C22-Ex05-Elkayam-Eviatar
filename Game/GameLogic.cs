@@ -1,0 +1,423 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Game
+{
+    public class GameLogic
+    {
+        private const bool v_FaceUp = true;
+        public static readonly char[] sr_ABC =
+        {
+            'A',
+            'B',
+            'C',
+            'D',
+            'E',
+            'F',
+            'G',
+            'H',
+            'I',
+            'J',
+            'K',
+            'L',
+            'M',
+            'N',
+            'O',
+            'P',
+            'Q',
+            'R',
+            'S',
+            'T',
+            'U',
+            'V',
+            'W',
+            'X',
+            'Y',
+            'Z',
+        };
+        private readonly byte r_NumOfCols;
+        private Card[,] m_GameBoard;
+        private byte m_FlippedCardsCounter;
+
+        /******     Dimensions   ******/
+        private readonly byte r_NumOfRows;
+        public byte Rows
+        {
+            get
+            {
+                return r_NumOfRows;
+            }
+        }
+
+        public byte Columns
+        {
+            get
+            {
+                return r_NumOfCols;
+            }
+        }
+
+        public byte FlippedCardsCounter
+        {
+            get
+            {
+                return m_FlippedCardsCounter;
+            }
+            set
+            {
+                m_FlippedCardsCounter = value;
+            }
+
+        }
+
+        /// constructor
+        public GameLogic(byte i_height, byte i_width)
+        {
+            /******     Dimensions   ******/
+            this.r_NumOfRows = i_width;
+            this.r_NumOfCols = i_height;
+            this.m_FlippedCardsCounter = 0;
+
+            char[] chars = new char[Rows * Columns];
+            for (byte j = 0; j < chars.Length; j++)
+            {
+                chars[j] = getCharForSlat(j);
+            }
+            shuffleCard(ref chars);
+            m_GameBoard = new Card[Rows, Columns];
+            byte indexInChars = 0;
+
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    m_GameBoard[i, j] = new Card(chars[indexInChars++], !v_FaceUp);
+                }
+            }
+        }
+
+        // ===================================================================
+        // methods that the constructor uses
+        // ===================================================================
+        // return a letter by index
+        private char getCharForSlat(byte i_index)
+        {
+            return sr_ABC[i_index >> 1];
+        }
+
+        /// function to Shuffle array the char array before creation
+        /// need to change to any array
+        /// <exception cref="ArgumentNullException"></exception>
+        private char[] shuffleCard(ref char[] i_CharArrToShuffle)
+        {
+            int len = i_CharArrToShuffle.Length;
+            if (len == 0)
+            {
+                throw new ArgumentNullException(nameof(i_CharArrToShuffle));
+            }
+
+            for (int s = 0; s < i_CharArrToShuffle.Length - 1; s++)
+            {
+                int indexOfnewValueFor_s = generateAnotherNum(s, len); // note the range
+
+                // swap procedure: note, char h to store initial i_CharArrToShuffle[s] value
+                (i_CharArrToShuffle[indexOfnewValueFor_s], i_CharArrToShuffle[s]) = (i_CharArrToShuffle[s], i_CharArrToShuffle[indexOfnewValueFor_s]);
+            }
+
+            return i_CharArrToShuffle;
+        }
+
+        /// Let unknown GenerateAnotherNum be a random number
+        private int generateAnotherNum(int from, int to)
+        {
+            Random random = new Random();
+            return random.Next(from, to);
+        }
+
+        // ===================================================================
+        // Properties
+        // ===================================================================
+
+        /// Length is the total number of slots in the array
+        public int Length
+        {
+            get
+            {
+                return Rows * Columns;
+            }
+        }
+
+        // return true if there are move available moves
+        public bool HaveMoreMoves
+        {
+            get
+            {
+                return Length - FlippedCardsCounter > 0;
+            }
+        }
+
+        /// indexer:
+        private Card this[string i_indexFormt]
+        {
+            get
+            {
+                configIndexFormat(i_indexFormt, out int io_rowIndex, out int io_colIndex);
+                return this[(byte)io_rowIndex, (byte)io_colIndex];
+            }
+
+            set
+            {
+                configIndexFormat(i_indexFormt, out int io_rowIndex, out int io_colIndex);
+                this[(byte)io_rowIndex, (byte)io_colIndex] = value;
+            }
+        }
+
+        private Card this[byte i_rows, byte i_columns]
+        {
+            get
+            {
+                isValidLocation(i_rows, i_columns);
+                return m_GameBoard[i_rows, i_columns];
+            }
+            set
+            {
+                isValidLocation(i_rows, i_columns);
+                m_GameBoard[i_rows, i_columns] = value;
+            }
+        }
+
+        // return true if locations is still hidden
+        private bool isValidLocation(byte i_rows, byte i_columns)
+        {
+            bool isValidRow = SettingAndRules.Rules.IsBetween(i_rows, Rows, 0);
+            bool isValidcol = SettingAndRules.Rules.IsBetween(i_rows, Columns, 0);
+
+            if (!isValidRow || !isValidcol)
+            {
+                throw new IndexOutOfRangeException("Index out of range in configIndexFormat");
+            }
+
+            return isValidRow && isValidcol;
+        }
+
+        // flip a card
+        public void Flipped(string i_index, bool i_Value)
+        {
+            Card c = this[i_index];
+            c.Flipped = i_Value;
+            this[i_index] = c;
+        }
+
+        // return true  The player got another turn
+        public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params string[] i_argsChosenInTurn)
+        {
+            io_scoreForTheTurn = 0;
+            bool isPair = true;
+
+            if (i_argsChosenInTurn.Length != 2)  ///TODO: Maybe change it to a fixed number 
+            {
+                throw new Exception("The number of cards does not match the format");
+            }
+
+            string firstIndex = i_argsChosenInTurn[0];
+
+            foreach (string index in i_argsChosenInTurn)
+            {
+                isPair = this[firstIndex] == this[index];
+                if (!isPair)
+                {
+                    break;
+                }
+            }
+
+            if (!isPair)
+            {
+                foreach (string index in i_argsChosenInTurn)
+                {
+                    Flipped(index, !v_FaceUp);
+                }
+            }
+            else
+            {
+                FlippedCardsCounter += 2;
+                io_scoreForTheTurn = 1;
+            }
+
+            return isPair;
+        }
+
+
+        // ===================================================================
+        // methods that use to draw the board
+        // ===================================================================
+        // return board to draw
+        public char[,] GetBoardToDraw()
+        {
+            char[,] boardToDraw = new char[Rows, Columns];
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    boardToDraw[i, j] = m_GameBoard[i, j].Value;
+                }
+            }
+
+            return boardToDraw;
+        }
+
+        // ===================================================================
+        // methods that are used to select a new tile
+        // ===================================================================
+        // return list of available tiles to choose from
+        public List<string> GetAllValidTilesForChoice()
+        {
+            List<string> validSlots = new List<string>();
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    bool isCardFlip = m_GameBoard[i, j].Flipped;
+
+                    if (!isCardFlip)
+                    {
+                        validSlots.Add(string.Format("{0}{1}", sr_ABC[j], i + 1));
+                    }
+                }
+            }
+
+            return validSlots;
+        }
+
+        /// function to configure the index from the format
+        /// <exception cref="IndexOutOfRangeException"></exception>
+        private void configIndexFormat(string i_indexFormt, out int io_rowIndex, out int io_colIndex)
+        {
+            io_colIndex = 0;
+            bool isUpper = false;
+            char charToFindTheIndex = char.ToUpper(i_indexFormt[0]);
+            string charToReplaceTheIndex = i_indexFormt.Substring(1);
+            bool isSuccessTryParse = int.TryParse(charToReplaceTheIndex, out io_rowIndex);
+            io_rowIndex--;
+
+            // check if col exists
+            for (int i = 0; i < Columns; i++)
+            {
+                if (charToFindTheIndex == sr_ABC[i])
+                {
+                    io_colIndex = i;
+                    isUpper = true;
+                    break;
+                }
+            }
+
+            // TODO: remove this 
+            if (!isSuccessTryParse || !isUpper)
+            {
+                throw new IndexOutOfRangeException(string.Format(
+@"Index out of range in configIndexFormat => 
+the string (index): {0}
+ subStrOfNum :{1} 
+charToFindTheIndex : {2} 
+isSuccessTryParse : {3} 
+isUpper : {4}
+m_GameBoard[io_rowIndex, io_colIndex] : {5}",
+i_indexFormt,
+charToReplaceTheIndex,
+charToFindTheIndex,
+isSuccessTryParse,
+isUpper,
+m_GameBoard[io_rowIndex, io_colIndex]));
+            }
+
+            bool isInvalueRow = io_rowIndex < 0 || io_rowIndex >= Rows;
+            bool isInvalueCol = io_colIndex < 0 || io_colIndex >= Columns;
+            if (isInvalueRow || isInvalueCol)
+            {
+                throw new IndexOutOfRangeException("Index out of range in configIndexFormat");
+            }
+        }
+
+        // represents a game card
+        internal struct Card
+        {
+            // private const string km_formatToPrint = " {} |";
+            private const char m_default = ' ';
+
+            private char m_value;
+            private bool m_flipped;
+
+            /// constructor
+            public Card(char value, bool flipped)
+            {
+                m_value = value;
+                m_flipped = flipped;
+            }
+
+            public Card(char value)
+                : this()
+            {
+                m_value = value;
+                m_flipped = false;
+            }
+
+            // Properties
+            public char Value
+            {
+                get
+                {
+                    char retunValue = m_default;
+                    if (Flipped)
+                    {
+                        retunValue = m_value;
+                    }
+
+                    return retunValue;
+                }
+
+                set
+                {
+                    m_value = value;
+                }
+            }
+
+            public bool Flipped
+            {
+                get
+                {
+                    return m_flipped;
+                }
+
+                set
+                {
+                    m_flipped = value;
+                }
+            }
+
+            public static bool operator ==(Card i_card1, Card i_card2)
+            {
+                return i_card1.Equals(i_card2);
+            }
+
+            public static bool operator !=(Card i_card1, Card i_card2)
+            {
+                return !i_card1.Equals(i_card2);
+            }
+
+            public override bool Equals(object i_comperTo)
+            {
+                return this.Value == ((Card)i_comperTo).Value;
+            }
+
+            public override int GetHashCode()
+            {
+                int hashCode = 1148891178;
+                hashCode = (hashCode * -1521134295) + m_value.GetHashCode();
+                hashCode = (hashCode * -1521134295) + m_flipped.GetHashCode();
+                hashCode = (hashCode * -1521134295) + Value.GetHashCode();
+                hashCode = (hashCode * -1521134295) + Flipped.GetHashCode();
+                return hashCode;
+            }
+
+        }
+    }
+}
