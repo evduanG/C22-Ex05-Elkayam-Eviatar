@@ -5,52 +5,52 @@ namespace WindowsUserInterface
 {
     internal class ElementsDesignerTool
     {
-        public static void DesignElements(ePositionBy i_PositionBy, Control i_ControlComprTo, Control i_ControlToSetPosition, int i_Margin)
+        public static void DesignElements(ePositionBy i_PositionBy, Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
             switch(i_PositionBy)
             {
                 case ePositionBy.Left:
-                    setControlToTheLeft(i_ControlComprTo, i_ControlToSetPosition, i_Margin);
+                    setControlToTheLeft(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
                 case ePositionBy.Right:
-                    setControlToThRight(i_ControlComprTo, i_ControlToSetPosition, i_Margin);
+                    setControlToTheRight(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
                 case ePositionBy.Top:
-                    setControlToThTop(i_ControlComprTo, i_ControlToSetPosition, i_Margin);
+                    setControlToTheTop(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
                 case ePositionBy.Bottom:
-                    setControlToThBottom(i_ControlComprTo, i_ControlToSetPosition, i_Margin);
+                    setControlToTheBottom(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
                 case ePositionBy.VerticalCentre:
-                    setControlToThVerticalCentre(i_ControlComprTo, i_ControlToSetPosition, i_Margin);
+                    setControlToThVerticalCentre(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
                 case ePositionBy.HorizontalCentre:
-                    setControlToThHorizontalCentre(i_ControlComprTo, i_ControlToSetPosition, i_Margin);
+                    setControlToTheHorizontalCentre(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
             }
         }
 
-        private static void setControlToThHorizontalCentre(Control i_ControlComprTo, Control i_ControlToSetPosition, int i_Margin)
+        private static void setControlToTheHorizontalCentre(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
+        {
+            i_ControlToSetPosition.Top = i_ControlCompareTo.Top + (i_ControlCompareTo.Height / 2) - (i_ControlToSetPosition.Height / 2);
+        }
+
+        private static void setControlToThVerticalCentre(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
+        {
+            i_ControlToSetPosition.Left = i_ControlCompareTo.Left + (i_ControlCompareTo.Width / 2) - (i_ControlToSetPosition.Width / 2);
+        }
+
+        private static void setControlToTheBottom(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
+        {
+            i_ControlToSetPosition.Top = i_ControlCompareTo.Bottom + i_ControlToSetPosition.Height;
+        }
+
+        private static void setControlToTheTop(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
             throw new NotImplementedException();
         }
 
-        private static void setControlToThVerticalCentre(Control i_ControlComprTo, Control i_ControlToSetPosition, int i_Margin)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void setControlToThBottom(Control i_ControlComprTo, Control i_ControlToSetPosition, int i_Margin)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void setControlToThTop(Control i_ControlComprTo, Control i_ControlToSetPosition, int i_Margin)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static void setControlToThRight(Control i_ControlComprTo, Control i_ControlToSetPosition, int i_Margin)
+        private static void setControlToTheRight(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,4 @@
-﻿
-namespace WindowsUserInterface
+﻿namespace WindowsUserInterface
 {
     internal enum ePositionBy
     {
