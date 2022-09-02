@@ -82,8 +82,9 @@ namespace WindowsUserInterface
                     GameBoardButtons[i, j] = new Button
                     {
                         Size = new Size(k_ButtonSize, k_ButtonSize),
-                        BackColor = Color.Gray,
+                        BackColor = Color.LightGray,
                     };
+                    GameBoardButtons[i, j].Click += gameBoardTile_Click;
                 }
             }
 
@@ -133,6 +134,12 @@ namespace WindowsUserInterface
                     this.Controls.Add(GameBoardButtons[i, j]);
                 }
             }
+        }
+
+        private void gameBoardTile_Click(object sender, EventArgs e)
+        {
+            Button clickedTile = sender as Button;
+            clickedTile.BackColor = CurrentPlayerName.BackColor;
         }
 
         private void initializeLabels(string i_PlayerOneName, string i_PlayerTwoName)
