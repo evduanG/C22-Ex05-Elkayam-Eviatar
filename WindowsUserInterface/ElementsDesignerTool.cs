@@ -5,9 +5,16 @@ namespace WindowsUserInterface
 {
     internal class ElementsDesignerTool
     {
+        private const int k_NoMargin = 0;
+
+        public static void DesignElements(ePositionBy i_PositionBy, Control i_ControlCompareTo, Control i_ControlToSetPosition)
+        {
+            DesignElements(i_PositionBy, i_ControlCompareTo, i_ControlToSetPosition, k_NoMargin);
+        }
+
         public static void DesignElements(ePositionBy i_PositionBy, Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
-            switch(i_PositionBy)
+            switch (i_PositionBy)
             {
                 case ePositionBy.Left:
                     setControlToTheLeft(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
