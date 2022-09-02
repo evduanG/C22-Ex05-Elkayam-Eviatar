@@ -142,12 +142,34 @@ namespace WindowsUserInterface
             clickedTile.BackColor = CurrentPlayerName.BackColor;
         }
 
+        private bool isGameOver()
+        {
+            bool isComplete = true;
+
+            foreach (Button button in GameBoardButtons)
+            {
+                if (button.BackColor != CurrentPlayerName.BackColor)
+                {
+                    isComplete = false;
+                }
+            }
+
+            if (isComplete)
+            {
+                Text = "BIG WIN";
+
+                // show MessageBox here
+            }
+
+            return isComplete;
+        }
+
         private void initializeLabels(string i_PlayerOneName, string i_PlayerTwoName)
         {
             // setup labels:
             PlayerOne = new Label()
             {
-                Text = string.Format(k_PlayerNameLabel, i_PlayerOneName, 0),
+                Text = getPlayerNameAndScore(i_PlayerOneName, 0),
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.LightSteelBlue,
                 Left = k_Margin,
@@ -157,7 +179,7 @@ namespace WindowsUserInterface
 
             PlayerTwo = new Label()
             {
-                Text = string.Format(k_PlayerNameLabel, i_PlayerTwoName, 0),
+                Text = getPlayerNameAndScore(i_PlayerOneName, 0),
                 TextAlign = PlayerOne.TextAlign,
                 BackColor = Color.PaleGreen,
                 Left = PlayerOne.Left,
@@ -183,9 +205,26 @@ namespace WindowsUserInterface
             this.Controls.Add(CurrentPlayerName);
         }
 
+        private string getPlayerNameAndScore(string i_PlayerName, int i_playerScore)
+        {
+            return string.Format(k_PlayerNameLabel, i_PlayerName, i_playerScore);
+        }
+
         public void SetCurrentPlayerName(string i_CurrentPlayer)
         {
             CurrentPlayerName.Text = string.Format(k_CurrentPlayerLabel, i_CurrentPlayer);
+        }
+
+        public void UpdatePlayerScore(string i_PlayerName, int i_NewScore)
+        {
+            if(PlayerOne.Text.ToLower() == i_PlayerName.ToLower())
+            {
+                PlayerOne.Text = getPlayerNameAndScore(PlayerOne.Text, i_NewScore);
+            }
+            else
+            {
+                PlayerTwo.Text = getPlayerNameAndScore(PlayerTwo.Text, i_NewScore);
+            }
         }
     }
 }
