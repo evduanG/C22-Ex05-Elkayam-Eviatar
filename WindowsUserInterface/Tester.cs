@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WindowsUserInterface
 {
@@ -10,7 +11,8 @@ namespace WindowsUserInterface
     {
         public static void Main()
         {
-            MainGameForm gameForm = new MainGameForm(6, 6, "elka", "avi");
+            // Application.EnableVisualStyles();
+            MainGameForm gameForm = new MainGameForm(6, 6, "Elkayam", "Eviatar");
             gameForm.ShowDialog();
         }
     }

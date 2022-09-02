@@ -5,6 +5,5 @@ namespace WindowsUserInterface
 {
     internal class MessageBox : Form
     {
-
     }
 }

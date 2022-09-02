@@ -9,6 +9,8 @@ namespace WindowsUserInterface
         private const int k_Margin = 10;
         private const int k_ButtonSize = 50;
         private const string k_GameTitle = "Memory Game";
+        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
+        private const string k_CurrentPlayerLabel = "Current Player: {0}";
 
         private Label m_CurrentPlayerName;
         private Label m_PlayerOne;
@@ -47,15 +49,26 @@ namespace WindowsUserInterface
 
         private void initializeComponents(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
         {
-            Text = k_GameTitle;
-            Size = new Size(i_BoardWidth * 80, i_BoardHeight * 80);
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            // MaximizeBox = false;
-            // MinimizeBox = false;
-
+            initializeMainForm(i_BoardHeight, i_BoardWidth);
             initilizeGameBoardButtons(i_BoardHeight, i_BoardWidth);
             initializeLabels(i_PlayerOneName, i_PlayerTwoName);
+        }
+
+        private void initializeMainForm(byte i_BoardHeight, byte i_BoardWidth)
+        {
+            Text = k_GameTitle;
+            Size = getWindowSize(i_BoardHeight, i_BoardWidth);
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            MaximizeBox = false;
+        }
+
+        private Size getWindowSize(byte i_BoardHeight, byte i_BoardWidth)
+        {
+            int formHeight = ((k_ButtonSize + k_Margin) * i_BoardHeight) + (16 * k_Margin);
+            int formWidth = ((k_ButtonSize + k_Margin) * i_BoardWidth) + (3 * k_Margin);
+
+            return new Size(formWidth, formHeight);
         }
 
         private void initilizeGameBoardButtons(byte i_BoardHeight, byte i_BoardWidth)
@@ -77,6 +90,7 @@ namespace WindowsUserInterface
             // setup top-left button
             GameBoardButtons[0, 0].Top = k_Margin;
             GameBoardButtons[0, 0].Left = k_Margin;
+            this.Controls.Add(GameBoardButtons[0, 0]);
 
             for (int i = 0; i < i_BoardHeight; i++)
             {
@@ -109,7 +123,7 @@ namespace WindowsUserInterface
                         else
                         {
                             GameBoardButtons[i, j].Top = GameBoardButtons[i, j - 1].Top;
-                            GameBoardButtons[i, j].Left = GameBoardButtons[i - 1, j - 1].Top;
+                            GameBoardButtons[i, j].Left = GameBoardButtons[i - 1, j].Left;
 
                             // ElementsDesignerTool.DesignElements(ePositionBy.Top, GameBoardButtons[i, j - 1], GameBoardButtons[i, j], k_Margin);
                             // ElementsDesignerTool.DesignElements(ePositionBy.Left, GameBoardButtons[i - 1, j], GameBoardButtons[i, j], k_Margin);
@@ -126,40 +140,45 @@ namespace WindowsUserInterface
             // setup labels:
             PlayerOne = new Label()
             {
-                Text = i_PlayerOneName,
+                Text = string.Format(k_PlayerNameLabel, i_PlayerOneName, 0),
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.SeaGreen,
+                BackColor = Color.LightSteelBlue,
                 Left = k_Margin,
+                AutoSize = true,
             };
             PlayerOne.Top = ClientSize.Height - k_Margin - PlayerOne.Height;
 
             PlayerTwo = new Label()
             {
-                Text = i_PlayerTwoName,
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.PaleVioletRed,
+                Text = string.Format(k_PlayerNameLabel, i_PlayerTwoName, 0),
+                TextAlign = PlayerOne.TextAlign,
+                BackColor = Color.PaleGreen,
                 Left = PlayerOne.Left,
-                Top = ClientSize.Height - (PlayerOne.Height * 2) - k_Margin,
+                AutoSize = true,
+                Top = ClientSize.Height - ((PlayerOne.Height + k_Margin) * 2),
             };
-
-            // add
-            this.Controls.Add(PlayerOne);
-            this.Controls.Add(PlayerTwo);
 
             // setup current player
             CurrentPlayerName = new Label()
             {
-                BackColor = Color.LightSkyBlue,
+                TextAlign = PlayerOne.TextAlign,
+                BackColor = PlayerOne.BackColor,
                 Left = PlayerOne.Left,
-                Top = ClientSize.Height - k_Margin - ((PlayerOne.Height + k_Margin) * 3),
+                AutoSize = true,
+                Top = ClientSize.Height - ((PlayerOne.Height + k_Margin) * 3),
             };
 
             SetCurrentPlayerName(i_PlayerOneName);
+
+            // add
+            this.Controls.Add(PlayerOne);
+            this.Controls.Add(PlayerTwo);
+            this.Controls.Add(CurrentPlayerName);
         }
 
-        public void SetCurrentPlayerName(string i_PlayerOneName)
+        public void SetCurrentPlayerName(string i_CurrentPlayer)
         {
-            CurrentPlayerName.Text = i_PlayerOneName;
+            CurrentPlayerName.Text = string.Format(k_CurrentPlayerLabel, i_CurrentPlayer);
         }
     }
 }
