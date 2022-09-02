@@ -12,7 +12,7 @@ namespace WindowsUserInterface
         public static void Main()
         {
             // Application.EnableVisualStyles();
-            MainGameForm gameForm = new MainGameForm(4, 6, "Elkayam", "Eviatar");
+            MainGameForm gameForm = new MainGameForm(4, 4, "Elkayam", "Eviatar");
             gameForm.ShowDialog();
         }
     }
