@@ -73,12 +73,12 @@ namespace WindowsUserInterface
             Controls.Add(No);
         }
 
-        private void no_Click(object sender, EventArgs e)
+        private void no_Click(object i_ButtonClicked, EventArgs i_EventArgs)
         {
             DialogResult = DialogResult.No;
         }
 
-        private void yes_Click(object sender, EventArgs e)
+        private void yes_Click(object i_ButtonClicked, EventArgs i_EventArgs)
         {
             DialogResult = DialogResult.Yes;
         }

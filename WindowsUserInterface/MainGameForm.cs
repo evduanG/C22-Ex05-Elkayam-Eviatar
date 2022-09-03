@@ -6,7 +6,7 @@ namespace WindowsUserInterface
 {
     internal class MainGameForm : Form
     {
-        // TODO: move public consts to another class maybe?
+        // TODO: move public constants to another class maybe?
         public const int k_Margin = 10;
         public const int k_ButtonSize = 75;
 
@@ -160,9 +160,9 @@ namespace WindowsUserInterface
             }
         }
 
-        private void gameBoardTile_Click(object sender, EventArgs e)
+        private void gameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
-            Button clickedTile = sender as Button;
+            Button clickedTile = i_ClickedButton as Button;
             clickedTile.BackColor = CurrentPlayerName.BackColor;
             if (isGameOver())
             {
@@ -199,7 +199,7 @@ namespace WindowsUserInterface
 
             PlayerTwo = new Label
             {
-                Text = getPlayerNameAndScore(i_PlayerOneName, k_StartingScore),
+                Text = getPlayerNameAndScore(i_PlayerTwoName, k_StartingScore),
                 TextAlign = PlayerOne.TextAlign,
                 BackColor = Color.PaleGreen,
                 Left = PlayerOne.Left,
@@ -237,9 +237,9 @@ namespace WindowsUserInterface
             GameOverDialog.FormClosed += gameOverDialog_FormClosed;
         }
 
-        private void gameOverDialog_FormClosed(object sender, FormClosedEventArgs e)
+        private void gameOverDialog_FormClosed(object i_ClosedForm, FormClosedEventArgs i_EventArgs)
         {
-            DialogResult userChoice = ((MessageBox)sender).DialogResult;
+            DialogResult userChoice = ((MessageBox)i_ClosedForm).DialogResult;
             if(userChoice == DialogResult.No)
             {
                 DialogResult = DialogResult.Cancel;
