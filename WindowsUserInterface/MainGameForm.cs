@@ -6,8 +6,10 @@ namespace WindowsUserInterface
 {
     internal class MainGameForm : Form
     {
-        private const int k_Margin = 10;
-        private const int k_ButtonSize = 75;
+        // TODO: move public consts to another class maybe?
+        public const int k_Margin = 10;
+        public const int k_ButtonSize = 75;
+
         private const string k_GameTitle = "Memory Game";
         private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
         private const string k_CurrentPlayerLabel = "Current Player: {0}";
@@ -18,6 +20,12 @@ namespace WindowsUserInterface
         private Label m_PlayerTwo;
         private Button[,] m_GameBoardButtons;
         private MessageBox m_GameOverDialog;
+
+        // Ctor:
+        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
+        {
+            initializeComponents(i_BoardHeight, i_BoardWidth, i_PlayerOneName, i_PlayerTwoName);
+        }
 
         // Properties:
         public Button[,] GameBoardButtons
@@ -49,12 +57,7 @@ namespace WindowsUserInterface
             set { m_GameOverDialog = value; }
         }
 
-        // ctor:
-        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
-        {
-            initializeComponents(i_BoardHeight, i_BoardWidth, i_PlayerOneName, i_PlayerTwoName);
-        }
-
+        // Initializers:
         private void initializeComponents(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
         {
             initializeMainForm(i_BoardHeight, i_BoardWidth);
@@ -231,6 +234,20 @@ namespace WindowsUserInterface
         private void initializeGameOverDialog()
         {
             m_GameOverDialog = new MessageBox();
+            GameOverDialog.FormClosed += gameOverDialog_FormClosed;
+        }
+
+        private void gameOverDialog_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            DialogResult userChoice = ((MessageBox)sender).DialogResult;
+            if(userChoice == DialogResult.No)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else
+            {
+                // rematch. idk how...
+            }
         }
 
         public void SetCurrentPlayerName(string i_CurrentPlayer)
