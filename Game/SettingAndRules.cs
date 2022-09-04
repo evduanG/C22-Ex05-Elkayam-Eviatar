@@ -8,9 +8,6 @@ namespace Game
         private const string k_ThrowFixedMsg = "The value is fixed";
         public const char k_ExitTheGame = 'Q';
 
-        //===============================================
-        //Dimensions
-        //===============================================
         private const byte k_UpperBound = 6;
         private const byte k_LowerBound = 4;
         private const string k_ThrowDimensionsMsg = "The game dimensions heva a fix size";
@@ -18,40 +15,40 @@ namespace Game
         public static Rules Rows = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !v_IsFixed, k_ThrowDimensionsMsg);
         public static Rules Columns = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !v_IsFixed, k_ThrowDimensionsMsg);
 
-        // or add to user input  
-
+        // or add to user input
         /******     number of players       ******/
-        private const byte m_NumOfParticipants = 2;
-        public static Rules m_NumOfPlayers = new Rules("num Of Players", m_NumOfParticipants, m_NumOfParticipants, v_IsFixed, k_ThrowFixedMsg);
+        private const byte k_NumOfParticipants = 2;
+        public static Rules NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, v_IsFixed, k_ThrowFixedMsg);
 
         /******     input format       ******/
         private const string k_InputFormatMsg = "The input format of the game is Capital letter between A - F , and a number between 1-6";
         private static Rules[] s_InputFormat = { new Rules("input Format Letter",(byte)'A', (byte)'F', !v_IsFixed, k_InputFormatMsg),
-            new Rules("input Format number",(byte)'1', (byte)'6', !v_IsFixed, k_InputFormatMsg) };
+            new Rules("input Format number", (byte)'1', (byte)'6', !v_IsFixed, k_InputFormatMsg),
+        };
 
         /******     number of players       ******/
         public const int k_SleepBetweenTurns = 2000;
 
         /****** number of Choice In players Turn ******/
         private const int k_NumOfChoiceInPlayerTurn = 2;
-        public static Rules NumOfChoiceInTurn = new Rules("Num Of Choice In player Turn",
+        public static Rules s_NumOfChoiceInTurn = new Rules("Num Of Choice In player Turn",
             k_NumOfChoiceInPlayerTurn, k_NumOfChoiceInPlayerTurn, v_IsFixed, k_ThrowFixedMsg);
 
         public struct Rules
         {
-            public readonly string m_Name;
-            public readonly byte m_UpperBound;
-            public readonly byte m_LowerBound;
+            public readonly string r_Name;
+            public readonly byte r_UpperBound;
+            public readonly byte r_LowerBound;
             public readonly bool v_IsFixed;
-            private readonly string m_TrowMsg;
+            private readonly string r_TrowMsg;
 
             public Rules(string i_Name, byte i_UpperBound, byte i_LowerBound, bool i_IsFixed, string i_TorwStr)
             {
-                m_Name = i_Name;
-                m_UpperBound = i_UpperBound;
-                m_LowerBound = i_LowerBound;
+                r_Name = i_Name;
+                r_UpperBound = i_UpperBound;
+                r_LowerBound = i_LowerBound;
                 v_IsFixed = i_IsFixed;
-                m_TrowMsg = i_TorwStr;
+                r_TrowMsg = i_TorwStr;
             }
 
             // authenticate value, throw exception if invalid
@@ -62,7 +59,7 @@ namespace Game
                     throw new ArgumentException();
                 }
 
-                return IsBetween(i_valueChecked, m_UpperBound, m_LowerBound);
+                return IsBetween(i_valueChecked, r_UpperBound, r_LowerBound);
             }
 
             // check if value is within upper and lower bounds
@@ -73,7 +70,7 @@ namespace Game
 
             public override string ToString()
             {
-                return string.Format(" the {0} between {1} to {2} ", m_Name, m_LowerBound, m_UpperBound);
+                return string.Format(" the {0} between {1} to {2} ", r_Name, r_LowerBound, r_UpperBound);
             }
         }
     }

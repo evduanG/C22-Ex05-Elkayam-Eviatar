@@ -1,4 +1,5 @@
-﻿using ConsoleUserInterface;
+﻿
+using System.Collections.Generic;
 
 namespace MemoryCardGame
 {
@@ -10,6 +11,7 @@ namespace MemoryCardGame
 
         // properties:
         public byte Score { get => m_Score; set => m_Score = value; }
+
         public string Name { get => m_Name; set => m_Name = value; }
 
         private AIPlayer? m_aiPlayer;
@@ -40,13 +42,13 @@ namespace MemoryCardGame
             get { return r_IsHuman; }
         }
 
-        public string? GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
+        public string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
         {
-            string? returnChosice;
+            string returnChosice;
 
             if (IsHuman)
             {
-                returnChosice = UserInput.GetPlayerGameMove();
+                // returnChosice = UserInput.GetPlayerGameMove();
             }
             else
             {

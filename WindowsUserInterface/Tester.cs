@@ -9,24 +9,19 @@ namespace WindowsUserInterface
 {
     internal class Tester
     {
+        //public static void Main()
+        //{
+        //    // Application.EnableVisualStyles();
+        //    SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
+        //    form.SetListOfBordSizeOptions(4, 6, 4, 6);
+        //    form.ShowDialog();
+        //    form.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
 
-        public static void Main()
-        {
-            // Application.EnableVisualStyles();
-            MainGameForm gameForm = new MainGameForm(4, 4, "Elkayam", "Eviatar");
-            gameForm.ShowDialog();
+        //    MainGameForm gameForm = new MainGameForm(o_Higt, o_Width, form.FirstPlayerName, form.SecondPlayerName);
+        //    gameForm.ShowDialog();
 
-            SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
-            form.SetListOfBordSizeOptions(4, 6, 4, 6);
-            form.ShowDialog();
-            SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
-            form1.ShowDialog();
-        }
-
-        public void ButtonStart_Click(object i_Sender, EventArgs e)
-        {
-            Console.WriteLine("Start");
-
-        }
+        //    SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
+        //    form1.ShowDialog();
+        //}
     }
 }

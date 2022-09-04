@@ -1,13 +1,17 @@
 ﻿using System.Text;
-using ConsoleUserInterface;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Windows.Forms;
 using Game;
 using Setting = Game.SettingAndRules;
+using Screen = WindowsUserInterface;
 
 namespace MemoryCardGame
 {
     public class GameEngine
     {
-        public const bool v_flippedTheCard = true;
+        public const bool k_flippedTheCard = true;
 
         private Player[] m_AllPlayersInGame;
         private GameLogic m_GameBoard;
@@ -15,6 +19,7 @@ namespace MemoryCardGame
         private bool m_IsPlaying;
         private byte m_TotalPLayers;
         private int k_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
+
         // ===================================================================
         //  constructor  and methods that the constructor uses
         // ===================================================================
@@ -27,7 +32,7 @@ namespace MemoryCardGame
             /******     number of players       ******/
             if (Setting.m_NumOfPlayers.v_IsFixed)
             {
-                m_TotalPLayers = Setting.m_NumOfPlayers.m_UpperBound;
+                m_TotalPLayers = Setting.m_NumOfPlayers.r_UpperBound;
             }
             else
             {
@@ -35,28 +40,6 @@ namespace MemoryCardGame
             }
 
             m_AllPlayersInGame = new Player[m_TotalPLayers];
-            bool isItComputer = false;
-
-            for (int i = 0; i < m_TotalPLayers; i++)
-            {
-                if (!isItComputer)
-                {
-                    string message = string.Format("Please Enter player {0} name:", i + 1);
-                    Screen.ShowMessage(message);
-                    string playerName = UserInput.GetPlayersNames();
-                    m_AllPlayersInGame[i] = new Player(playerName);
-                }
-                else
-                {
-                    m_AllPlayersInGame[i] = new Player();
-                }
-
-                if (!(i == m_TotalPLayers - 1))
-                {
-                    Screen.ShowMessage("Is the next player AI? (N/Y)");
-                    isItComputer = UserInput.GetBooleanAnswer();
-                }
-            }
         }
 
         public byte InputFromTheUserAccordingToTheRules(Setting.Rules i_rule)
@@ -66,7 +49,7 @@ namespace MemoryCardGame
             bool isInputValid = false;
             do
             {
-                Screen.ShowMessage(strMsg);
+                // Screen.ShowMessage(strMsg);
                 isInputValid = i_rule.IsValid(returnVal);
             } while (!isInputValid);
 
@@ -90,20 +73,18 @@ namespace MemoryCardGame
 
             do
             {
-                // ask for board Dimensions
-                // choose board size
-                Screen.ShowPrompt(ePromptType.GameBoardDimensions, Setting.Rows.m_UpperBound.ToString(),
-                Setting.Rows.m_LowerBound.ToString());
+                Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
+                form.SetListOfBordSizeOptions(Setting.Columns.r_LowerBound, Setting.Columns.r_UpperBound, Setting.Rows.r_LowerBound, Setting.Rows.r_UpperBound);
+                form.StartClick += ButtonStart_Click;
+                form.ShowDialog();
 
-                UserInput.GetBoardDimensions(out byte o_BoardLength, out byte o_BoardWidth);
-
-                m_GameBoard = new GameLogic(o_BoardLength, o_BoardWidth);
                 m_TurnCounter = 0;
                 playTheGame();
                 if (m_IsPlaying)
                 {
-                    Screen.ShowPrompt(ePromptType.AnotherGame);
-                    m_IsPlaying = UserInput.GetBooleanAnswer();
+                    Screen.MessageBox messageBox = new Screen.MessageBox();
+                    messageBox.m_MessageBox += MessageBox_Occur;
+                    messageBox.ShowDialog();
 
                     if (m_IsPlaying)
                     {
@@ -127,7 +108,7 @@ namespace MemoryCardGame
                     Player currentlyPlayingPlayer = m_AllPlayersInGame[getPlayerIndex()];
                     List<string> playerChois = new List<string>();
 
-                    for (int i = 0; i < Setting.NumOfChoiceInTurn.m_UpperBound; i++)
+                    for (int i = 0; i < Setting.s_NumOfChoiceInTurn.r_UpperBound; i++)
                     {
                         playerChois.Add(gameStage(currentlyPlayingPlayer));
                     }
@@ -143,7 +124,6 @@ namespace MemoryCardGame
 
                     currentlyPlayingPlayer.IncreaseScore(o_scoreForTheTurn);
                     Thread.Sleep(k_SleepBetweenTurns);
-
                 }
                 while (isRunning());
             }
@@ -152,6 +132,7 @@ namespace MemoryCardGame
                 m_IsPlaying = false;
                 return;
             }
+
             showWhoWon();
         }
 
@@ -169,7 +150,7 @@ namespace MemoryCardGame
                 }
             }
 
-            Screen.ShowPrompt(ePromptType.Winning, winnerName, highScore.ToString());
+            // Screen.ShowPrompt(ePromptType.Winning, winnerName, highScore.ToString());
         }
 
         // player turn
@@ -183,18 +164,19 @@ namespace MemoryCardGame
             do
             {
                 drawBoard();
-                Screen.ShowMessage(mag);
+                // Screen.ShowMessage(mag);
                 if (!userInputValid)
                 {
-                    Screen.ShowError(eErrorType.CardTaken);
+                    // Screen.ShowError(eErrorType.CardTaken);
                 }
-                indexChoice = i_currentlyPlayingPlayer.GetPlayerChoice(validSlotForChose, m_GameBoard.GetBoardToDraw());
 
-                userInputValid = validSlotForChose.Contains(indexChoice.ToUpper());
+                //indexChoice = i_currentlyPlayingPlayer.GetPlayerChoice(validSlotForChose, m_GameBoard.GetBoardToDraw());
+
+                // userInputValid = validSlotForChose.Contains(indexChoice.ToUpper());
             }
             while (!userInputValid);
 
-            m_GameBoard.Flipped(indexChoice, v_flippedTheCard);
+            m_GameBoard.Flipped(indexChoice, k_flippedTheCard);
 
             return indexChoice;
         }
@@ -202,9 +184,9 @@ namespace MemoryCardGame
         // render the game board and show stats
         private void drawBoard()
         {
-            Screen.ClearBoard();
-            Screen.ShowBoard(m_GameBoard.GetBoardToDraw());
-            Screen.ShowMessage(getPlayersScoreLine());
+            //Screen.ClearBoard();
+            //Screen.ShowBoard(m_GameBoard.GetBoardToDraw());
+            //Screen.ShowMessage(getPlayersScoreLine());
         }
 
         private void showAllPlayersTheBoard()
@@ -228,5 +210,32 @@ namespace MemoryCardGame
 
             return sb.ToString();
         }
+
+        protected virtual void ButtonStart_Click(object i_Sender, EventArgs e)
+        {
+            Screen.SetUpNewGameForm setUpNewGameForm = i_Sender as Screen.SetUpNewGameForm;
+            if (setUpNewGameForm != null)
+            {
+                m_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName);
+
+                if(setUpNewGameForm.IsSecondPlayerComputer)
+                {
+                    m_AllPlayersInGame[1] = new Player();
+                }
+                else
+                {
+                    m_AllPlayersInGame[1] = new Player(setUpNewGameForm.SecondPlayerName);
+                }
+
+                setUpNewGameForm.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
+                m_GameBoard = new GameLogic(o_Higt, o_Width);
+            }
+        }
+
+        protected virtual void MessageBox_Occur(object i_Sender, EventArgs e)
+        {
+            Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
+        }
+
     }
 }
