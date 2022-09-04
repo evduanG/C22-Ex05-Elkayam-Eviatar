@@ -14,8 +14,8 @@ namespace WindowsUserInterface
 
         private Label m_GameResultsMessage;
         private Label m_AnotherGameMessage;
-        private Button m_Yes;
-        private Button m_No;
+        private Button m_ButtonYes;
+        private Button m_ButtonNo;
 
         // Ctor:
         public MessageBox()
@@ -36,16 +36,16 @@ namespace WindowsUserInterface
             set { m_AnotherGameMessage = value; }
         }
 
-        public Button Yes
+        public Button ButtonYes
         {
-            get { return m_Yes; }
-            set { m_Yes = value; }
+            get { return m_ButtonYes; }
+            set { m_ButtonYes = value; }
         }
 
-        public Button No
+        public Button ButtonNo
         {
-            get { return m_No; }
-            set { m_No = value; }
+            get { return m_ButtonNo; }
+            set { m_ButtonNo = value; }
         }
 
         private void initializeComponents()
@@ -57,20 +57,20 @@ namespace WindowsUserInterface
 
         private void initializeButtons()
         {
-            Yes = new Button();
-            Yes.Text = "Yes";
-            Yes.Top = AnotherGameMessage.Bottom + (2 * MainGameForm.k_Margin);
-            Yes.Left = AnotherGameMessage.Left + (2 * MainGameForm.k_Margin);
-            Yes.Click += yes_Click;
+            ButtonYes = new Button();
+            ButtonYes.Text = "Yes";
+            ButtonYes.Top = AnotherGameMessage.Bottom + (2 * MainGameForm.k_Margin);
+            ButtonYes.Left = AnotherGameMessage.Left + (2 * MainGameForm.k_Margin);
+            ButtonYes.Click += yes_Click;
 
-            No = new Button();
-            No.Text = "No";
-            No.Top = Yes.Top;
-            No.Left = Yes.Right + (MainGameForm.k_Margin * 2);
-            No.Click += no_Click;
+            ButtonNo = new Button();
+            ButtonNo.Text = "No";
+            ButtonNo.Top = ButtonYes.Top;
+            ButtonNo.Left = ButtonYes.Right + (MainGameForm.k_Margin * 2);
+            ButtonNo.Click += no_Click;
 
-            Controls.Add(Yes);
-            Controls.Add(No);
+            Controls.Add(ButtonYes);
+            Controls.Add(ButtonNo);
         }
 
         private void no_Click(object i_ButtonClicked, EventArgs i_EventArgs)
@@ -97,16 +97,20 @@ namespace WindowsUserInterface
             GameResultsMessage = new Label();
             GameResultsMessage.Text = k_WinnerScoreMessage;
             GameResultsMessage.TextAlign = ContentAlignment.MiddleCenter;
-            GameResultsMessage.Width = k_LabelWidth;
+            // GameResultsMessage.Width = k_LabelWidth;
+            GameResultsMessage.BackColor = Color.LightGoldenrodYellow;
+            GameResultsMessage.AutoSize = true;
             GameResultsMessage.Top = MainGameForm.k_Margin * 2;
             GameResultsMessage.Left = (ClientSize.Width / 2) - (GameResultsMessage.Width / 2);
 
             AnotherGameMessage = new Label();
             AnotherGameMessage.Text = k_AnotherGameMessage;
             AnotherGameMessage.TextAlign = ContentAlignment.MiddleCenter;
-            AnotherGameMessage.Width = k_LabelWidth;
+            // AnotherGameMessage.Width = k_LabelWidth;
+            AnotherGameMessage.BackColor = Color.LightGoldenrodYellow;
+            AnotherGameMessage.AutoSize = true;
             AnotherGameMessage.Top = GameResultsMessage.Bottom + MainGameForm.k_Margin;
-            AnotherGameMessage.Left = GameResultsMessage.Left;
+            AnotherGameMessage.Left = GameResultsMessage.Left + (GameResultsMessage.Width / 2) - AnotherGameMessage.Width;
 
             Controls.Add(m_GameResultsMessage);
             Controls.Add(m_AnotherGameMessage);

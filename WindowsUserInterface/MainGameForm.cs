@@ -164,6 +164,7 @@ namespace WindowsUserInterface
         {
             Button clickedTile = i_ClickedButton as Button;
             clickedTile.BackColor = CurrentPlayerName.BackColor;
+            clickedTile.Text = "A";
             if (isGameOver())
             {
                 GameOverDialog.ShowDialog();
@@ -246,7 +247,7 @@ namespace WindowsUserInterface
             }
             else
             {
-                // rematch. idk how...
+               // rematch
             }
         }
 
