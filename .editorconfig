@@ -152,6 +152,10 @@ dotnet_naming_rule.static_readonly_fields_should_be_begins_with_sr_.severity = w
 dotnet_naming_rule.static_readonly_fields_should_be_begins_with_sr_.symbols = static_readonly_fields
 dotnet_naming_rule.static_readonly_fields_should_be_begins_with_sr_.style = begins_with_sr_
 
+dotnet_naming_rule.delegate_should_be_delegate_handler.severity = warning
+dotnet_naming_rule.delegate_should_be_delegate_handler.symbols = delegate
+dotnet_naming_rule.delegate_should_be_delegate_handler.style = delegate_handler
+
 # Symbol specifications
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
@@ -202,6 +206,10 @@ dotnet_naming_symbols.regular_field_members.applicable_kinds = field
 dotnet_naming_symbols.regular_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.regular_field_members.required_modifiers = 
 
+dotnet_naming_symbols.delegate.applicable_kinds = delegate
+dotnet_naming_symbols.delegate.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.delegate.required_modifiers = 
+
 # Naming styles
 
 dotnet_naming_style.pascal_case.required_prefix = 
@@ -248,3 +256,8 @@ dotnet_naming_style.begins_with_sr_.required_prefix = sr_
 dotnet_naming_style.begins_with_sr_.required_suffix = 
 dotnet_naming_style.begins_with_sr_.word_separator = 
 dotnet_naming_style.begins_with_sr_.capitalization = pascal_case
+
+dotnet_naming_style.delegate_handler.required_prefix = 
+dotnet_naming_style.delegate_handler.required_suffix = Handler
+dotnet_naming_style.delegate_handler.word_separator = 
+dotnet_naming_style.delegate_handler.capitalization = pascal_case

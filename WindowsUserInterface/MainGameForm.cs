@@ -6,14 +6,26 @@ namespace WindowsUserInterface
 {
     internal class MainGameForm : Form
     {
-        private const int k_Margin = 10;
-        private const int k_ButtonSize = 50;
+        // TODO: move public constants to another class maybe?
+        public const int k_Margin = 10;
+        public const int k_ButtonSize = 75;
+
         private const string k_GameTitle = "Memory Game";
+        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
+        private const string k_CurrentPlayerLabel = "Current Player: {0}";
+        private const int k_StartingScore = 0;
 
         private Label m_CurrentPlayerName;
         private Label m_PlayerOne;
         private Label m_PlayerTwo;
         private Button[,] m_GameBoardButtons;
+        private MessageBox m_GameOverDialog;
+
+        // Ctor:
+        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
+        {
+            initializeComponents(i_BoardHeight, i_BoardWidth, i_PlayerOneName, i_PlayerTwoName);
+        }
 
         // Properties:
         public Button[,] GameBoardButtons
@@ -39,45 +51,72 @@ namespace WindowsUserInterface
             set { m_PlayerTwo = value; }
         }
 
-        // ctor:
-        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
+        public MessageBox GameOverDialog
         {
-            initializeComponents(i_BoardHeight, i_BoardWidth, i_PlayerOneName, i_PlayerTwoName);
+            get { return m_GameOverDialog; }
+            set { m_GameOverDialog = value; }
         }
 
+        // Initializers:
         private void initializeComponents(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
         {
-            Text = k_GameTitle;
-            Size = new Size(i_BoardWidth * 80, i_BoardHeight * 80);
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            // MaximizeBox = false;
-            // MinimizeBox = false;
-
+            initializeMainForm(i_BoardHeight, i_BoardWidth);
             initilizeGameBoardButtons(i_BoardHeight, i_BoardWidth);
             initializeLabels(i_PlayerOneName, i_PlayerTwoName);
+            initializeGameOverDialog();
         }
 
+        // Main Form:
+        private void initializeMainForm(byte i_BoardHeight, byte i_BoardWidth)
+        {
+            Text = k_GameTitle;
+            Size = getWindowSize(i_BoardHeight, i_BoardWidth);
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            MaximizeBox = false;
+        }
+
+        private Size getWindowSize(byte i_BoardHeight, byte i_BoardWidth)
+        {
+            int formHeight = ((k_ButtonSize + k_Margin) * i_BoardHeight) + (16 * k_Margin);
+            int formWidth = ((k_ButtonSize + k_Margin) * i_BoardWidth) + (3 * k_Margin);
+
+            return new Size(formWidth, formHeight);
+        }
+
+        // Game Board:
         private void initilizeGameBoardButtons(byte i_BoardHeight, byte i_BoardWidth)
         {
             m_GameBoardButtons = new Button[i_BoardHeight, i_BoardWidth];
+            createButtons(i_BoardHeight, i_BoardWidth);
+            positionButtonsOnGrid(i_BoardHeight, i_BoardWidth);
+        }
 
-            for(int i = 0; i < i_BoardHeight; i++)
+        private void createButtons(byte i_BoardHeight, byte i_BoardWidth)
+        {
+            // create buttons
+            for (int i = 0; i < i_BoardHeight; i++)
             {
-                for(int j = 0; j < i_BoardWidth; j++)
+                for (int j = 0; j < i_BoardWidth; j++)
                 {
                     GameBoardButtons[i, j] = new Button
                     {
                         Size = new Size(k_ButtonSize, k_ButtonSize),
-                        BackColor = Color.Gray,
+                        BackColor = Color.LightGray,
                     };
+                    GameBoardButtons[i, j].Click += gameBoardTile_Click;
                 }
             }
+        }
 
+        private void positionButtonsOnGrid(byte i_BoardHeight, byte i_BoardWidth)
+        {
             // setup top-left button
             GameBoardButtons[0, 0].Top = k_Margin;
             GameBoardButtons[0, 0].Left = k_Margin;
+            this.Controls.Add(GameBoardButtons[0, 0]);
 
+            // setup the rest
             for (int i = 0; i < i_BoardHeight; i++)
             {
                 for (int j = 0; j < i_BoardWidth; j++)
@@ -109,57 +148,123 @@ namespace WindowsUserInterface
                         else
                         {
                             GameBoardButtons[i, j].Top = GameBoardButtons[i, j - 1].Top;
-                            GameBoardButtons[i, j].Left = GameBoardButtons[i - 1, j - 1].Top;
+                            GameBoardButtons[i, j].Left = GameBoardButtons[i - 1, j].Left;
 
                             // ElementsDesignerTool.DesignElements(ePositionBy.Top, GameBoardButtons[i, j - 1], GameBoardButtons[i, j], k_Margin);
                             // ElementsDesignerTool.DesignElements(ePositionBy.Left, GameBoardButtons[i - 1, j], GameBoardButtons[i, j], k_Margin);
                         }
                     }
 
-                    this.Controls.Add(GameBoardButtons[i, j]);
+                    Controls.Add(GameBoardButtons[i, j]);
                 }
             }
         }
 
+        private void gameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
+        {
+            Button clickedTile = i_ClickedButton as Button;
+            clickedTile.BackColor = CurrentPlayerName.BackColor;
+            if (isGameOver())
+            {
+                GameOverDialog.ShowDialog();
+            }
+        }
+
+        private bool isGameOver()
+        {
+            bool isComplete = true;
+
+            foreach (Button button in GameBoardButtons)
+            {
+                if (button.BackColor != CurrentPlayerName.BackColor)
+                {
+                    isComplete = false;
+                }
+            }
+
+            return isComplete;
+        }
+
+        // Names and Score:
         private void initializeLabels(string i_PlayerOneName, string i_PlayerTwoName)
         {
             // setup labels:
-            PlayerOne = new Label()
-            {
-                Text = i_PlayerOneName,
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.SeaGreen,
-                Left = k_Margin,
-            };
+            PlayerOne = new Label();
+            PlayerOne.Text = getPlayerNameAndScore(i_PlayerOneName, k_StartingScore);
+            PlayerOne.TextAlign = ContentAlignment.MiddleCenter;
+            PlayerOne.BackColor = Color.LightSteelBlue;
+            PlayerOne.Left = k_Margin;
+            PlayerOne.AutoSize = true;
             PlayerOne.Top = ClientSize.Height - k_Margin - PlayerOne.Height;
 
-            PlayerTwo = new Label()
+            PlayerTwo = new Label
             {
-                Text = i_PlayerTwoName,
-                TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.PaleVioletRed,
+                Text = getPlayerNameAndScore(i_PlayerTwoName, k_StartingScore),
+                TextAlign = PlayerOne.TextAlign,
+                BackColor = Color.PaleGreen,
                 Left = PlayerOne.Left,
-                Top = ClientSize.Height - (PlayerOne.Height * 2) - k_Margin,
+                AutoSize = true,
+                Top = ClientSize.Height - ((PlayerOne.Height + k_Margin) * 2),
             };
 
-            // add
-            this.Controls.Add(PlayerOne);
-            this.Controls.Add(PlayerTwo);
-
             // setup current player
-            CurrentPlayerName = new Label()
+            CurrentPlayerName = new Label
             {
-                BackColor = Color.LightSkyBlue,
+                TextAlign = PlayerOne.TextAlign,
+                BackColor = PlayerOne.BackColor,
                 Left = PlayerOne.Left,
-                Top = ClientSize.Height - k_Margin - ((PlayerOne.Height + k_Margin) * 3),
+                AutoSize = true,
+                Top = ClientSize.Height - ((PlayerOne.Height + k_Margin) * 3),
             };
 
             SetCurrentPlayerName(i_PlayerOneName);
+
+            // add
+            Controls.Add(PlayerOne);
+            Controls.Add(PlayerTwo);
+            Controls.Add(CurrentPlayerName);
         }
 
-        public void SetCurrentPlayerName(string i_PlayerOneName)
+        private string getPlayerNameAndScore(string i_PlayerName, int i_playerScore)
         {
-            CurrentPlayerName.Text = i_PlayerOneName;
+            return string.Format(k_PlayerNameLabel, i_PlayerName, i_playerScore);
+        }
+
+        // Game Over Dialog:
+        private void initializeGameOverDialog()
+        {
+            m_GameOverDialog = new MessageBox();
+            GameOverDialog.FormClosed += gameOverDialog_FormClosed;
+        }
+
+        private void gameOverDialog_FormClosed(object i_ClosedForm, FormClosedEventArgs i_EventArgs)
+        {
+            DialogResult userChoice = ((MessageBox)i_ClosedForm).DialogResult;
+            if(userChoice == DialogResult.No)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else
+            {
+                // rematch. idk how...
+            }
+        }
+
+        public void SetCurrentPlayerName(string i_CurrentPlayer)
+        {
+            CurrentPlayerName.Text = string.Format(k_CurrentPlayerLabel, i_CurrentPlayer);
+        }
+
+        public void UpdatePlayerScore(string i_PlayerName, int i_NewScore)
+        {
+            if(PlayerOne.Text.ToLower() == i_PlayerName.ToLower())
+            {
+                PlayerOne.Text = getPlayerNameAndScore(PlayerOne.Text, i_NewScore);
+            }
+            else
+            {
+                PlayerTwo.Text = getPlayerNameAndScore(PlayerTwo.Text, i_NewScore);
+            }
         }
 
         private void InitializeComponent()
