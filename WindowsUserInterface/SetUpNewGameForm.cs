@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    internal class SetUpNewGameForm : Form
+    public delegate void StartClickHandler(object sender, MouseEventArgs e);
+
+    public class SetUpNewGameForm : Form
     {
         private const string k_TitleForm = "Memory Game - Settung";
         private const string k_TitleLabelFirstplayer = "First Plyer Name:";
@@ -15,9 +17,11 @@ namespace WindowsUserInterface
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";
         private const int k_Margin = 12;
-        private const bool v_Show = true;
-        private const bool v_Enable = true;
-        private const bool v_FirstGame = true;
+        private const bool k_Show = true;
+        private const bool k_Enable = true;
+        private const bool k_FirstGame = true;
+
+        public event StartClickHandler StartClick;
 
         public readonly bool r_IsFirstGame;
         private Label m_LabelFirstPlayer;
@@ -40,12 +44,19 @@ namespace WindowsUserInterface
             get { return m_TextBoxSecondPlayer.Text; }
         }
 
-        public bool IsSecondPlayerבomputer
+        public bool IsSecondPlayerComputer
         {
             get
             {
                 return m_ButtonAgainstAFriend.Enabled;
             }
+        }
+
+        public void GetSelectedDimensions(out byte o_Higt, out byte o_Width)
+        {
+            object bordSize = m_ComboBoxBordSize.SelectedItem;
+            o_Higt = ((BordSizeOptions)bordSize).Higt;
+            o_Width = ((BordSizeOptions)bordSize).Width;
         }
 
         private SetUpNewGameForm(bool i_IsFirstGame, string i_FirstplayerName, string i_SecondPlayerName)
@@ -89,7 +100,7 @@ namespace WindowsUserInterface
             m_TextBoxSecondPlayer.Text = k_TitleDefultSecondPlayer;
             ElementsDesignerTool.DesignElements(m_TextBoxSecondPlayer, ePositionBy.NextToTheLeft, m_LabelSecondPlayer, k_Margin);
             ElementsDesignerTool.DesignElements(m_TextBoxSecondPlayer, ePositionBy.HorizontalCentre, m_LabelSecondPlayer, k_Margin);
-            m_TextBoxSecondPlayer.Enabled = !v_Enable;
+            m_TextBoxSecondPlayer.Enabled = !k_Enable;
             this.Controls.Add(m_TextBoxSecondPlayer);
 
             // Button-Against-A-Friend
@@ -110,8 +121,8 @@ namespace WindowsUserInterface
 
             // ComboBox-Bord-Size
             m_ComboBoxBordSize = new ComboBox();
-            ElementsDesignerTool.DesignElements(m_ComboBoxBordSize, ePositionBy.Left, m_LabelSecondPlayer);
-            ElementsDesignerTool.DesignElements(m_ComboBoxBordSize, ePositionBy.Under, m_LabelSecondPlayer, k_Margin);
+            ElementsDesignerTool.DesignElements(m_ComboBoxBordSize, ePositionBy.Left, m_LabelBordSize);
+            ElementsDesignerTool.DesignElements(m_ComboBoxBordSize, ePositionBy.Under, m_LabelBordSize, k_Margin);
             this.Controls.Add(m_ComboBoxBordSize);
 
             // Button-Start
@@ -123,19 +134,19 @@ namespace WindowsUserInterface
             this.Controls.Add(m_ButtonStart);
             if(!r_IsFirstGame)
             {
-                m_ButtonAgainstAFriend.Enabled = !v_Enable;
-                m_TextBoxFirstPlayer.Enabled = !v_Enable;
+                m_ButtonAgainstAFriend.Enabled = !k_Enable;
+                m_TextBoxFirstPlayer.Enabled = !k_Enable;
             }
         }
 
         public static SetUpNewGameForm StartGameForm()
         {
-            return new SetUpNewGameForm(v_FirstGame, string.Empty, k_TitleDefultSecondPlayer);
+            return new SetUpNewGameForm(k_FirstGame, string.Empty, k_TitleDefultSecondPlayer);
         }
 
         public static SetUpNewGameForm RestartGameForm(string i_FirstplayerName, string i_SecondPlayerName)
         {
-            return new SetUpNewGameForm(!v_FirstGame, i_FirstplayerName, i_SecondPlayerName);
+            return new SetUpNewGameForm(!k_FirstGame, i_FirstplayerName, i_SecondPlayerName);
         }
 
         public void SetListOfBordSizeOptions(byte i_HigtMin, byte i_HigtMax, byte i_WidthMin, byte i_WidthMax)
@@ -185,9 +196,9 @@ namespace WindowsUserInterface
         {
             bool isFirstPlayer = m_TextBoxFirstPlayer.Text != string.Empty;
             bool isSecondPlayer = m_TextBoxSecondPlayer.Text != string.Empty;
-            bool isValid = false;
+            bool isValid = m_ComboBoxBordSize.SelectedItem != null;
 
-            return isFirstPlayer && isSecondPlayer;
+            return isFirstPlayer && isSecondPlayer && isValid;
         }
 
         private struct BordSizeOptions

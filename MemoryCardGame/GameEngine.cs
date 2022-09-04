@@ -1,13 +1,15 @@
 ﻿using System.Text;
-using ConsoleUserInterface;
+using WindowsUserInterface;
 using Game;
+using System;
 using Setting = Game.SettingAndRules;
+using System.Collections.Generic;
 
 namespace MemoryCardGame
 {
     public class GameEngine
     {
-        public const bool v_flippedTheCard = true;
+        public const bool k_flippedTheCard = true;
 
         private Player[] m_AllPlayersInGame;
         private GameLogic m_GameBoard;
@@ -15,6 +17,7 @@ namespace MemoryCardGame
         private bool m_IsPlaying;
         private byte m_TotalPLayers;
         private int k_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
+
         // ===================================================================
         //  constructor  and methods that the constructor uses
         // ===================================================================
@@ -35,28 +38,6 @@ namespace MemoryCardGame
             }
 
             m_AllPlayersInGame = new Player[m_TotalPLayers];
-            bool isItComputer = false;
-
-            for (int i = 0; i < m_TotalPLayers; i++)
-            {
-                if (!isItComputer)
-                {
-                    string message = string.Format("Please Enter player {0} name:", i + 1);
-                    Screen.ShowMessage(message);
-                    string playerName = UserInput.GetPlayersNames();
-                    m_AllPlayersInGame[i] = new Player(playerName);
-                }
-                else
-                {
-                    m_AllPlayersInGame[i] = new Player();
-                }
-
-                if (!(i == m_TotalPLayers - 1))
-                {
-                    Screen.ShowMessage("Is the next player AI? (N/Y)");
-                    isItComputer = UserInput.GetBooleanAnswer();
-                }
-            }
         }
 
         public byte InputFromTheUserAccordingToTheRules(Setting.Rules i_rule)
@@ -90,14 +71,11 @@ namespace MemoryCardGame
 
             do
             {
-                // ask for board Dimensions
-                // choose board size
-                Screen.ShowPrompt(ePromptType.GameBoardDimensions, Setting.Rows.m_UpperBound.ToString(),
-                Setting.Rows.m_LowerBound.ToString());
+                SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
+                form.SetListOfBordSizeOptions(Setting.Columns.m_LowerBound, Setting.Columns.m_UpperBound, Setting.Rows.m_LowerBound, Setting.Rows.m_UpperBound);
+                form.StartClick += ButtonStart_Click;
+                form.ShowDialog();
 
-                UserInput.GetBoardDimensions(out byte o_BoardLength, out byte o_BoardWidth);
-
-                m_GameBoard = new GameLogic(o_BoardLength, o_BoardWidth);
                 m_TurnCounter = 0;
                 playTheGame();
                 if (m_IsPlaying)
@@ -194,7 +172,7 @@ namespace MemoryCardGame
             }
             while (!userInputValid);
 
-            m_GameBoard.Flipped(indexChoice, v_flippedTheCard);
+            m_GameBoard.Flipped(indexChoice, k_flippedTheCard);
 
             return indexChoice;
         }
@@ -227,6 +205,27 @@ namespace MemoryCardGame
             }
 
             return sb.ToString();
+        }
+
+        protected virtual void ButtonStart_Click(object i_Sender, EventArgs e)
+        {
+            SetUpNewGameForm setUpNewGameForm = i_Sender as SetUpNewGameForm;
+            if (setUpNewGameForm != null)
+            {
+                m_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName);
+
+                if(setUpNewGameForm.IsSecondPlayerComputer)
+                {
+                    m_AllPlayersInGame[1] = new Player();
+                }
+                else
+                {
+                    m_AllPlayersInGame[1] = new Player(setUpNewGameForm.SecondPlayerName);
+                }
+
+                setUpNewGameForm.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
+                m_GameBoard = new GameLogic(o_Higt, o_Width);
+            }
         }
     }
 }

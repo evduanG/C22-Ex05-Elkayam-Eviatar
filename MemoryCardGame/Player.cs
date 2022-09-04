@@ -1,5 +1,4 @@
-﻿using ConsoleUserInterface;
-
+﻿
 namespace MemoryCardGame
 {
     internal class Player
@@ -10,6 +9,7 @@ namespace MemoryCardGame
 
         // properties:
         public byte Score { get => m_Score; set => m_Score = value; }
+
         public string Name { get => m_Name; set => m_Name = value; }
 
         private AIPlayer? m_aiPlayer;
