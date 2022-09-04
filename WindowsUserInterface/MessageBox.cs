@@ -4,13 +4,17 @@ using System;
 
 namespace WindowsUserInterface
 {
-    internal class MessageBox : Form
+    public delegate void MessageBoxHandler(object sender, MouseEventArgs e);
+
+    public class MessageBox : Form
     {
         private const int k_MessageBoxHeight = 180;
         private const int k_MessageBoxWidth = 360;
         private const int k_LabelWidth = 200;
         private const string k_WinnerScoreMessage = "{0} won with {1} points!";
         private const string k_AnotherGameMessage = "Do you want to play another game?";
+
+        public event MessageBoxHandler m_MessageBox; // TODO: rename
 
         private Label m_GameResultsMessage;
         private Label m_AnotherGameMessage;

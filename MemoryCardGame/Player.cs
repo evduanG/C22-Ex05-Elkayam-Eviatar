@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace MemoryCardGame
 {
     internal class Player
@@ -40,13 +42,13 @@ namespace MemoryCardGame
             get { return r_IsHuman; }
         }
 
-        public string? GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
+        public string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
         {
-            string? returnChosice;
+            string returnChosice;
 
             if (IsHuman)
             {
-                returnChosice = UserInput.GetPlayerGameMove();
+                // returnChosice = UserInput.GetPlayerGameMove();
             }
             else
             {

@@ -35,12 +35,14 @@ namespace Game
             'Y',
             'Z',
         };
+
         private readonly byte r_NumOfCols;
         private Card[,] m_GameBoard;
         private byte m_FlippedCardsCounter;
 
         /******     Dimensions   ******/
         private readonly byte r_NumOfRows;
+
         public byte Rows
         {
             get
@@ -63,6 +65,7 @@ namespace Game
             {
                 return m_FlippedCardsCounter;
             }
+
             set
             {
                 m_FlippedCardsCounter = value;
@@ -179,6 +182,7 @@ namespace Game
                 isValidLocation(i_rows, i_columns);
                 return m_GameBoard[i_rows, i_columns];
             }
+
             set
             {
                 isValidLocation(i_rows, i_columns);
@@ -214,7 +218,7 @@ namespace Game
             io_scoreForTheTurn = 0;
             bool isPair = true;
 
-            if (i_argsChosenInTurn.Length != 2)  ///TODO: Maybe change it to a fixed number 
+            if (i_argsChosenInTurn.Length != 2)
             {
                 throw new Exception("The number of cards does not match the format");
             }

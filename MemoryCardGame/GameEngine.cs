@@ -1,9 +1,11 @@
 ﻿using System.Text;
-using WindowsUserInterface;
-using Game;
 using System;
-using Setting = Game.SettingAndRules;
 using System.Collections.Generic;
+using System.Threading;
+using System.Windows.Forms;
+using Game;
+using Setting = Game.SettingAndRules;
+using Screen = WindowsUserInterface;
 
 namespace MemoryCardGame
 {
@@ -30,7 +32,7 @@ namespace MemoryCardGame
             /******     number of players       ******/
             if (Setting.m_NumOfPlayers.v_IsFixed)
             {
-                m_TotalPLayers = Setting.m_NumOfPlayers.m_UpperBound;
+                m_TotalPLayers = Setting.m_NumOfPlayers.r_UpperBound;
             }
             else
             {
@@ -47,7 +49,7 @@ namespace MemoryCardGame
             bool isInputValid = false;
             do
             {
-                Screen.ShowMessage(strMsg);
+                // Screen.ShowMessage(strMsg);
                 isInputValid = i_rule.IsValid(returnVal);
             } while (!isInputValid);
 
@@ -71,8 +73,8 @@ namespace MemoryCardGame
 
             do
             {
-                SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
-                form.SetListOfBordSizeOptions(Setting.Columns.m_LowerBound, Setting.Columns.m_UpperBound, Setting.Rows.m_LowerBound, Setting.Rows.m_UpperBound);
+                Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
+                form.SetListOfBordSizeOptions(Setting.Columns.r_LowerBound, Setting.Columns.r_UpperBound, Setting.Rows.r_LowerBound, Setting.Rows.r_UpperBound);
                 form.StartClick += ButtonStart_Click;
                 form.ShowDialog();
 
@@ -80,8 +82,9 @@ namespace MemoryCardGame
                 playTheGame();
                 if (m_IsPlaying)
                 {
-                    Screen.ShowPrompt(ePromptType.AnotherGame);
-                    m_IsPlaying = UserInput.GetBooleanAnswer();
+                    Screen.MessageBox messageBox = new Screen.MessageBox();
+                    messageBox.m_MessageBox += MessageBox_Occur;
+                    messageBox.ShowDialog();
 
                     if (m_IsPlaying)
                     {
@@ -105,7 +108,7 @@ namespace MemoryCardGame
                     Player currentlyPlayingPlayer = m_AllPlayersInGame[getPlayerIndex()];
                     List<string> playerChois = new List<string>();
 
-                    for (int i = 0; i < Setting.NumOfChoiceInTurn.m_UpperBound; i++)
+                    for (int i = 0; i < Setting.s_NumOfChoiceInTurn.r_UpperBound; i++)
                     {
                         playerChois.Add(gameStage(currentlyPlayingPlayer));
                     }
@@ -121,7 +124,6 @@ namespace MemoryCardGame
 
                     currentlyPlayingPlayer.IncreaseScore(o_scoreForTheTurn);
                     Thread.Sleep(k_SleepBetweenTurns);
-
                 }
                 while (isRunning());
             }
@@ -130,6 +132,7 @@ namespace MemoryCardGame
                 m_IsPlaying = false;
                 return;
             }
+
             showWhoWon();
         }
 
@@ -147,7 +150,7 @@ namespace MemoryCardGame
                 }
             }
 
-            Screen.ShowPrompt(ePromptType.Winning, winnerName, highScore.ToString());
+            // Screen.ShowPrompt(ePromptType.Winning, winnerName, highScore.ToString());
         }
 
         // player turn
@@ -161,14 +164,15 @@ namespace MemoryCardGame
             do
             {
                 drawBoard();
-                Screen.ShowMessage(mag);
+                // Screen.ShowMessage(mag);
                 if (!userInputValid)
                 {
-                    Screen.ShowError(eErrorType.CardTaken);
+                    // Screen.ShowError(eErrorType.CardTaken);
                 }
-                indexChoice = i_currentlyPlayingPlayer.GetPlayerChoice(validSlotForChose, m_GameBoard.GetBoardToDraw());
 
-                userInputValid = validSlotForChose.Contains(indexChoice.ToUpper());
+                //indexChoice = i_currentlyPlayingPlayer.GetPlayerChoice(validSlotForChose, m_GameBoard.GetBoardToDraw());
+
+                // userInputValid = validSlotForChose.Contains(indexChoice.ToUpper());
             }
             while (!userInputValid);
 
@@ -180,9 +184,9 @@ namespace MemoryCardGame
         // render the game board and show stats
         private void drawBoard()
         {
-            Screen.ClearBoard();
-            Screen.ShowBoard(m_GameBoard.GetBoardToDraw());
-            Screen.ShowMessage(getPlayersScoreLine());
+            //Screen.ClearBoard();
+            //Screen.ShowBoard(m_GameBoard.GetBoardToDraw());
+            //Screen.ShowMessage(getPlayersScoreLine());
         }
 
         private void showAllPlayersTheBoard()
@@ -209,7 +213,7 @@ namespace MemoryCardGame
 
         protected virtual void ButtonStart_Click(object i_Sender, EventArgs e)
         {
-            SetUpNewGameForm setUpNewGameForm = i_Sender as SetUpNewGameForm;
+            Screen.SetUpNewGameForm setUpNewGameForm = i_Sender as Screen.SetUpNewGameForm;
             if (setUpNewGameForm != null)
             {
                 m_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName);
@@ -227,5 +231,11 @@ namespace MemoryCardGame
                 m_GameBoard = new GameLogic(o_Higt, o_Width);
             }
         }
+
+        protected virtual void MessageBox_Occur(object i_Sender, EventArgs e)
+        {
+            Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
+        }
+
     }
 }
