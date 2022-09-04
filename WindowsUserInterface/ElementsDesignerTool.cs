@@ -7,12 +7,12 @@ namespace WindowsUserInterface
     {
         private const int k_NoMargin = 0;
 
-        public static void DesignElements(Control i_ControlCompareTo, ePositionBy i_PositionBy, Control i_ControlToSetPosition)
+        public static void DesignElements(Control i_ControlToSetPosition, ePositionBy i_PositionBy, Control i_ControlCompareTo)
         {
-            DesignElements(i_ControlCompareTo, i_PositionBy, i_ControlToSetPosition, k_NoMargin);
+            DesignElements(i_ControlToSetPosition, i_PositionBy, i_ControlCompareTo, k_NoMargin);
         }
 
-        public static void DesignElements(Control i_ControlCompareTo, ePositionBy i_PositionBy, Control i_ControlToSetPosition, int i_Margin)
+        public static void DesignElements(Control i_ControlToSetPosition, ePositionBy i_PositionBy, Control i_ControlCompareTo, int i_Margin)
         {
             switch (i_PositionBy)
             {
@@ -31,6 +31,9 @@ namespace WindowsUserInterface
                 case ePositionBy.Under:
                     setControlToTheUnder(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
+                case ePositionBy.NextToTheLeft:
+                    setControlNextToTheLeft(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
+                    break;
                 case ePositionBy.VerticalCentre:
                     setControlToThVerticalCentre(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
@@ -38,6 +41,11 @@ namespace WindowsUserInterface
                     setControlToTheHorizontalCentre(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
             }
+        }
+
+        private static void setControlNextToTheLeft(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
+        {
+            i_ControlToSetPosition.Left = i_ControlCompareTo.Right + i_Margin;
         }
 
         private static void setControlToTheUnder(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
@@ -67,7 +75,7 @@ namespace WindowsUserInterface
 
         private static void setControlToTheRight(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
-            i_ControlToSetPosition.Left = i_ControlCompareTo.Right + i_Margin;
+            i_ControlToSetPosition.Left = i_ControlCompareTo.Right + i_Margin - i_ControlToSetPosition.Width;
         }
 
         private static void setControlToTheLeft(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)

@@ -17,8 +17,10 @@ namespace WindowsUserInterface
             gameForm.ShowDialog();
 
             SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
+            form.SetListOfBordSizeOptions(4, 6, 4, 6);
             form.ShowDialog();
-
+            SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
+            form1.ShowDialog();
         }
 
         public void ButtonStart_Click(object i_Sender, EventArgs e)
