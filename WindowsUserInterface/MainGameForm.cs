@@ -161,5 +161,22 @@ namespace WindowsUserInterface
         {
             CurrentPlayerName.Text = i_PlayerOneName;
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // MainGameForm
+            this.ClientSize = new System.Drawing.Size(282, 253);
+            this.Name = "MainGameForm";
+            this.Load += new System.EventHandler(this.MainGameForm_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        private void MainGameForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
