@@ -5,7 +5,6 @@ namespace MemoryCardGame
     internal struct AIPlayer
     {
         private static readonly Random sr_Random = new Random();
-        // $G$ DSN-999 (-3) This list should be readonly.
         private readonly List<MemorySlot> m_Memory = new List<MemorySlot>();
 
         public AIPlayer(List<MemorySlot> memory)
