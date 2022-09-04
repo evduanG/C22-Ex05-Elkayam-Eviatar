@@ -6,6 +6,7 @@
         Top,
         Right,
         Bottom,
+        Under,
         VerticalCentre,
         HorizontalCentre,
     }

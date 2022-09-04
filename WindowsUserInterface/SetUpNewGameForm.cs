@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using System;
 
 namespace WindowsUserInterface
 {
@@ -16,8 +17,8 @@ namespace WindowsUserInterface
         private const bool v_Show = true;
         private const bool v_Enable = true;
 
-        private Label m_LabelFirstPlayer;
         private Label m_LabelSecondPlayer;
+        private Label m_LabelFirstPlayer;
         private Label m_LabelBordSize;
         private TextBox m_TextBoxFirstPlayer;
         private TextBox m_TextBoxSecondPlayer;
@@ -27,6 +28,9 @@ namespace WindowsUserInterface
 
         private SetUpNewGameForm()
         {
+            Size = new Size(400, 400);
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             initiationForm();
         }
 
@@ -37,32 +41,56 @@ namespace WindowsUserInterface
             m_LabelFirstPlayer.Text = k_TitleLabelFirstplayer;
             m_LabelFirstPlayer.Left = k_Margin;
             m_LabelFirstPlayer.Top = k_Margin;
+            this.Controls.Add(m_LabelFirstPlayer);
 
             // TextBox-First-player
             m_TextBoxFirstPlayer = new TextBox();
-            ElementsDesignerTool.DesignElements(ePositionBy.Left, m_LabelFirstPlayer, m_TextBoxFirstPlayer, k_Margin);
-            ElementsDesignerTool.DesignElements(ePositionBy.HorizontalCentre, m_LabelFirstPlayer, m_TextBoxFirstPlayer);
+            ElementsDesignerTool.DesignElements(m_LabelFirstPlayer, ePositionBy.Right, m_TextBoxFirstPlayer, k_Margin);
+            ElementsDesignerTool.DesignElements(m_LabelFirstPlayer, ePositionBy.HorizontalCentre, m_TextBoxFirstPlayer);
+            this.Controls.Add(m_TextBoxFirstPlayer);
 
             // Label-Second-Plyer
             m_LabelSecondPlayer = new Label();
             m_LabelSecondPlayer.Text = k_TitleLabelSecondPlayer;
-            ElementsDesignerTool.DesignElements(ePositionBy.Left, m_LabelFirstPlayer, m_LabelSecondPlayer);
-            ElementsDesignerTool.DesignElements(ePositionBy.Top, m_LabelFirstPlayer, m_LabelSecondPlayer, k_Margin);
+            ElementsDesignerTool.DesignElements(m_LabelFirstPlayer, ePositionBy.Left, m_LabelSecondPlayer);
+            ElementsDesignerTool.DesignElements(m_LabelFirstPlayer, ePositionBy.Under, m_LabelSecondPlayer, k_Margin);
+            this.Controls.Add(m_LabelSecondPlayer);
 
             // TextBox-Second-Player
             m_TextBoxSecondPlayer = new TextBox();
             m_TextBoxSecondPlayer.Text = k_TitleDefultSecondPlayer;
-            ElementsDesignerTool.DesignElements(ePositionBy.Left, m_LabelFirstPlayer, m_TextBoxSecondPlayer, k_Margin);
-            ElementsDesignerTool.DesignElements(ePositionBy.HorizontalCentre, m_LabelSecondPlayer, m_TextBoxSecondPlayer, k_Margin);
+            ElementsDesignerTool.DesignElements(m_LabelSecondPlayer, ePositionBy.Right, m_TextBoxSecondPlayer, k_Margin);
+            ElementsDesignerTool.DesignElements(m_LabelSecondPlayer, ePositionBy.HorizontalCentre, m_TextBoxSecondPlayer, k_Margin);
+            m_TextBoxSecondPlayer.Enabled = !v_Enable;
+            this.Controls.Add(m_TextBoxSecondPlayer);
 
             // Button-Against-A-Friend
             m_ButtonAgainstAFriend = new Button();
             m_ButtonAgainstAFriend.Text = k_TitleButtonAgainstAFriend;
-            ElementsDesignerTool.DesignElements(ePositionBy.Left, m_TextBoxSecondPlayer, m_ButtonAgainstAFriend, k_Margin);
-            ElementsDesignerTool.DesignElements(ePositionBy.VerticalCentre, m_TextBoxSecondPlayer, m_ButtonAgainstAFriend);
+            ElementsDesignerTool.DesignElements(m_TextBoxSecondPlayer, ePositionBy.Right, m_ButtonAgainstAFriend, k_Margin);
+            ElementsDesignerTool.DesignElements(m_TextBoxSecondPlayer, ePositionBy.HorizontalCentre, m_ButtonAgainstAFriend);
+            m_ButtonAgainstAFriend.Click += ButtonAgainstAFriend_Click;
+            this.Controls.Add(m_ButtonAgainstAFriend);
+
+            // Label-Scroll-Bord-Size
+            m_LabelBordSize = new Label();
+            m_LabelBordSize.Text = k_TitleLabelBordSize;
+            ElementsDesignerTool.DesignElements(m_LabelBordSize, ePositionBy.Left, m_LabelSecondPlayer);
+            ElementsDesignerTool.DesignElements(m_LabelBordSize, ePositionBy.Under, m_LabelSecondPlayer, k_Margin);
+            this.Controls.Add(m_LabelBordSize);
 
             // Scroll-Bord-Size
-            // m_ScrollBordSize = new ScrollBar();
+            m_ScrollBordSize = new VScrollBar();
+            ElementsDesignerTool.DesignElements(m_ScrollBordSize, ePositionBy.Left, m_LabelSecondPlayer);
+            ElementsDesignerTool.DesignElements(m_ScrollBordSize, ePositionBy.Under, m_LabelSecondPlayer, k_Margin);
+            this.Controls.Add(m_ScrollBordSize);
+
+            //Button-Start
+            m_ButtonStart = new Button();
+            m_ButtonStart.Text = k_TitleButtonStart;
+            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Right, m_ButtonAgainstAFriend);
+            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Bottom, m_ScrollBordSize);
+            this.Controls.Add(m_ButtonStart);
         }
 
         public static SetUpNewGameForm StartGameForm()
@@ -80,6 +108,16 @@ namespace WindowsUserInterface
             restartGameForm.m_ButtonAgainstAFriend.Visible = !v_Show;
 
             return restartGameForm;
+        }
+
+        private void ButtonAgainstAFriend_Click(object i_Sender, EventArgs e)
+        {
+            bool isTextBoxSecondPlayer = m_TextBoxSecondPlayer.Enabled;
+            if (isTextBoxSecondPlayer)
+            {
+                m_TextBoxSecondPlayer.Text = k_TitleDefultSecondPlayer;
+            }
+            m_TextBoxSecondPlayer.Enabled = !isTextBoxSecondPlayer;
         }
     }
 }
