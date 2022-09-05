@@ -7,14 +7,17 @@ namespace MemoryCardGame
     internal struct AIPlayer
     {
         private static readonly Random sr_Random = new Random();
-        private readonly List<MemorySlot> r_Memory = new List<MemorySlot>();
+        private readonly List<MemorySlot> r_Memory;
 
         public AIPlayer(List<MemorySlot> memory)
         {
-            Memory = memory;
+            r_Memory = memory;
         }
 
-        public AIPlayer() : this(new List<MemorySlot>()) { }
+        public static AIPlayer CreateNew()
+        {
+            return new AIPlayer(new List<MemorySlot>());
+        }
 
         private List<MemorySlot> Memory
         {
@@ -59,7 +62,7 @@ namespace MemoryCardGame
         internal string GetAIPlayerChoice(List<string> i_ValidSlotTOChase,
             char[,] i_boardToDraw)
         {
-            string? ans = null;
+            string ans = string.Empty;
 
             if (i_ValidSlotTOChase.Count % 2 == 0)
             {
@@ -79,12 +82,11 @@ namespace MemoryCardGame
             return ans;
         }
 
-        // $G$ CSS-013 (-3) Bad parameter name (should be in the form of i_PascalCase).
-        private string? getAIFirstPlayerChoice(List<string> i_ValidSlotTOChase)
+        private string getAIFirstPlayerChoice(List<string> i_ValidSlotTOChase)
         {
             r_Memory.Sort();
             i_ValidSlotTOChase.Sort();
-            MemorySlot valueFirst = r_Memory.First();
+            MemorySlot valueFirst = r_Memory[0];
             MemorySlot valueSecond;
             bool isItFound = false;
 
@@ -116,12 +118,12 @@ namespace MemoryCardGame
             return isItFound ? valueFirst.Index : null;
         }
 
-        private string? getAISecondPlayerChoice(
+        private string getAISecondPlayerChoice(
             List<string> i_validSlotToChase,
             char[,] i_boardToDraw)
         {
             r_Memory.Sort();
-            string? returnedIndex = "";
+            string returnedIndex = "";
 
             foreach (char value in i_boardToDraw)
             {
@@ -175,18 +177,9 @@ namespace MemoryCardGame
                 set { m_Index = value; }
             }
 
-            //===============================================
+            /// ===============================================
             // Constructor
-            //===============================================
-            public MemorySlot()
-            {
-                m_Value = ' ';
-                m_Index = "";
-            }
-
-            //===============================================
-            // Methods
-            //===============================================
+            /// ===============================================
             public MemorySlot(char i_value, string i_index)
             {
                 m_Index = i_index;
@@ -194,7 +187,7 @@ namespace MemoryCardGame
             }
 
             // implementing CompareTo for sort()
-            public int CompareTo(object? obj)
+            public int CompareTo(object obj)
             {
                 int ans;
 
@@ -230,11 +223,10 @@ namespace MemoryCardGame
                 return !(i_Other1 > i_Other2);
             }
 
-            public override bool Equals(object? obj)
+            public override bool Equals(object obj)
             {
                 return this == (MemorySlot?)obj;
             }
-
         }
     }
 

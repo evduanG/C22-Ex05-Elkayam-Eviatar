@@ -21,7 +21,7 @@ namespace MemoryCardGame
             m_Name = "PC";
             m_Score = 0;
             r_IsHuman = false;
-            m_aiPlayer = new AIPlayer();
+            m_aiPlayer = AIPlayer.CreateNew();
         }
 
         public Player(string i_name)
@@ -44,7 +44,7 @@ namespace MemoryCardGame
 
         public string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
         {
-            string returnChosice;
+            string returnChosice = string.Empty;
 
             if (IsHuman)
             {

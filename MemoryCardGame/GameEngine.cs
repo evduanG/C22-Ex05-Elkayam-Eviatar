@@ -11,14 +11,15 @@ namespace MemoryCardGame
 {
     public class GameEngine
     {
-        public const bool k_flippedTheCard = true;
-
+        public const bool k_FlippedTheCard = true;
+        private Screen.MainGameForm m_GameForm;
         private Player[] m_AllPlayersInGame;
+        private List<string> m_PlayerChois = new List<string>();
         private GameLogic m_GameBoard;
         private byte m_TurnCounter;
         private bool m_IsPlaying;
         private byte m_TotalPLayers;
-        private int k_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
+        private int k_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : renam thiis to be Ticker ..
 
         // ===================================================================
         //  constructor  and methods that the constructor uses
@@ -28,15 +29,16 @@ namespace MemoryCardGame
             m_GameBoard = null;
             m_IsPlaying = false;
             m_TurnCounter = 0;
+            m_PlayerChois = new List<string>();
 
             /******     number of players       ******/
-            if (Setting.m_NumOfPlayers.v_IsFixed)
+            if (Setting.NumOfPlayers.v_IsFixed)
             {
-                m_TotalPLayers = Setting.m_NumOfPlayers.r_UpperBound;
+                m_TotalPLayers = Setting.NumOfPlayers.r_UpperBound;
             }
             else
             {
-                m_TotalPLayers = InputFromTheUserAccordingToTheRules(Setting.m_NumOfPlayers);
+                m_TotalPLayers = InputFromTheUserAccordingToTheRules(Setting.NumOfPlayers);
             }
 
             m_AllPlayersInGame = new Player[m_TotalPLayers];
@@ -44,16 +46,19 @@ namespace MemoryCardGame
 
         public byte InputFromTheUserAccordingToTheRules(Setting.Rules i_rule)
         {
-            string strMsg = string.Format("Please enter the {0}", i_rule.ToString());
-            byte returnVal = 0;
-            bool isInputValid = false;
-            do
-            {
-                // Screen.ShowMessage(strMsg);
-                isInputValid = i_rule.IsValid(returnVal);
-            } while (!isInputValid);
+            // TODO: make this func 
 
-            return returnVal;
+            //string strMsg = string.Format("Please enter the {0}", i_rule.ToString());
+            //byte returnVal = 0;
+            //bool isInputValid = false;
+            //do
+            //{
+            //    // Screen.ShowMessage(strMsg);
+            //    isInputValid = i_rule.IsValid(returnVal);
+            //} while (!isInputValid);
+
+            //return returnVal;
+            return 2;
         }
 
         private bool isRunning()
@@ -73,10 +78,10 @@ namespace MemoryCardGame
 
             do
             {
-                Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
-                form.SetListOfBordSizeOptions(Setting.Columns.r_LowerBound, Setting.Columns.r_UpperBound, Setting.Rows.r_LowerBound, Setting.Rows.r_UpperBound);
-                form.StartClick += ButtonStart_Click;
-                form.ShowDialog();
+                Screen.SetUpNewGameForm setUpForm = Screen.SetUpNewGameForm.StartGameForm();
+                setUpForm.SetListOfBordSizeOptions(Setting.Columns.r_LowerBound, Setting.Columns.r_UpperBound, Setting.Rows.r_LowerBound, Setting.Rows.r_UpperBound);
+                setUpForm.StartClick += ButtonStart_Click;
+                setUpForm.ShowDialog();
 
                 m_TurnCounter = 0;
                 playTheGame();
@@ -101,21 +106,27 @@ namespace MemoryCardGame
 
         private void playTheGame()
         {
+            m_GameForm = new Screen.MainGameForm(m_GameBoard.Rows, m_GameBoard.Columns,
+                m_AllPlayersInGame[0].Name, m_AllPlayersInGame[1].Name);
             try
             {
                 do
                 {
-                    Player currentlyPlayingPlayer = m_AllPlayersInGame[getPlayerIndex()];
-                    List<string> playerChois = new List<string>();
+                    m_PlayerChois.Clear();
+                    // settheForm();
+                    // TODO : set the name of the currnt pleayr:
+                    // TODO : set the score of the players
+
+                    m_GameForm.AynButtonClick += FirstCoche_Occur;
+                    Player currentlyPlayingPlayer = m_AllPlayersInGame[getPlayerIndex()]; // chang in the form the name
 
                     for (int i = 0; i < Setting.s_NumOfChoiceInTurn.r_UpperBound; i++)
                     {
-                        playerChois.Add(gameStage(currentlyPlayingPlayer));
                     }
 
                     // Show all players the board
                     showAllPlayersTheBoard();
-                    bool isThePlyerHaveAnderTurn = m_GameBoard.DoThePlayersChoicesMatch(out byte o_scoreForTheTurn, playerChois.ToArray());
+                    bool isThePlyerHaveAnderTurn = m_GameBoard.DoThePlayersChoicesMatch(out byte o_scoreForTheTurn, m_PlayerChois.ToArray());
 
                     if (!isThePlyerHaveAnderTurn)
                     {
@@ -157,7 +168,7 @@ namespace MemoryCardGame
         private string gameStage(Player i_currentlyPlayingPlayer)
         {
             bool userInputValid = true;
-            string indexChoice;
+            string indexChoice = string.Empty;
             string mag = string.Format("{0} choose a tile", i_currentlyPlayingPlayer.Name);
             List<string> validSlotForChose = m_GameBoard.GetAllValidTilesForChoice();
 
@@ -176,7 +187,7 @@ namespace MemoryCardGame
             }
             while (!userInputValid);
 
-            m_GameBoard.Flipped(indexChoice, k_flippedTheCard);
+            m_GameBoard.Flipped(indexChoice, k_FlippedTheCard);
 
             return indexChoice;
         }
@@ -214,6 +225,7 @@ namespace MemoryCardGame
         protected virtual void ButtonStart_Click(object i_Sender, EventArgs e)
         {
             Screen.SetUpNewGameForm setUpNewGameForm = i_Sender as Screen.SetUpNewGameForm;
+
             if (setUpNewGameForm != null)
             {
                 m_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName);
@@ -237,5 +249,25 @@ namespace MemoryCardGame
             Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
         }
 
+        protected virtual void FirstCoche_Occur(object i_Sender, EventArgs e)
+        {
+            Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
+            //m_GameBoard[x,y].flipe 
+            // set form to the img 
+            // add 
+            m_PlayerChois.Add("cxv");
+            m_GameForm.AynButtonClick -= FirstCoche_Occur;
+            m_GameForm.AynButtonClick += ScendCoche_Occur;
+
+        }
+
+        protected virtual void ScendCoche_Occur(object i_Sender, EventArgs e)
+        {
+            Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
+            //m_GameBoard[x,y].flipe 
+            // set form to the img 
+            // add 
+            m_PlayerChois.Add("cxv");
+        }
     }
 }

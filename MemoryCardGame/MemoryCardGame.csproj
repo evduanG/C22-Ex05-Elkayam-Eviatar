@@ -43,6 +43,7 @@
     <Compile Include="AIPlayer.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
