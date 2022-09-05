@@ -42,6 +42,8 @@ namespace MemoryCardGame
             get { return r_IsHuman; }
         }
 
+        public object Color { get; internal set; }
+
         public string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
         {
             string returnChosice = string.Empty;

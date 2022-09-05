@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
@@ -162,6 +163,12 @@ namespace WindowsUserInterface
                     Controls.Add(GameBoardButtons[i, j]);
                 }
             }
+        }
+
+        public void ColorAndEnablePair(List<string> m_PlayerChois, object color)
+        {
+            // TODO :: 
+            throw new NotImplementedException();
         }
 
         protected virtual void gameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)

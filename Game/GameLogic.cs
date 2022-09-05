@@ -109,6 +109,17 @@ namespace Game
             return sr_ABC[i_index >> 1];
         }
 
+        public void ApplyAllTheButtons(global::WindowsUserInterface.MainGameForm i_GameForm)
+        {
+            for(byte i = 0; i < Rows; i++)
+            {
+                for(byte j = 0; j < Columns; j++)
+                {
+                    //i_GameForm[i, j].Delget += Flipped_AsDelget;
+                }
+            }
+        }
+
         /// function to Shuffle array the char array before creation
         /// need to change to any array
         /// <exception cref="ArgumentNullException"></exception>
