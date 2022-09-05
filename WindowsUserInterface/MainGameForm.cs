@@ -4,11 +4,15 @@ using System.Drawing;
 
 namespace WindowsUserInterface
 {
-    internal class MainGameForm : Form
+    public delegate void AynButtonHandler(object sender, MouseEventArgs e);
+
+    public class MainGameForm : Form
     {
         // TODO: move public constants to another class maybe?
         public const int k_Margin = 10;
         public const int k_ButtonSize = 75;
+
+        public event AynButtonHandler AynButtonClick;
 
         private const string k_GameTitle = "Memory Game";
         private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
@@ -160,7 +164,7 @@ namespace WindowsUserInterface
             }
         }
 
-        private void gameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
+        protected virtual void gameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
             clickedTile.BackColor = CurrentPlayerName.BackColor;
@@ -169,6 +173,8 @@ namespace WindowsUserInterface
             {
                 GameOverDialog.ShowDialog();
             }
+
+            AnyButtem_Click(clickedTile , i_EventArgs);
         }
 
         private bool isGameOver()
@@ -266,6 +272,35 @@ namespace WindowsUserInterface
             {
                 PlayerTwo.Text = getPlayerNameAndScore(PlayerTwo.Text, i_NewScore);
             }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // MainGameForm
+            this.ClientSize = new System.Drawing.Size(282, 253);
+            this.Name = "MainGameForm";
+            this.Load += new System.EventHandler(this.MainGameForm_Load);
+            this.ResumeLayout(false);
+        }
+
+        protected virtual void MainGameForm_Load(object sender, EventArgs e)
+        {
+            // lissner 
+
+        }
+
+        protected virtual void AllButtem_Click(object sender, EventArgs e)
+        {
+            // lissner 
+            // 
+        }
+
+        protected virtual void AnyButtem_Click(object sender, EventArgs e)
+        {
+            // lissner 
+            // 
         }
     }
 }

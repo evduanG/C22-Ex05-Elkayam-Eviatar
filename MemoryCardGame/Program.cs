@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using WindowsUserInterface;
 
-namespace WindowsUserInterface
+namespace MemoryCardGame
 {
-    internal class Tester
+    public class Program
     {
         public static void Main()
         {

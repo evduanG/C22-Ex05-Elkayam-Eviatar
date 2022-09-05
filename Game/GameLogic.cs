@@ -5,7 +5,7 @@ namespace Game
 {
     public class GameLogic
     {
-        private const bool v_FaceUp = true;
+        private const bool k_FaceUp = true;
         public static readonly char[] sr_ABC =
         {
             'A',
@@ -35,12 +35,14 @@ namespace Game
             'Y',
             'Z',
         };
+
         private readonly byte r_NumOfCols;
         private Card[,] m_GameBoard;
         private byte m_FlippedCardsCounter;
 
         /******     Dimensions   ******/
         private readonly byte r_NumOfRows;
+
         public byte Rows
         {
             get
@@ -63,6 +65,7 @@ namespace Game
             {
                 return m_FlippedCardsCounter;
             }
+
             set
             {
                 m_FlippedCardsCounter = value;
@@ -82,7 +85,8 @@ namespace Game
             for (byte j = 0; j < chars.Length; j++)
             {
                 chars[j] = getCharForSlat(j);
-            }
+            } 
+
             shuffleCard(ref chars);
             m_GameBoard = new Card[Rows, Columns];
             byte indexInChars = 0;
@@ -91,7 +95,7 @@ namespace Game
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    m_GameBoard[i, j] = new Card(chars[indexInChars++], !v_FaceUp);
+                    m_GameBoard[i, j] = new Card(chars[indexInChars++], !k_FaceUp);
                 }
             }
         }
@@ -179,6 +183,7 @@ namespace Game
                 isValidLocation(i_rows, i_columns);
                 return m_GameBoard[i_rows, i_columns];
             }
+
             set
             {
                 isValidLocation(i_rows, i_columns);
@@ -214,7 +219,7 @@ namespace Game
             io_scoreForTheTurn = 0;
             bool isPair = true;
 
-            if (i_argsChosenInTurn.Length != 2)  ///TODO: Maybe change it to a fixed number 
+            if (i_argsChosenInTurn.Length != 2)
             {
                 throw new Exception("The number of cards does not match the format");
             }
@@ -234,7 +239,7 @@ namespace Game
             {
                 foreach (string index in i_argsChosenInTurn)
                 {
-                    Flipped(index, !v_FaceUp);
+                    Flipped(index, !k_FaceUp);
                 }
             }
             else
@@ -245,7 +250,6 @@ namespace Game
 
             return isPair;
         }
-
 
         // ===================================================================
         // methods that use to draw the board
@@ -310,7 +314,6 @@ namespace Game
                 }
             }
 
-            // TODO: remove this 
             if (!isSuccessTryParse || !isUpper)
             {
                 throw new IndexOutOfRangeException(string.Format(
@@ -343,21 +346,21 @@ m_GameBoard[io_rowIndex, io_colIndex]));
             // private const string km_formatToPrint = " {} |";
             private const char m_default = ' ';
 
-            private char m_value;
-            private bool m_flipped;
+            private char m_Value;
+            private bool m_Flipped;
 
             /// constructor
             public Card(char value, bool flipped)
             {
-                m_value = value;
-                m_flipped = flipped;
+                m_Value = value;
+                m_Flipped = flipped;
             }
 
             public Card(char value)
                 : this()
             {
-                m_value = value;
-                m_flipped = false;
+                m_Value = value;
+                m_Flipped = false;
             }
 
             // Properties
@@ -368,7 +371,7 @@ m_GameBoard[io_rowIndex, io_colIndex]));
                     char retunValue = m_default;
                     if (Flipped)
                     {
-                        retunValue = m_value;
+                        retunValue = m_Value;
                     }
 
                     return retunValue;
@@ -376,7 +379,7 @@ m_GameBoard[io_rowIndex, io_colIndex]));
 
                 set
                 {
-                    m_value = value;
+                    m_Value = value;
                 }
             }
 
@@ -384,12 +387,12 @@ m_GameBoard[io_rowIndex, io_colIndex]));
             {
                 get
                 {
-                    return m_flipped;
+                    return m_Flipped;
                 }
 
                 set
                 {
-                    m_flipped = value;
+                    m_Flipped = value;
                 }
             }
 
@@ -411,13 +414,12 @@ m_GameBoard[io_rowIndex, io_colIndex]));
             public override int GetHashCode()
             {
                 int hashCode = 1148891178;
-                hashCode = (hashCode * -1521134295) + m_value.GetHashCode();
-                hashCode = (hashCode * -1521134295) + m_flipped.GetHashCode();
+                hashCode = (hashCode * -1521134295) + m_Value.GetHashCode();
+                hashCode = (hashCode * -1521134295) + m_Flipped.GetHashCode();
                 hashCode = (hashCode * -1521134295) + Value.GetHashCode();
                 hashCode = (hashCode * -1521134295) + Flipped.GetHashCode();
                 return hashCode;
             }
-
         }
     }
 }

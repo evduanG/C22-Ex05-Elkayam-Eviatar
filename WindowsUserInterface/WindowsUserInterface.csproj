@@ -70,5 +70,13 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainGameForm.resx">
+      <DependentUpon>MainGameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SetUpNewGameForm.resx">
+      <DependentUpon>SetUpNewGameForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
