@@ -229,7 +229,7 @@ namespace WindowsUserInterface
             }
         }
 
-        //private void InitializeComponent()
+        //private void initializeComponent()
         //{
         //    this.SuspendLayout();
         //    // 
