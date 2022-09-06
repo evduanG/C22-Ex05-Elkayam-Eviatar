@@ -11,6 +11,7 @@ namespace MemoryCardGame
 {
     public class GameEngine
     {
+        public const bool k_Running = true;
         public const bool k_FlippedTheCard = true;
         private Screen.MainGameForm m_GameForm;
         private Player[] m_AllPlayersInGame;
@@ -70,18 +71,8 @@ namespace MemoryCardGame
             return 2;
         }
 
-        //private bool isRunning()
-        //{
-        //    return m_IsPlaying || m_GameBoard.HaveMoreMoves;
-        //}
-
-        private int getPlayerIndex()
-        {
-            return m_TurnCounter % m_TotalPLayers;
-        }
-
         // start the game
-        private void start(byte i_Higt, byte i_Width)
+        private void startNewGame(byte i_Higt, byte i_Width)
         {
             m_GameBoard = new GameLogic(i_Higt, i_Higt);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, m_AllPlayersInGame[0].Name, m_AllPlayersInGame[0].Name);
@@ -137,6 +128,9 @@ namespace MemoryCardGame
                     m_AllPlayersInGame[1] = new Player(setUpNewGameForm.SecondPlayerName);
                 }
             }
+
+            setUpNewGameForm.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
+            startNewGame(o_Higt, o_Width);
         }
 
         protected virtual void MessageBox_Occur(object i_Sender, EventArgs e)
@@ -186,8 +180,17 @@ namespace MemoryCardGame
                 m_GameForm.AynButtonClick -= ScendCoche_Occur;
             }
         }
+
+        public void DisplaySetUpForm()
+        {
+            Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
+            form.SetListOfBordSizeOptions(4, 6, 4, 6);
+            form.StartClick += ButtonStart_Click;
+            form.ShowDialog();
+        }
     }
 }
+
 //private void start(byte i_Higt, byte i_Width)
 //{
     //m_GameBoard = new GameLogic(i_Higt, i_Higt);
