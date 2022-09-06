@@ -109,7 +109,7 @@ namespace WindowsUserInterface
                         Size = new Size(k_ButtonSize, k_ButtonSize),
                         BackColor = Color.LightGray,
                     };
-                    GameBoardButtons[i, j].Click += gameBoardTile_Click;
+                    GameBoardButtons[i, j].Click += GameBoardTile_Click;
                 }
             }
         }
@@ -167,11 +167,11 @@ namespace WindowsUserInterface
 
         public void ColorAndEnablePair(List<string> m_PlayerChois, object color)
         {
-            // TODO :: 
+            // TODO ::
             throw new NotImplementedException();
         }
 
-        protected virtual void gameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
+        protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
             clickedTile.BackColor = CurrentPlayerName.BackColor;
@@ -180,7 +180,7 @@ namespace WindowsUserInterface
                 GameOverDialog.ShowDialog();
             }
 
-            AnyButtem_Click(clickedTile , i_EventArgs);
+            AnyButtem_Click(clickedTile, i_EventArgs);
         }
 
         private bool isGameOver()
@@ -280,10 +280,10 @@ namespace WindowsUserInterface
             }
         }
 
-        private void InitializeComponent()
+        private void initializeComponent()
         {
             this.SuspendLayout();
-            // 
+
             // MainGameForm
             this.ClientSize = new System.Drawing.Size(282, 253);
             this.Name = "MainGameForm";
@@ -293,20 +293,17 @@ namespace WindowsUserInterface
 
         protected virtual void MainGameForm_Load(object sender, EventArgs e)
         {
-            // lissner 
-
+            // lissner
         }
 
         protected virtual void AllButtem_Click(object sender, EventArgs e)
         {
-            // lissner 
-            // 
+            // lissner
         }
 
         protected virtual void AnyButtem_Click(object sender, EventArgs e)
         {
-            // lissner 
-            // 
+            // lissner
         }
     }
 }

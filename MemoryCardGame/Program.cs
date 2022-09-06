@@ -15,17 +15,20 @@ namespace MemoryCardGame
             GameEngine game = new GameEngine();
             game.DisplaySetUpForm();
 
+            /*
 
-            //SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
-            //form.SetListOfBordSizeOptions(4, 6, 4, 6);
-            //form.ShowDialog();
-            //form.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
 
-            //MainGameForm gameForm = new MainGameForm(o_Higt, o_Width, form.FirstPlayerName, form.SecondPlayerName);
-            //gameForm.ShowDialog();
+            SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
+            form.SetListOfBordSizeOptions(4, 6, 4, 6);
+            form.ShowDialog();
+            form.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
 
-            //SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
-            //form1.ShowDialog();
+            MainGameForm gameForm = new MainGameForm(o_Higt, o_Width, form.FirstPlayerName, form.SecondPlayerName);
+            gameForm.ShowDialog();
+
+            SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
+            form1.ShowDialog();
+                         */
         }
     }
 }

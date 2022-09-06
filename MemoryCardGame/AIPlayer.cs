@@ -1,6 +1,6 @@
-﻿using Game;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Game;
 
 namespace MemoryCardGame
 {
@@ -59,7 +59,8 @@ namespace MemoryCardGame
             }
         }
 
-        internal string GetAIPlayerChoice(List<string> i_ValidSlotTOChase,
+        internal string GetAIPlayerChoice(
+            List<string> i_ValidSlotTOChase,
             char[,] i_boardToDraw)
         {
             string ans = string.Empty;
@@ -123,7 +124,7 @@ namespace MemoryCardGame
             char[,] i_boardToDraw)
         {
             r_Memory.Sort();
-            string returnedIndex = "";
+            string returnedIndex = string.Empty;
 
             foreach (char value in i_boardToDraw)
             {

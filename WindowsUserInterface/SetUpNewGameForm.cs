@@ -229,16 +229,18 @@ namespace WindowsUserInterface
             }
         }
 
-        //private void initializeComponent()
-        //{
-        //    this.SuspendLayout();
-        //    // 
-        //    // SetUpNewGameForm
-        //    // 
-        //    this.ClientSize = new System.Drawing.Size(282, 253);
-        //    this.Name = "SetUpNewGameForm";
-        //    this.ResumeLayout(false);
+        /*
+        private void initializecomponent()
+        {
+            this.suspendlayout();
+            //
+            // setupnewgameform
+            //
+            this.clientsize = new system.drawing.size(282, 253);
+            this.name = "setupnewgameform";
+            this.resumelayout(false);
 
-        //}
+        }
+        */
     }
 }
