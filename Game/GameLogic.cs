@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Screen = WindowsUserInterface;
 
 namespace Game
@@ -116,7 +117,7 @@ namespace Game
             {
                 for(byte j = 0; j < Columns; j++)
                 {
-                    //i_GameForm[i, j].Delget += Flipped_AsDelget;
+                    i_GameForm.GameBoardButtons[j, i].Click += m_GameBoard[j, i].Card_Clicked;
                 }
             }
         }
@@ -172,6 +173,8 @@ namespace Game
             }
         }
 
+        // TODO: change the indexer and make it work with row 0 col 0
+
         /// indexer:
         private Card this[string i_indexFormt]
         {
@@ -225,6 +228,7 @@ namespace Game
             this[i_index] = c;
         }
 
+        // TODO: fix
         // return true  The player got another turn
         public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params string[] i_argsChosenInTurn)
         {
@@ -431,6 +435,16 @@ m_GameBoard[io_rowIndex, io_colIndex]));
                 hashCode = (hashCode * -1521134295) + Value.GetHashCode();
                 hashCode = (hashCode * -1521134295) + Flipped.GetHashCode();
                 return hashCode;
+            }
+
+            internal void Card_Clicked(object i_Sender, EventArgs i_EventArgs)
+            {
+                if (i_Sender is Button clickedButton)
+                {
+                    clickedButton.Enabled = false;
+                    Flipped = true;
+                    clickedButton.Text = Value.ToString();
+                }
             }
         }
     }
