@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Windows.Forms;
 using Game;
 using Setting = Game.SettingAndRules;
 using Screen = WindowsUserInterface;
@@ -19,7 +18,7 @@ namespace MemoryCardGame
         private byte m_TurnCounter;
         private bool m_IsPlaying;
         private byte m_TotalPLayers;
-        private int k_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : renam thiis to be Ticker ..
+        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : rename this to be Ticker ..
 
         // ===================================================================
         //  constructor  and methods that the constructor uses
@@ -106,35 +105,33 @@ namespace MemoryCardGame
 
         private void playTheGame()
         {
-            m_GameForm = new Screen.MainGameForm(m_GameBoard.Rows, m_GameBoard.Columns,
-                m_AllPlayersInGame[0].Name, m_AllPlayersInGame[1].Name);
+            m_GameForm = new Screen.MainGameForm(m_GameBoard.Rows, m_GameBoard.Columns, m_AllPlayersInGame[0].Name, m_AllPlayersInGame[1].Name, m_AllPlayersInGame[0].Name);
             try
             {
                 do
                 {
                     m_PlayerChois.Clear();
                     // settheForm();
-                    // TODO : set the name of the currnt pleayr:
-                    // TODO : set the score of the players
+                    // TODO : set the score of the players => done in line 133
 
-                    m_GameForm.AynButtonClick += FirstCoche_Occur;
-                    Player currentlyPlayingPlayer = m_AllPlayersInGame[getPlayerIndex()]; // chang in the form the name
+                    m_GameForm.AnyButtonHandler += FirstChoice_Occur;
+                    Player currentlyPlayingPlayer = m_AllPlayersInGame[getPlayerIndex()]; // change in the form the name
 
-                    for (int i = 0; i < Setting.s_NumOfChoiceInTurn.r_UpperBound; i++)
-                    {
-                    }
+                    // TODO : set the name of the current player:
+                    m_GameForm.SetCurrentPlayerName(currentlyPlayingPlayer.Name);
 
-                    // Show all players the board
+                    // Show all players the board => useless now?
                     showAllPlayersTheBoard();
-                    bool isThePlyerHaveAnderTurn = m_GameBoard.DoThePlayersChoicesMatch(out byte o_scoreForTheTurn, m_PlayerChois.ToArray());
+                    bool doesThePlayerHaveAnotherTurn = m_GameBoard.DoThePlayersChoicesMatch(out byte o_scoreForTheTurn, m_PlayerChois.ToArray());
 
-                    if (!isThePlyerHaveAnderTurn)
+                    if (!doesThePlayerHaveAnotherTurn)
                     {
                         m_TurnCounter++;
                     }
 
                     currentlyPlayingPlayer.IncreaseScore(o_scoreForTheTurn);
-                    Thread.Sleep(k_SleepBetweenTurns);
+                    m_GameForm.UpdatePlayerScore(currentlyPlayingPlayer.Name, currentlyPlayingPlayer.Score);
+                    Thread.Sleep(m_SleepBetweenTurns);
                 }
                 while (isRunning());
             }
@@ -181,7 +178,7 @@ namespace MemoryCardGame
                     // Screen.ShowError(eErrorType.CardTaken);
                 }
 
-                //indexChoice = i_currentlyPlayingPlayer.GetPlayerChoice(validSlotForChose, m_GameBoard.GetBoardToDraw());
+                indexChoice = i_currentlyPlayingPlayer.GetPlayerChoice(validSlotForChose, m_GameBoard.GetBoardToDraw());
 
                 // userInputValid = validSlotForChose.Contains(indexChoice.ToUpper());
             }
@@ -249,19 +246,20 @@ namespace MemoryCardGame
             Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
         }
 
-        protected virtual void FirstCoche_Occur(object i_Sender, EventArgs e)
+        protected virtual void FirstChoice_Occur(object i_Sender)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
+            
             //m_GameBoard[x,y].flipe 
-            // set form to the img 
+            // set form to the img
             // add 
             m_PlayerChois.Add("cxv");
-            m_GameForm.AynButtonClick -= FirstCoche_Occur;
-            m_GameForm.AynButtonClick += ScendCoche_Occur;
+            m_GameForm.AnyButtonHandler -= FirstChoice_Occur;
+            m_GameForm.AnyButtonHandler += SecondChoice_Occur;
 
         }
 
-        protected virtual void ScendCoche_Occur(object i_Sender, EventArgs e)
+        protected virtual void SecondChoice_Occur(object i_Sender)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             //m_GameBoard[x,y].flipe 

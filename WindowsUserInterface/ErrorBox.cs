@@ -65,7 +65,7 @@ namespace WindowsUserInterface
             ButtonOk = new Button();
             ButtonOk.Text = "Okay";
             ButtonOk.Top = ErrorLabel.Bottom + (MainGameForm.k_Margin * 2);
-            ElementsDesignerTool.DesignElements(ePositionBy.VerticalCentre, ErrorLabel, ButtonOk, MainGameForm.k_Margin);
+            ElementsDesignerTool.DesignElements(ErrorLabel, ePositionBy.VerticalCentre, ButtonOk, MainGameForm.k_Margin);
             ButtonOk.Click += buttonOk_Click;
 
             Controls.Add(ButtonOk);
