@@ -310,7 +310,7 @@ namespace WindowsUserInterface
                 PlayerTwo.Text = getPlayerNameAndScore(PlayerTwo.Text, i_NewScore);
             }
         }
-        
+
         public string GetCoordinates(Button i_ClickedButton)
         {
             string buttonCoordinates = string.Empty;
@@ -329,37 +329,25 @@ namespace WindowsUserInterface
             return buttonCoordinates;
         }
 
-        protected virtual void MainGameForm_Load(object sender)
+        protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)
         {
-            // lissner
         }
 
-        protected virtual void AllButtem_Click(object sender)
+        protected virtual void AllButtem_Click(object sender, EventArgs i_EventArgs)
         {
-            // lissner
         }
 
-        protected virtual void AnyButton_Click(object sender)
+        protected virtual void AnyButton_Click(object sender, EventArgs i_EventArgs)
         {
-            anyButtemInvoker(e);
+            anyButtemInvoker(i_EventArgs);
         }
 
-        private void anyButtemInvoker(EventArgs e)
+        private void anyButtemInvoker(EventArgs i_EventArgs)
         {
-            if(AnyButtonClick != null)
+            if(AnyButtonHandler != null)
             {
-                AnyButtonClick.Invoke(this, (ButtomIndexEvent)e);
+                AnyButtonHandler.Invoke(this, (ButtomIndexEvent)i_EventArgs);
             }
         }
     }
 }
-/*
- * 
- * 
- * stak 
- * sb 
- * while (stak. Top != null) 
- * sb. apLine (stak. Top ) 
- * stak.pop ()
- * 
- */
