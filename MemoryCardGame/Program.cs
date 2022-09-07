@@ -12,6 +12,12 @@ namespace MemoryCardGame
         public static void Main()
         {
             // Application.EnableVisualStyles();
+            GameEngine game = new GameEngine();
+            game.DisplaySetUpForm();
+
+            /*
+
+
             SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
             form.SetListOfBordSizeOptions(4, 6, 4, 6);
             form.ShowDialog();
@@ -22,6 +28,7 @@ namespace MemoryCardGame
 
             SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
             form1.ShowDialog();
+                         */
         }
     }
 }

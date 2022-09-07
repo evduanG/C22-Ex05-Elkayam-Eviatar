@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void AnyButtonHandler(object sender);
+    public delegate void AnyButtonHandler(object sender, ButtomIndexEvent e);
 
     public class MainGameForm : Form
     {
@@ -194,6 +195,12 @@ namespace WindowsUserInterface
             }
         }
 
+        public void ColorAndEnablePair(List<string> m_PlayerChois, object color)
+        {
+            // TODO ::
+            throw new NotImplementedException();
+        }
+        
         protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
@@ -203,8 +210,8 @@ namespace WindowsUserInterface
             {
                 GameOverDialog.ShowDialog();
             }
-
-            AnyButton_Click(this);
+            
+            AnyButton_Click(clickedTile, new ButtomIndexEvent(0, 0));
         }
 
         private bool isGameOver()
@@ -303,7 +310,7 @@ namespace WindowsUserInterface
                 PlayerTwo.Text = getPlayerNameAndScore(PlayerTwo.Text, i_NewScore);
             }
         }
-
+        
         public string GetCoordinates(Button i_ClickedButton)
         {
             string buttonCoordinates = string.Empty;
@@ -324,18 +331,35 @@ namespace WindowsUserInterface
 
         protected virtual void MainGameForm_Load(object sender)
         {
-            // lissner 
-
+            // lissner
         }
 
         protected virtual void AllButtem_Click(object sender)
         {
-            // lissner 
-            // 
+            // lissner
         }
 
         protected virtual void AnyButton_Click(object sender)
         {
+            anyButtemInvoker(e);
+        }
+
+        private void anyButtemInvoker(EventArgs e)
+        {
+            if(AnyButtonClick != null)
+            {
+                AnyButtonClick.Invoke(this, (ButtomIndexEvent)e);
+            }
         }
     }
 }
+/*
+ * 
+ * 
+ * stak 
+ * sb 
+ * while (stak. Top != null) 
+ * sb. apLine (stak. Top ) 
+ * stak.pop ()
+ * 
+ */
