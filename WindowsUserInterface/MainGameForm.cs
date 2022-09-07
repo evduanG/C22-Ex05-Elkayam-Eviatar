@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void AynButtonHandler(object sender, MouseEventArgs e);
+    public delegate void AynButtonHandler(object sender, ButtomIndexEvent e);
 
     public class MainGameForm : Form
     {
@@ -180,7 +180,7 @@ namespace WindowsUserInterface
                 GameOverDialog.ShowDialog();
             }
 
-            AnyButtem_Click(clickedTile, i_EventArgs);
+            AnyButtem_Click(clickedTile, new ButtomIndexEvent(0, 0));
         }
 
         private bool isGameOver()
@@ -304,6 +304,25 @@ namespace WindowsUserInterface
         protected virtual void AnyButtem_Click(object sender, EventArgs e)
         {
             // lissner
+            anyButtemInvoker(e);
+        }
+
+        private void anyButtemInvoker(EventArgs e)
+        {
+            if(AynButtonClick != null)
+            {
+                AynButtonClick.Invoke(this, (ButtomIndexEvent)e);
+            }
         }
     }
 }
+/*
+ * 
+ * 
+ * stak 
+ * sb 
+ * while (stak. Top != null) 
+ * sb. apLine (stak. Top ) 
+ * stak.pop ()
+ * 
+ */

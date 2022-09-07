@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Game;
 using Setting = Game.SettingAndRules;
 using Screen = WindowsUserInterface;
+using WindowsUserInterface;
 
 namespace MemoryCardGame
 {
@@ -144,11 +145,12 @@ namespace MemoryCardGame
         protected virtual void FirstCoche_Occur(object i_Sender, EventArgs e)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
+            ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
 
             // m_GameBoard[x,y].flipe
             // set form to the img
             // add
-            m_PlayerChois.Add("cxv");
+            m_PlayerChois.Add(buttomIndexEvent.ToString());
             m_GameForm.AynButtonClick -= FirstCoche_Occur;
             m_GameForm.AynButtonClick += ScendCoche_Occur;
         }
@@ -156,11 +158,12 @@ namespace MemoryCardGame
         protected virtual void ScendCoche_Occur(object i_Sender, EventArgs e)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
+            ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
 
             // m_GameBoard[x,y].flipe
             // set form to the img
             // add
-            m_PlayerChois.Add("cxv");
+            m_PlayerChois.Add(buttomIndexEvent.ToString());
             endOfTurn();
         }
 
@@ -192,6 +195,13 @@ namespace MemoryCardGame
             form.SetListOfBordSizeOptions(4, 6, 4, 6);
             form.StartClick += ButtonStart_Click;
             form.ShowDialog();
+
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                form.RestartGameForm();
+            }
+
+            // asq for more game ?
         }
     }
 }

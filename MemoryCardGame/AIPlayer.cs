@@ -228,6 +228,16 @@ namespace MemoryCardGame
             {
                 return this == (MemorySlot?)obj;
             }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+
+            public override string ToString()
+            {
+                return base.ToString();
+            }
         }
     }
 
