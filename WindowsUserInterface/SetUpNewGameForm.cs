@@ -9,10 +9,11 @@ namespace WindowsUserInterface
 
     public class SetUpNewGameForm : Form
     {
-        private const string k_TitleForm = "Memory Game - Settung";
-        private const string k_TitleLabelFirstplayer = "First Plyer Name:";
-        private const string k_TitleLabelSecondPlayer = "Second Plyer Name:";
-        private const string k_TitleLabelBordSize = "Bord Size:";
+        // TODO: change board size setup button
+        private const string k_TitleForm = "Memory Game - Settings";
+        private const string k_TitleLabelFirstplayer = "First Player Name:";
+        private const string k_TitleLabelSecondPlayer = "Second Player Name:";
+        private const string k_TitleLabelBordSize = "Board Size:";
         private const string k_TitleButtonAgainstAFriend = "Against a Friend";
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";

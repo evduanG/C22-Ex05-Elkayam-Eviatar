@@ -1,35 +1,42 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace MemoryCardGame
 {
     internal class Player
     {
+        private static readonly Color[] sr_Colors = { System.Drawing.Color.LightBlue, System.Drawing.Color.LightGreen, System.Drawing.Color.LightPink };
+
         private readonly bool r_IsHuman;
         private byte m_Score;
         private string m_Name;
+        private byte m_ID;
 
         // properties:
         public byte Score { get => m_Score; set => m_Score = value; }
 
         public string Name { get => m_Name; set => m_Name = value; }
 
-        private AIPlayer? m_aiPlayer;
+        public byte ID { get => m_ID; set => m_ID = value; }
 
-        public Player()
+        private AIPlayer? m_AiPlayer;
+
+        public Player(byte i_ID)
         {
             m_Name = "PC";
             m_Score = 0;
             r_IsHuman = false;
-            m_aiPlayer = AIPlayer.CreateNew();
+            m_AiPlayer = AIPlayer.CreateNew();
+            m_ID = i_ID;
         }
 
-        public Player(string i_name)
+        public Player(string i_name, byte i_ID)
         {
             m_Score = 0;
             r_IsHuman = true;
             m_Name = i_name;
-            m_aiPlayer = null;
+            m_AiPlayer = null;
+            m_ID = i_ID;
         }
 
         public void IncreaseScore(byte i_ScoreInTheTurn)
@@ -42,7 +49,13 @@ namespace MemoryCardGame
             get { return r_IsHuman; }
         }
 
-        public object Color { get; internal set; }
+        public Color Color
+        {
+            get
+            {
+                return sr_Colors[m_ID];
+            }
+        }
 
         public string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
         {
@@ -54,7 +67,7 @@ namespace MemoryCardGame
             }
             else
             {
-                returnChosice = m_aiPlayer?.GetAIPlayerChoice(i_validSlotTOChase, i_BoardToDraw);
+                returnChosice = m_AiPlayer?.GetAIPlayerChoice(i_validSlotTOChase, i_BoardToDraw);
             }
 
             return returnChosice;
@@ -64,7 +77,7 @@ namespace MemoryCardGame
         {
             if (!IsHuman)
             {
-                m_aiPlayer?.ShowBoard(i_GameBoard);
+                m_AiPlayer?.ShowBoard(i_GameBoard);
             }
         }
 
@@ -72,7 +85,7 @@ namespace MemoryCardGame
         {
             if (!IsHuman)
             {
-                m_aiPlayer?.ResetMemory();
+                m_AiPlayer?.ResetMemory();
             }
         }
 

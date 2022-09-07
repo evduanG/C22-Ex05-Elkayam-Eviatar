@@ -20,7 +20,7 @@ namespace MemoryCardGame
         private byte m_TurnCounter;
 
         private byte m_TotalPLayers;
-        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : rename this to be Ticker ..
+        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : remake this to be Ticker ..
 
         private Player CurrentPlayer
         {
@@ -76,9 +76,16 @@ namespace MemoryCardGame
         private void startNewGame(byte i_Higt, byte i_Width)
         {
             m_GameBoard = new GameLogic(i_Higt, i_Higt);
-            m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, m_AllPlayersInGame[0].Name, m_AllPlayersInGame[0].Name, CurrentPlayer.Name);
+            m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2, CurrentPlayer.Name);
             m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonHandler += FirstChoice_Occur;
+
+            foreach(Player player in m_AllPlayersInGame)
+            {
+                m_GameForm.SetPlayer(player.ToString(), player.Color, player.ID);
+            }
+
+            m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             m_GameForm.ShowDialog();
         }
 
@@ -120,15 +127,15 @@ namespace MemoryCardGame
 
             if (setUpNewGameForm != null)
             {
-                m_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName);
+                m_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName, 0);
 
                 if(setUpNewGameForm.IsSecondPlayerComputer)
                 {
-                    m_AllPlayersInGame[1] = new Player();
+                    m_AllPlayersInGame[1] = new Player(1);
                 }
                 else
                 {
-                    m_AllPlayersInGame[1] = new Player(setUpNewGameForm.SecondPlayerName);
+                    m_AllPlayersInGame[1] = new Player(setUpNewGameForm.SecondPlayerName, 1);
                 }
             }
 
@@ -171,9 +178,13 @@ namespace MemoryCardGame
             bool isThePlyerHaveAnderTurn = m_GameBoard.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_PlayerChois.ToArray());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
+            m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
+
             if (!isThePlyerHaveAnderTurn)
             {
                 m_TurnCounter++;
+                // changeCurr
+                // m_GameForm.UpdatePlayerScore()
             }
             else
             {
