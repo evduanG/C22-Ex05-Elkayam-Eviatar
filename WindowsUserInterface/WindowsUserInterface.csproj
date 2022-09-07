@@ -53,6 +53,9 @@
     <Compile Include="ButtomIndexEvent.cs" />
     <Compile Include="ElementsDesignerTool.cs" />
     <Compile Include="ePositionBy.cs" />
+    <Compile Include="ErrorBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MainGameForm.cs">
       <SubType>Form</SubType>
     </Compile>

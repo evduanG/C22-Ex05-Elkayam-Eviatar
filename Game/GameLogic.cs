@@ -296,7 +296,7 @@ namespace Game
 
                     if (!isCardFlip)
                     {
-                        validSlots.Add(string.Format("{0}{1}", sr_ABC[j], i + 1));
+                        validSlots.Add(string.Format("{0} {1}", sr_ABC[j], i + 1));
                     }
                 }
             }

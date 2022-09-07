@@ -11,17 +11,17 @@ namespace WindowsUserInterface
     {
         public static void Main()
         {
-            // Application.EnableVisualStyles();
-            SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
-            form.SetListOfBordSizeOptions(4, 6, 4, 6);
-            form.ShowDialog();
-            form.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
+            //// Application.EnableVisualStyles();
+            // SetUpNewGameForm form = SetUpNewGameForm.StartGameForm();
+            // form.SetListOfBordSizeOptions(4, 6, 4, 6);
+            // form.ShowDialog();
+            // form.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
 
-            MainGameForm gameForm = new MainGameForm(o_Higt, o_Width, form.FirstPlayerName, form.SecondPlayerName);
-            gameForm.ShowDialog();
+            // MainGameForm gameForm = new MainGameForm(o_Higt, o_Width, form.FirstPlayerName, form.SecondPlayerName, form.FirstPlayerName);
+            // gameForm.ShowDialog();
 
-            SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
-            form1.ShowDialog();
+            // SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
+            // form1.ShowDialog();
         }
     }
 }
