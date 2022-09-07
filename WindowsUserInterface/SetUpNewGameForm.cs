@@ -76,7 +76,7 @@ namespace WindowsUserInterface
         private SetUpNewGameForm(bool i_IsFirstGame, string i_FirstplayerName, string i_SecondPlayerName)
         {
             r_IsFirstGame = i_IsFirstGame;
-            Size = new Size(400, 400);
+            Size = new Size(370, 300);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             this.Text = k_TitleForm;
@@ -151,7 +151,7 @@ namespace WindowsUserInterface
             m_ButtonStart = new Button();
             m_ButtonStart.Text = k_TitleButtonStart;
             ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Right, m_ButtonAgainstAFriend);
-            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Bottom, m_BoardSizes); // todo/
+            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Bottom, m_BoardSizes);
             m_ButtonStart.Click += ButtonStart_Click;
             this.Controls.Add(m_ButtonStart);
             if (!r_IsFirstGame)
@@ -185,7 +185,7 @@ namespace WindowsUserInterface
                 for(byte widt = i_WidthMin; widt <= i_WidthMax; widt++)
                 {
                     m_ListBordSizeOptions.Add(new BordSizeOptions(higt, widt));
-                    // m_ComboBoxBordSize.Items.Add(new BordSizeOptions(higt, widt)); /todo/
+                    // m_ComboBoxBordSize.Items.Add(new BordSizeOptions(higt, widt));
                 }
             }
         }
@@ -234,7 +234,7 @@ namespace WindowsUserInterface
         {
             bool isFirstPlayer = m_TextBoxFirstPlayer.Text != string.Empty;
             bool isSecondPlayer = m_TextBoxSecondPlayer.Text != string.Empty;
-            // bool isValid = m_ComboBoxBordSize.SelectedItem != null; /todo/
+            // bool isValid = m_ComboBoxBordSize.SelectedItem != null;
 
             return isFirstPlayer && isSecondPlayer; //&& isValid;
         }
