@@ -20,7 +20,7 @@ namespace MemoryCardGame
         private byte m_TurnCounter;
 
         private byte m_TotalPLayers;
-        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : renam thiis to be Ticker ..
+        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : rename this to be Ticker ..
 
         private Player CurrentPlayer
         {
