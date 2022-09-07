@@ -69,14 +69,14 @@ namespace WindowsUserInterface
             // o_Higt = ((BordSizeOptions)bordSize).Higt;
             // o_Width = ((BordSizeOptions)bordSize).Width;
 
-            o_Height = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
-            o_Width = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
+            o_Height = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
+            o_Width = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
         }
 
         private SetUpNewGameForm(bool i_IsFirstGame, string i_FirstplayerName, string i_SecondPlayerName)
         {
             r_IsFirstGame = i_IsFirstGame;
-            Size = new Size(370, 300);
+            Size = new Size(380, 300);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             this.Text = k_TitleForm;
