@@ -15,7 +15,7 @@ namespace MemoryCardGame
         public const bool k_FlippedTheCard = true;
         private Screen.MainGameForm m_GameForm;
         private Player[] m_AllPlayersInGame;
-        private List<string> m_PlayerChois = new List<string>();
+        private List<ButtomIndexEvent> m_PlayerChois = new List<ButtomIndexEvent>();
         private GameLogic m_GameBoard;
         private byte m_TurnCounter;
 
@@ -40,7 +40,7 @@ namespace MemoryCardGame
 
             // r_IsPlaying = false;
             m_TurnCounter = 0;
-            m_PlayerChois = new List<string>();
+            m_PlayerChois = new List<ButtomIndexEvent>();
 
             /******     number of players       ******/
             if (Setting.NumOfPlayers.v_IsFixed)
@@ -75,7 +75,7 @@ namespace MemoryCardGame
         // start the game
         private void startNewGame(byte i_Higt, byte i_Width)
         {
-            m_GameBoard = new GameLogic(i_Higt, i_Higt);
+            m_GameBoard = new GameLogic(i_Higt, i_Width);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2, CurrentPlayer.Name);
             m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonHandler += FirstChoice_Occur;
@@ -156,7 +156,7 @@ namespace MemoryCardGame
             // m_GameBoard[x,y].flipe
             // set form to the img
             // add
-            m_PlayerChois.Add(buttomIndexEvent.ToString());
+            m_PlayerChois.Add(buttomIndexEvent);
             m_GameForm.AnyButtonHandler -= FirstChoice_Occur;
             m_GameForm.AnyButtonHandler += SecondChoice_Occur;
         }
@@ -169,7 +169,7 @@ namespace MemoryCardGame
             // m_GameBoard[x,y].flipe
             // set form to the img
             // add
-            m_PlayerChois.Add(buttomIndexEvent.ToString());
+            m_PlayerChois.Add(buttomIndexEvent);
             endOfTurn();
         }
 
@@ -183,12 +183,11 @@ namespace MemoryCardGame
             if (!isThePlyerHaveAnderTurn)
             {
                 m_TurnCounter++;
-                // changeCurr
-                // m_GameForm.UpdatePlayerScore()
+                m_GameForm.FlippCardsToFaceDown(m_PlayerChois);
             }
             else
             {
-                m_GameForm.ColorAndEnablePair(m_PlayerChois, CurrentPlayer.Color);
+                m_GameForm.ColorPair(m_PlayerChois, CurrentPlayer.Color);
             }
 
             if(m_GameBoard.HaveMoreMoves)

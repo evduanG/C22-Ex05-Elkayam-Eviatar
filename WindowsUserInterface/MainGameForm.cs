@@ -15,6 +15,24 @@ namespace WindowsUserInterface
         private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
         private const string k_CurrentPlayerLabel = "Current Player: {0}";
         private const int k_StartingScore = 0;
+        private readonly byte r_NumOfRows;
+        private readonly byte r_NumOfCols;
+
+        public byte Rows
+        {
+            get
+            {
+                return r_NumOfRows;
+            }
+        }
+
+        public byte Columns
+        {
+            get
+            {
+                return r_NumOfCols;
+            }
+        }
 
         public event AnyButtonHandler AnyButtonHandler;
 
@@ -58,8 +76,10 @@ namespace WindowsUserInterface
         // Ctor:
         public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, byte i_numOfPlayers, string i_CurrentPlayer)
         {
+            r_NumOfCols = i_BoardHeight;
+            r_NumOfRows = i_BoardWidth;
             m_Players = new Label[i_numOfPlayers];
-            initializeComponents(i_BoardHeight, i_BoardWidth, i_CurrentPlayer);
+            initializeComponents(i_CurrentPlayer);
         }
 
         // Properties:
@@ -85,11 +105,24 @@ namespace WindowsUserInterface
             set { m_GameOverDialog = value; }
         }
 
-        // Initializers:
-        private void initializeComponents(byte i_BoardHeight, byte i_BoardWidth, string i_CurrentPlayer)
+        public Button this[byte i_Row, byte i_Col]
         {
-            initializeMainForm(i_BoardHeight, i_BoardWidth);
-            initilizeGameBoardButtons(i_BoardHeight, i_BoardWidth);
+            get
+            {
+                return m_GameBoardButtons[i_Row, i_Col];
+            }
+
+            set
+            {
+                m_GameBoardButtons[i_Row, i_Col] = value;
+            }
+        }
+
+        // Initializers:
+        private void initializeComponents(string i_CurrentPlayer)
+        {
+            initializeMainForm();
+            initilizeGameBoardButtons();
             initializeLabels(i_CurrentPlayer);
             initializeGameOverDialog();
         }
@@ -105,37 +138,39 @@ namespace WindowsUserInterface
         }
 
         // Main Form:
-        private void initializeMainForm(byte i_BoardHeight, byte i_BoardWidth)
+        private void initializeMainForm()
         {
             Text = k_GameTitle;
-            Size = getWindowSize(i_BoardHeight, i_BoardWidth);
+            Size = getWindowSize();
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.Fixed3D;
             MaximizeBox = false;
         }
 
-        private Size getWindowSize(byte i_BoardHeight, byte i_BoardWidth)
+        private Size getWindowSize()
         {
-            int formHeight = ((k_ButtonSize + k_Margin) * i_BoardHeight) + (16 * k_Margin);
-            int formWidth = ((k_ButtonSize + k_Margin) * i_BoardWidth) + (3 * k_Margin);
+            // TODO: 16 and 3 to const
+            int buttonSizeAndMargin = k_ButtonSize + k_Margin;
+            int formHeight = (buttonSizeAndMargin * Rows) + (16 * k_Margin); // what is 16 ??
+            int formWidth = (buttonSizeAndMargin * Columns) + (3 * k_Margin); // what is 3 ??
 
             return new Size(formWidth, formHeight);
         }
 
         // Game Board:
-        private void initilizeGameBoardButtons(byte i_BoardHeight, byte i_BoardWidth)
+        private void initilizeGameBoardButtons()
         {
-            m_GameBoardButtons = new Button[i_BoardHeight, i_BoardWidth];
-            createButtons(i_BoardHeight, i_BoardWidth);
-            positionButtonsOnGrid(i_BoardHeight, i_BoardWidth);
+            m_GameBoardButtons = new Button[Rows, Columns];
+            createButtons();
+            positionButtonsOnGrid();
         }
 
-        private void createButtons(byte i_BoardHeight, byte i_BoardWidth)
+        private void createButtons()
         {
             // create buttons
-            for (int i = 0; i < i_BoardHeight; i++)
+            for (int i = 0; i < Rows; i++)
             {
-                for (int j = 0; j < i_BoardWidth; j++)
+                for (int j = 0; j < Columns; j++)
                 {
                     GameBoardButtons[i, j] = new Button
                     {
@@ -147,17 +182,18 @@ namespace WindowsUserInterface
             }
         }
 
-        private void positionButtonsOnGrid(byte i_BoardHeight, byte i_BoardWidth)
+        private void positionButtonsOnGrid()
         {
             // setup top-left button
             GameBoardButtons[0, 0].Top = k_Margin;
             GameBoardButtons[0, 0].Left = k_Margin;
             Controls.Add(GameBoardButtons[0, 0]);
 
+            // TODO : use the ElementsDesignerTool 
             // setup the rest
-            for (int i = 0; i < i_BoardHeight; i++)
+            for (int i = 0; i < Rows; i++)
             {
-                for (int j = 0; j < i_BoardWidth; j++)
+                for (int j = 0; j < Columns; j++)
                 {
                     // top-left button
                     if (i == 0 && j == 0)
@@ -188,8 +224,8 @@ namespace WindowsUserInterface
                             GameBoardButtons[i, j].Top = GameBoardButtons[i, j - 1].Top;
                             GameBoardButtons[i, j].Left = GameBoardButtons[i - 1, j].Left;
 
-                            // ElementsDesignerTool.DesignElements(ePositionBy.Top, GameBoardButtons[i, j - 1], GameBoardButtons[i, j], k_Margin);
-                            // ElementsDesignerTool.DesignElements(ePositionBy.Left, GameBoardButtons[i - 1, j], GameBoardButtons[i, j], k_Margin);
+                            // ElementsDesignerTool.DesignElements(ePositionBy.Top, GameBoardButtons[row, col - 1], GameBoardButtons[row, col], k_Margin);
+                            // ElementsDesignerTool.DesignElements(ePositionBy.Left, GameBoardButtons[row - 1, col], GameBoardButtons[row, col], k_Margin);
                         }
                     }
 
@@ -198,25 +234,38 @@ namespace WindowsUserInterface
             }
         }
 
-        public void ColorAndEnablePair(List<string> m_PlayerChoice, Color color)
+        public void ColorPair(List<ButtomIndexEvent> m_PlayerChoice, Color color)
         {
-            foreach (string choice in m_PlayerChoice)
+            foreach (ButtomIndexEvent choice in m_PlayerChoice)
             {
-                byte col = (byte)sr_ABC.IndexOf(choice[0]);
-                byte row = byte.Parse(choice.Substring(2, 1));
-                GameBoardButtons[col, row].BackColor = color;
+                GameBoardButtons[choice.Row, choice.Col].BackColor = color;
+            }
+        }
+
+        public void FlippCardsToFaceDown(List<ButtomIndexEvent> m_PlayerChoice)
+        {
+            foreach (ButtomIndexEvent choice in m_PlayerChoice)
+            {
+                GameBoardButtons[choice.Row, choice.Col].Enabled = true;
             }
         }
 
         protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
+
             if (isGameOver())
             {
                 GameOverDialog.ShowDialog();
             }
 
-            AnyButton_Click(clickedTile, ButtomIndexEvent.Parse(GetCoordinates(clickedTile)));
+            bool isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
+            if(!isButtomExists)
+            {
+                throw new FormatException("the Buttom is not  Exists");
+            }
+
+            AnyButton_Click(clickedTile, new ButtomIndexEvent(o_Row, o_Col));
         }
 
         private bool isGameOver()
@@ -310,23 +359,27 @@ namespace WindowsUserInterface
             }
         }
 
-
-        public string GetCoordinates(Button i_ClickedButton)
+        public bool GetCoordinates(Button i_ClickedButton, out byte o_Row, out byte o_Col)
         {
-            string buttonCoordinates = string.Empty;
+            bool buttonExit = false;
+            o_Row = 0;
+            o_Col = 0;
 
-            for(int i = 0; i < GameBoardButtons.GetLength(0); i++)
+            for (byte row = 0; row < GameBoardButtons.GetLength(0); row++)
             {
-                for(int j = 0; j < GameBoardButtons.GetLength(1); j++)
+                for(byte col = 0; col < GameBoardButtons.GetLength(1); col++)
                 {
-                    if (GameBoardButtons[i, j] == i_ClickedButton)
+                    if (GameBoardButtons[row, col] == i_ClickedButton)
                     {
-                        buttonCoordinates = string.Format("{0} {1}", j, i);
+                        buttonExit = true;
+                        o_Row = row;
+                        o_Col = col;
+                        break;
                     }
                 }
             }
 
-            return buttonCoordinates;
+            return buttonExit;
         }
 
         protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)

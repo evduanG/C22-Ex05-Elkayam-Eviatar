@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using WindowsUserInterface;
 using Screen = WindowsUserInterface;
 
 namespace Game
@@ -117,7 +118,7 @@ namespace Game
             {
                 for(byte j = 0; j < Columns; j++)
                 {
-                    i_GameForm.GameBoardButtons[j, i].Click += m_GameBoard[j, i].Card_Clicked;
+                    i_GameForm[i, j].Click += m_GameBoard[i, j].Card_Clicked;
                 }
             }
         }
@@ -191,46 +192,73 @@ namespace Game
             }
         }
 
-        private Card this[byte i_rows, byte i_columns]
+        private Card this[ButtomIndexEvent i_indexFormt]
         {
             get
             {
-                isValidLocation(i_rows, i_columns);
-                return m_GameBoard[i_rows, i_columns];
+                return this[i_indexFormt.Row, i_indexFormt.Col];
             }
 
             set
             {
-                isValidLocation(i_rows, i_columns);
-                m_GameBoard[i_rows, i_columns] = value;
+                this[i_indexFormt.Row, i_indexFormt.Col] = value;
+            }
+        }
+
+        private Card this[byte i_Rows, byte i_Columns]
+        {
+            get
+            {
+                try
+                {
+                    return m_GameBoard[i_Rows, i_Columns];
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(String.Format("i_Rows = {0}, Rows = {1}, i_Columns= {2}, Columns= {3}", i_Rows, Rows, i_Columns, Columns), e);
+                }
+                // isValidLocation(i_Rows, i_Columns);
+            }
+
+            set
+            {
+                // isValidLocation(i_Rows, i_Columns);
+                m_GameBoard[i_Rows, i_Columns] = value;
             }
         }
 
         // return true if locations is still hidden
-        private bool isValidLocation(byte i_rows, byte i_columns)
+        private bool isValidLocation(byte i_Rows, byte i_Columns)
         {
-            bool isValidRow = SettingAndRules.Rules.IsBetween(i_rows, Rows, 0);
-            bool isValidcol = SettingAndRules.Rules.IsBetween(i_rows, Columns, 0);
+            bool isValidRow = SettingAndRules.Rules.IsBetween(i_Rows, Rows, 0);
+            bool isValidCol = SettingAndRules.Rules.IsBetween(i_Columns, Columns, 0);
 
-            if (!isValidRow || !isValidcol)
+            if (!isValidRow || !isValidCol)
             {
                 throw new IndexOutOfRangeException("Index out of range in configIndexFormat");
             }
 
-            return isValidRow && isValidcol;
+            return isValidRow && isValidCol;
         }
 
         // flip a card
-        public void Flipped(string i_index, bool i_Value)
+        public void Flipped(string i_Index, bool i_Value)
         {
-            Card c = this[i_index];
+            Card c = this[i_Index];
             c.Flipped = i_Value;
-            this[i_index] = c;
+            this[i_Index] = c;
+        }
+
+        public void Flipped(ButtomIndexEvent i_Index, bool i_Value)
+        {
+            Card c = this[i_Index];
+            c.Flipped = i_Value;
+            this[i_Index] = c;
         }
 
         // TODO: fix
         // return true  The player got another turn
-        public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params string[] i_argsChosenInTurn)
+        public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params ButtomIndexEvent[] i_argsChosenInTurn)
         {
             io_scoreForTheTurn = 0;
             bool isPair = true;
@@ -240,11 +268,13 @@ namespace Game
                 throw new Exception("The number of cards does not match the format");
             }
 
-            string firstIndex = i_argsChosenInTurn[0];
+            Card firstCard = this[i_argsChosenInTurn[0]];
 
-            foreach (string index in i_argsChosenInTurn)
+            foreach (ButtomIndexEvent index in i_argsChosenInTurn)
             {
-                isPair = this[firstIndex] == this[index];
+                isPair = firstCard == this[index];
+                Console.WriteLine(index.ToString());
+
                 if (!isPair)
                 {
                     break;
@@ -253,7 +283,7 @@ namespace Game
 
             if (!isPair)
             {
-                foreach (string index in i_argsChosenInTurn)
+                foreach (ButtomIndexEvent index in i_argsChosenInTurn)
                 {
                     Flipped(index, !k_FaceUp);
                 }
