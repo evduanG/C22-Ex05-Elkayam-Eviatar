@@ -149,6 +149,13 @@ namespace WindowsUserInterface
             return new SetUpNewGameForm(!k_FirstGame, i_FirstplayerName, i_SecondPlayerName);
         }
 
+        public void RestartGameForm()
+        {
+            m_ButtonAgainstAFriend.Enabled = !k_Enable;
+            m_TextBoxFirstPlayer.Enabled = !k_Enable;
+            m_TextBoxSecondPlayer.Enabled = !k_Enable;
+        }
+
         public void SetListOfBordSizeOptions(byte i_HigtMin, byte i_HigtMax, byte i_WidthMin, byte i_WidthMax)
         {
             for(byte higt = i_HigtMin; higt <= i_HigtMax; higt++)
@@ -189,6 +196,15 @@ namespace WindowsUserInterface
             else
             {
                 this.Close();
+                startClickHandler();
+            }
+        }
+
+        private void startClickHandler()
+        {
+            if(StartClick != null)
+            {
+                StartClick.Invoke(this, null);
             }
         }
 
@@ -229,16 +245,18 @@ namespace WindowsUserInterface
             }
         }
 
-        //private void initializeComponent()
-        //{
-        //    this.SuspendLayout();
-        //    // 
-        //    // SetUpNewGameForm
-        //    // 
-        //    this.ClientSize = new System.Drawing.Size(282, 253);
-        //    this.Name = "SetUpNewGameForm";
-        //    this.ResumeLayout(false);
+        /*
+        private void initializecomponent()
+        {
+            this.suspendlayout();
+            //
+            // setupnewgameform
+            //
+            this.clientsize = new system.drawing.size(282, 253);
+            this.name = "setupnewgameform";
+            this.resumelayout(false);
 
-        //}
+        }
+        */
     }
 }

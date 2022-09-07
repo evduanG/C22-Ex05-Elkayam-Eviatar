@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void AynButtonHandler(object sender, MouseEventArgs e);
+    public delegate void AynButtonHandler(object sender, ButtomIndexEvent e);
 
     public class MainGameForm : Form
     {
@@ -108,7 +109,7 @@ namespace WindowsUserInterface
                         Size = new Size(k_ButtonSize, k_ButtonSize),
                         BackColor = Color.LightGray,
                     };
-                    GameBoardButtons[i, j].Click += gameBoardTile_Click;
+                    GameBoardButtons[i, j].Click += GameBoardTile_Click;
                 }
             }
         }
@@ -164,7 +165,13 @@ namespace WindowsUserInterface
             }
         }
 
-        protected virtual void gameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
+        public void ColorAndEnablePair(List<string> m_PlayerChois, object color)
+        {
+            // TODO ::
+            throw new NotImplementedException();
+        }
+
+        protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
             clickedTile.BackColor = CurrentPlayerName.BackColor;
@@ -173,7 +180,7 @@ namespace WindowsUserInterface
                 GameOverDialog.ShowDialog();
             }
 
-            AnyButtem_Click(clickedTile , i_EventArgs);
+            AnyButtem_Click(clickedTile, new ButtomIndexEvent(0, 0));
         }
 
         private bool isGameOver()
@@ -273,10 +280,10 @@ namespace WindowsUserInterface
             }
         }
 
-        private void InitializeComponent()
+        private void initializeComponent()
         {
             this.SuspendLayout();
-            // 
+
             // MainGameForm
             this.ClientSize = new System.Drawing.Size(282, 253);
             this.Name = "MainGameForm";
@@ -286,20 +293,36 @@ namespace WindowsUserInterface
 
         protected virtual void MainGameForm_Load(object sender, EventArgs e)
         {
-            // lissner 
-
+            // lissner
         }
 
         protected virtual void AllButtem_Click(object sender, EventArgs e)
         {
-            // lissner 
-            // 
+            // lissner
         }
 
         protected virtual void AnyButtem_Click(object sender, EventArgs e)
         {
-            // lissner 
-            // 
+            // lissner
+            anyButtemInvoker(e);
+        }
+
+        private void anyButtemInvoker(EventArgs e)
+        {
+            if(AynButtonClick != null)
+            {
+                AynButtonClick.Invoke(this, (ButtomIndexEvent)e);
+            }
         }
     }
 }
+/*
+ * 
+ * 
+ * stak 
+ * sb 
+ * while (stak. Top != null) 
+ * sb. apLine (stak. Top ) 
+ * stak.pop ()
+ * 
+ */

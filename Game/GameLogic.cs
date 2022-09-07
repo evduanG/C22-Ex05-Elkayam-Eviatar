@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Screen = WindowsUserInterface;
 
 namespace Game
 {
@@ -85,7 +86,7 @@ namespace Game
             for (byte j = 0; j < chars.Length; j++)
             {
                 chars[j] = getCharForSlat(j);
-            } 
+            }
 
             shuffleCard(ref chars);
             m_GameBoard = new Card[Rows, Columns];
@@ -107,6 +108,17 @@ namespace Game
         private char getCharForSlat(byte i_index)
         {
             return sr_ABC[i_index >> 1];
+        }
+
+        public void ApplyAllTheButtons(Screen.MainGameForm i_GameForm)
+        {
+            for(byte i = 0; i < Rows; i++)
+            {
+                for(byte j = 0; j < Columns; j++)
+                {
+                    //i_GameForm[i, j].Delget += Flipped_AsDelget;
+                }
+            }
         }
 
         /// function to Shuffle array the char array before creation
@@ -315,7 +327,7 @@ namespace Game
             }
 
             if (!isSuccessTryParse || !isUpper)
-            {
+            {// 1
                 throw new IndexOutOfRangeException(string.Format(
 @"Index out of range in configIndexFormat => 
 the string (index): {0}
