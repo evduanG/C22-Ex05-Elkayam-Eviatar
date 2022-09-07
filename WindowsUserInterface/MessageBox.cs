@@ -11,8 +11,8 @@ namespace WindowsUserInterface
         private const int k_MessageBoxHeight = 180;
         private const int k_MessageBoxWidth = 360;
         private const int k_LabelWidth = 200;
-        private const string k_WinnerScoreMessage = "{0} won with {1} points!";
-        private const string k_AnotherGameMessage = "Do you want to play another game?";
+        private const string k_FormtWinnerScoreMessage = "{0} won with {1} points!";
+        private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
         public event MessageBoxHandler m_MessageBox; // TODO: rename
 
@@ -99,7 +99,7 @@ namespace WindowsUserInterface
         private void initializeLabels()
         {
             GameResultsMessage = new Label();
-            GameResultsMessage.Text = k_WinnerScoreMessage;
+            GameResultsMessage.Text = k_FormtWinnerScoreMessage;
             GameResultsMessage.TextAlign = ContentAlignment.MiddleCenter;
             // GameResultsMessage.Width = k_LabelWidth;
             GameResultsMessage.BackColor = Color.LightGoldenrodYellow;
@@ -108,7 +108,7 @@ namespace WindowsUserInterface
             GameResultsMessage.Left = (ClientSize.Width / 2) - (GameResultsMessage.Width / 2);
 
             AnotherGameMessage = new Label();
-            AnotherGameMessage.Text = k_AnotherGameMessage;
+            AnotherGameMessage.Text = k_FormtAnotherGameMessage;
             AnotherGameMessage.TextAlign = ContentAlignment.MiddleCenter;
             // AnotherGameMessage.Width = k_LabelWidth;
             AnotherGameMessage.BackColor = Color.LightGoldenrodYellow;
