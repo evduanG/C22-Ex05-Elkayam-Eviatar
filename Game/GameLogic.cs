@@ -98,7 +98,9 @@ namespace Game
             {
                 for (int j = 0; j < Columns; j++)
                 {
+                    byte k = indexInChars;
                     m_GameBoard[i, j] = new Card(chars[indexInChars++], !k_FaceUp);
+                    Console.WriteLine(string.Format("card : {0} , row = {1} ,col = {2}",chars[k],i ,j));
                 }
             }
         }
@@ -249,11 +251,12 @@ namespace Game
             this[i_Index] = c;
         }
 
-        public void Flipped(ButtomIndexEvent i_Index, bool i_Value)
+        public char Flipped(ButtomIndexEvent i_Index, bool i_Value)
         {
             Card c = this[i_Index];
             c.Flipped = i_Value;
             this[i_Index] = c;
+            return this[i_Index].Value;
         }
 
         // TODO: fix
@@ -273,7 +276,6 @@ namespace Game
             foreach (ButtomIndexEvent index in i_argsChosenInTurn)
             {
                 isPair = firstCard == this[index];
-                Console.WriteLine(index.ToString());
 
                 if (!isPair)
                 {

@@ -16,7 +16,7 @@ namespace MemoryCardGame
         private Screen.MainGameForm m_GameForm;
         private Player[] m_AllPlayersInGame;
         private List<ButtomIndexEvent> m_PlayerChois = new List<ButtomIndexEvent>();
-        private GameLogic m_GameBoard;
+        private GameLogic v;
         private byte m_TurnCounter;
 
         private byte m_TotalPLayers;
@@ -36,7 +36,7 @@ namespace MemoryCardGame
         // ===================================================================
         public GameEngine()
         {
-            m_GameBoard = null;
+            v = null;
 
             // r_IsPlaying = false;
             m_TurnCounter = 0;
@@ -75,9 +75,10 @@ namespace MemoryCardGame
         // start the game
         private void startNewGame(byte i_Higt, byte i_Width)
         {
-            m_GameBoard = new GameLogic(i_Higt, i_Width);
+            v = new GameLogic(i_Higt, i_Width);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2, CurrentPlayer.Name);
-            m_GameBoard.ApplyAllTheButtons(m_GameForm);
+
+            // m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonHandler += FirstChoice_Occur;
 
             foreach(Player player in m_AllPlayersInGame)
@@ -104,7 +105,7 @@ namespace MemoryCardGame
             drawBoard();
             foreach (Player player in m_AllPlayersInGame)
             {
-                player.ShowBoard(m_GameBoard.GetBoardToDraw());
+                player.ShowBoard(v.GetBoardToDraw());
             }
         }
 
@@ -121,7 +122,7 @@ namespace MemoryCardGame
             return sb.ToString();
         }
 
-        protected virtual void ButtonStart_Click(object i_Sender, EventArgs e)
+        protected virtual void ButtonStart_Click(object i_Sender, EventArgs i_ButtomIndexEvent)
         {
             Screen.SetUpNewGameForm setUpNewGameForm = i_Sender as Screen.SetUpNewGameForm;
 
@@ -143,16 +144,18 @@ namespace MemoryCardGame
             startNewGame(o_Higt, o_Width);
         }
 
-        protected virtual void MessageBox_Occur(object i_Sender, EventArgs e)
+        protected virtual void MessageBox_Occur(object i_Sender, EventArgs i_ButtomIndexEvent)
         {
             Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
         }
 
-        protected virtual void FirstChoice_Occur(object i_Sender, EventArgs e)
+        protected virtual void FirstChoice_Occur(object i_Sender, EventArgs i_ButtomIndexEvent)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
-            ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
+            ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
+            char v = this.v.Flipped(buttomIndexEvent, true);
 
+            m_GameForm.Flipped(buttomIndexEvent, v);
             // m_GameBoard[x,y].flipe
             // set form to the img
             // add
@@ -175,7 +178,7 @@ namespace MemoryCardGame
 
         private void endOfTurn()
         {
-            bool isThePlyerHaveAnderTurn = m_GameBoard.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_PlayerChois.ToArray());
+            bool isThePlyerHaveAnderTurn = v.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_PlayerChois.ToArray());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
@@ -190,7 +193,7 @@ namespace MemoryCardGame
                 m_GameForm.ColorPair(m_PlayerChois, CurrentPlayer.Color);
             }
 
-            if(m_GameBoard.HaveMoreMoves)
+            if(v.HaveMoreMoves)
             {
                 m_PlayerChois.Clear();
                 m_GameForm.AnyButtonHandler += FirstChoice_Occur;
@@ -282,7 +285,7 @@ private void start(byte i_Higt, byte i_Width)
             }
             while (isRunning());
         }
-        catch (Exception e)
+        catch (Exception i_ButtomIndexEvent)
         {
             m_IsPlaying = false;
             return;

@@ -118,6 +118,19 @@ namespace WindowsUserInterface
             }
         }
 
+        public Button this[ButtomIndexEvent indexEvent]
+        {
+            get
+            {
+                return this[indexEvent.Row, indexEvent.Col];
+            }
+
+            set
+            {
+                this[indexEvent.Row, indexEvent.Col] = value;
+            }
+        }
+
         // Initializers:
         private void initializeComponents(string i_CurrentPlayer)
         {
@@ -180,6 +193,12 @@ namespace WindowsUserInterface
                     GameBoardButtons[i, j].Click += GameBoardTile_Click;
                 }
             }
+        }
+
+        public void Flipped(ButtomIndexEvent buttomIndexEvent, char v)
+        {
+            this[buttomIndexEvent].Text = v.ToString();
+            this[buttomIndexEvent].Enabled = false;
         }
 
         private void positionButtonsOnGrid()
@@ -246,7 +265,13 @@ namespace WindowsUserInterface
         {
             foreach (ButtomIndexEvent choice in m_PlayerChoice)
             {
-                GameBoardButtons[choice.Row, choice.Col].Enabled = true;
+                Button buttonClick = GameBoardButtons[choice.Row, choice.Col];
+
+                // TODO : make the Enabled to be const
+                // TODO : make the Color to be statir redonly 
+                buttonClick.Enabled = true;
+                buttonClick.BackColor = Color.LightGray;
+                buttonClick.Text = " ";
             }
         }
 
