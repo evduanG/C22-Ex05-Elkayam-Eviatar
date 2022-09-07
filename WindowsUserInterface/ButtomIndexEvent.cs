@@ -58,6 +58,14 @@ namespace WindowsUserInterface
             m_Col = i_Col;
         }
 
+        public static ButtomIndexEvent Parse(string i_ButtonIndexString)
+        {
+            byte row = byte.Parse(i_ButtonIndexString.Substring(0, 1));
+            byte col = byte.Parse(i_ButtonIndexString.Substring(2, 1));
+
+            return new ButtomIndexEvent(row, col);
+        }
+
         public override string ToString()
         {
             return string.Format(k_ToStringFormt, sr_ABC[m_Col], m_Row);

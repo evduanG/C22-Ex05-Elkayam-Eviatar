@@ -12,10 +12,14 @@ namespace WindowsUserInterface
         // TODO: move public constants to another class maybe?
         public const int k_Margin = 10;
         public const int k_ButtonSize = 75;
+        private const string k_GameTitle = "Memory Game";
+        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
+        private const string k_CurrentPlayerLabel = "Current Player: {0}";
+        private const int k_StartingScore = 0;
 
         public event AnyButtonHandler AnyButtonHandler;
 
-        private static readonly char[] sr_ABC =
+        private static readonly List<char> sr_ABC = new List<char>()
         {
             'A',
             'B',
@@ -44,11 +48,6 @@ namespace WindowsUserInterface
             'Y',
             'Z',
         };
-
-        private const string k_GameTitle = "Memory Game";
-        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
-        private const string k_CurrentPlayerLabel = "Current Player: {0}";
-        private const int k_StartingScore = 0;
 
         private Label m_CurrentPlayerName;
         private Label m_PlayerOne;
@@ -195,12 +194,16 @@ namespace WindowsUserInterface
             }
         }
 
-        public void ColorAndEnablePair(List<string> m_PlayerChois, object color)
+        public void ColorAndEnablePair(List<string> m_PlayerChoice, object color)
         {
-            // TODO ::
-            throw new NotImplementedException();
+            foreach (string choice in m_PlayerChoice)
+            {
+                byte col = (byte)sr_ABC.IndexOf(choice[0]);
+                byte row = byte.Parse(choice.Substring(2, 1));
+                GameBoardButtons[row, col].BackColor = (Color)color;
+            }
         }
-        
+
         protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
@@ -210,8 +213,8 @@ namespace WindowsUserInterface
             {
                 GameOverDialog.ShowDialog();
             }
-            
-            AnyButton_Click(clickedTile, new ButtomIndexEvent(0, 0));
+
+            AnyButton_Click(clickedTile, ButtomIndexEvent.Parse(GetCoordinates(clickedTile)));
         }
 
         private bool isGameOver()
@@ -317,11 +320,11 @@ namespace WindowsUserInterface
 
             for(int i = 0; i < GameBoardButtons.GetLength(0); i++)
             {
-                for(int j = 0; j < GameBoardButtons.GetLength(i); j++)
+                for(int j = 0; j < GameBoardButtons.GetLength(1); j++)
                 {
                     if (GameBoardButtons[i, j] == i_ClickedButton)
                     {
-                        buttonCoordinates = string.Format("{0}{1}", i, j);
+                        buttonCoordinates = string.Format("{0} {1}", j, i);
                     }
                 }
             }
