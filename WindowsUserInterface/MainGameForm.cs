@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void AynButtonHandler(object sender, ButtomIndexEvent e);
+    public delegate void AnyButtonHandler(object sender, ButtomIndexEvent e);
 
     public class MainGameForm : Form
     {
@@ -13,7 +13,37 @@ namespace WindowsUserInterface
         public const int k_Margin = 10;
         public const int k_ButtonSize = 75;
 
-        public event AynButtonHandler AynButtonClick;
+        public event AnyButtonHandler AnyButtonHandler;
+
+        private static readonly char[] sr_ABC =
+        {
+            'A',
+            'B',
+            'C',
+            'D',
+            'E',
+            'F',
+            'G',
+            'H',
+            'I',
+            'J',
+            'K',
+            'L',
+            'M',
+            'N',
+            'O',
+            'P',
+            'Q',
+            'R',
+            'S',
+            'T',
+            'U',
+            'V',
+            'W',
+            'X',
+            'Y',
+            'Z',
+        };
 
         private const string k_GameTitle = "Memory Game";
         private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
@@ -27,9 +57,9 @@ namespace WindowsUserInterface
         private MessageBox m_GameOverDialog;
 
         // Ctor:
-        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
+        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName, string i_CurrentPlayer)
         {
-            initializeComponents(i_BoardHeight, i_BoardWidth, i_PlayerOneName, i_PlayerTwoName);
+            initializeComponents(i_BoardHeight, i_BoardWidth, i_PlayerOneName, i_PlayerTwoName, i_CurrentPlayer);
         }
 
         // Properties:
@@ -63,11 +93,11 @@ namespace WindowsUserInterface
         }
 
         // Initializers:
-        private void initializeComponents(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName)
+        private void initializeComponents(byte i_BoardHeight, byte i_BoardWidth, string i_PlayerOneName, string i_PlayerTwoName, string i_CurrentPlayer)
         {
             initializeMainForm(i_BoardHeight, i_BoardWidth);
             initilizeGameBoardButtons(i_BoardHeight, i_BoardWidth);
-            initializeLabels(i_PlayerOneName, i_PlayerTwoName);
+            initializeLabels(i_PlayerOneName, i_PlayerTwoName, i_CurrentPlayer);
             initializeGameOverDialog();
         }
 
@@ -119,7 +149,7 @@ namespace WindowsUserInterface
             // setup top-left button
             GameBoardButtons[0, 0].Top = k_Margin;
             GameBoardButtons[0, 0].Left = k_Margin;
-            this.Controls.Add(GameBoardButtons[0, 0]);
+            Controls.Add(GameBoardButtons[0, 0]);
 
             // setup the rest
             for (int i = 0; i < i_BoardHeight; i++)
@@ -170,17 +200,18 @@ namespace WindowsUserInterface
             // TODO ::
             throw new NotImplementedException();
         }
-
+        
         protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
             clickedTile.BackColor = CurrentPlayerName.BackColor;
+            clickedTile.Text = "A";
             if (isGameOver())
             {
                 GameOverDialog.ShowDialog();
             }
-
-            AnyButtem_Click(clickedTile, new ButtomIndexEvent(0, 0));
+            
+            AnyButton_Click(clickedTile, new ButtomIndexEvent(0, 0));
         }
 
         private bool isGameOver()
@@ -199,7 +230,7 @@ namespace WindowsUserInterface
         }
 
         // Names and Score:
-        private void initializeLabels(string i_PlayerOneName, string i_PlayerTwoName)
+        private void initializeLabels(string i_PlayerOneName, string i_PlayerTwoName, string i_CurrentPlayer)
         {
             // setup labels:
             PlayerOne = new Label();
@@ -230,7 +261,7 @@ namespace WindowsUserInterface
                 Top = ClientSize.Height - ((PlayerOne.Height + k_Margin) * 3),
             };
 
-            SetCurrentPlayerName(i_PlayerOneName);
+            SetCurrentPlayerName(i_CurrentPlayer);
 
             // add
             Controls.Add(PlayerOne);
@@ -259,7 +290,7 @@ namespace WindowsUserInterface
             }
             else
             {
-                // rematch. idk how...
+               // rematch
             }
         }
 
@@ -279,39 +310,45 @@ namespace WindowsUserInterface
                 PlayerTwo.Text = getPlayerNameAndScore(PlayerTwo.Text, i_NewScore);
             }
         }
-
-        private void initializeComponent()
+        
+        public string GetCoordinates(Button i_ClickedButton)
         {
-            this.SuspendLayout();
+            string buttonCoordinates = string.Empty;
 
-            // MainGameForm
-            this.ClientSize = new System.Drawing.Size(282, 253);
-            this.Name = "MainGameForm";
-            this.Load += new System.EventHandler(this.MainGameForm_Load);
-            this.ResumeLayout(false);
+            for(int i = 0; i < GameBoardButtons.GetLength(0); i++)
+            {
+                for(int j = 0; j < GameBoardButtons.GetLength(i); j++)
+                {
+                    if (GameBoardButtons[i, j] == i_ClickedButton)
+                    {
+                        buttonCoordinates = string.Format("{0}{1}", i, j);
+                    }
+                }
+            }
+
+            return buttonCoordinates;
         }
 
-        protected virtual void MainGameForm_Load(object sender, EventArgs e)
+        protected virtual void MainGameForm_Load(object sender)
         {
             // lissner
         }
 
-        protected virtual void AllButtem_Click(object sender, EventArgs e)
+        protected virtual void AllButtem_Click(object sender)
         {
             // lissner
         }
 
-        protected virtual void AnyButtem_Click(object sender, EventArgs e)
+        protected virtual void AnyButton_Click(object sender)
         {
-            // lissner
             anyButtemInvoker(e);
         }
 
         private void anyButtemInvoker(EventArgs e)
         {
-            if(AynButtonClick != null)
+            if(AnyButtonClick != null)
             {
-                AynButtonClick.Invoke(this, (ButtomIndexEvent)e);
+                AnyButtonClick.Invoke(this, (ButtomIndexEvent)e);
             }
         }
     }

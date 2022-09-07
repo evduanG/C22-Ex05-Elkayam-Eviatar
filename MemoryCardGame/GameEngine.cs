@@ -1,8 +1,7 @@
-﻿using System.Text;
+using System.Text;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Windows.Forms;
 using Game;
 using Setting = Game.SettingAndRules;
 using Screen = WindowsUserInterface;
@@ -142,7 +141,7 @@ namespace MemoryCardGame
             Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
         }
 
-        protected virtual void FirstCoche_Occur(object i_Sender, EventArgs e)
+        protected virtual void FirstChoice_Occur(object i_Sender)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
@@ -155,7 +154,7 @@ namespace MemoryCardGame
             m_GameForm.AynButtonClick += ScendCoche_Occur;
         }
 
-        protected virtual void ScendCoche_Occur(object i_Sender, EventArgs e)
+        protected virtual void SecondChoice_Occur(object i_Sender)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
