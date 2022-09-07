@@ -15,6 +15,8 @@ namespace WindowsUserInterface
         private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
         private const string k_CurrentPlayerLabel = "Current Player: {0}";
         private const int k_StartingScore = 0;
+        private const int k_WindowHeightModifier = 16;
+        private const int k_WindowWidthModifier = 3;
         private readonly byte r_NumOfRows;
         private readonly byte r_NumOfCols;
 
@@ -162,10 +164,10 @@ namespace WindowsUserInterface
 
         private Size getWindowSize()
         {
-            // TODO: 16 and 3 to const
+            // TODO: 16 and 3 to const ==> done!
             int buttonSizeAndMargin = k_ButtonSize + k_Margin;
-            int formHeight = (buttonSizeAndMargin * Rows) + (16 * k_Margin); // what is 16 ??
-            int formWidth = (buttonSizeAndMargin * Columns) + (3 * k_Margin); // what is 3 ??
+            int formHeight = (buttonSizeAndMargin * Rows) + (k_WindowHeightModifier * k_Margin);
+            int formWidth = (buttonSizeAndMargin * Columns) + (k_WindowWidthModifier * k_Margin);
 
             return new Size(formWidth, formHeight);
         }
@@ -287,7 +289,7 @@ namespace WindowsUserInterface
             bool isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
             if(!isButtomExists)
             {
-                throw new FormatException("the Buttom is not  Exists");
+                throw new FormatException("the button does not exists");
             }
 
             AnyButton_Click(clickedTile, new ButtomIndexEvent(o_Row, o_Col));
