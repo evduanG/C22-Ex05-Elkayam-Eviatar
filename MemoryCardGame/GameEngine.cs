@@ -15,8 +15,8 @@ namespace MemoryCardGame
         public const bool k_FlippedTheCard = true;
         private Screen.MainGameForm m_GameForm;
         private Player[] m_AllPlayersInGame;
-        private List<ButtomIndexEvent> m_PlayerChois = new List<ButtomIndexEvent>();
-        private GameLogic v;
+        private List<ButtomIndexEvent> m_PlayerChois = new List<ButtomIndexEvent>(); // TODO : move to constrcror 
+        private GameLogic m_GameLogic;
         private byte m_TurnCounter;
 
         private byte m_TotalPLayers;
@@ -36,7 +36,7 @@ namespace MemoryCardGame
         // ===================================================================
         public GameEngine()
         {
-            v = null;
+            m_GameLogic = null;
 
             // r_IsPlaying = false;
             m_TurnCounter = 0;
@@ -75,7 +75,7 @@ namespace MemoryCardGame
         // start the game
         private void startNewGame(byte i_Higt, byte i_Width)
         {
-            v = new GameLogic(i_Higt, i_Width);
+            m_GameLogic = new GameLogic(i_Higt, i_Width);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2, CurrentPlayer.Name);
 
             // m_GameBoard.ApplyAllTheButtons(m_GameForm);
@@ -102,10 +102,10 @@ namespace MemoryCardGame
 
         private void showAllPlayersTheBoard()
         {
-            drawBoard();
             foreach (Player player in m_AllPlayersInGame)
             {
-                player.ShowBoard(v.GetBoardToDraw());
+                player.ShowBoard(m_GameLogic.GetBoardToDraw());
+                // TODO : ShowBoard  m_PlayerChois and list of val 
             }
         }
 
@@ -153,7 +153,7 @@ namespace MemoryCardGame
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
-            char v = this.v.Flipped(buttomIndexEvent, true);
+            char v = this.m_GameLogic.Flipped(buttomIndexEvent, true);
 
             m_GameForm.Flipped(buttomIndexEvent, v);
             // m_GameBoard[x,y].flipe
@@ -178,7 +178,7 @@ namespace MemoryCardGame
 
         private void endOfTurn()
         {
-            bool isThePlyerHaveAnderTurn = v.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_PlayerChois.ToArray());
+            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_PlayerChois.ToArray());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
@@ -193,7 +193,7 @@ namespace MemoryCardGame
                 m_GameForm.ColorPair(m_PlayerChois, CurrentPlayer.Color);
             }
 
-            if(v.HaveMoreMoves)
+            if(m_GameLogic.HaveMoreMoves)
             {
                 m_PlayerChois.Clear();
                 m_GameForm.AnyButtonHandler += FirstChoice_Occur;

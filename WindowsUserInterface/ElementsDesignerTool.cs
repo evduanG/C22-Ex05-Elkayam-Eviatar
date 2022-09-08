@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using static System.Windows.Forms.Control;
 
 namespace WindowsUserInterface
 {
@@ -91,6 +92,27 @@ namespace WindowsUserInterface
         public static int ConfigClientSizeHeight(Control i_First, Control i_Last, int i_Margin)
         {
             return 0;
+        }
+
+        public static void FitTheSizeOfForm(Form i_FormToFit, int i_Margin)
+        {
+            if (i_FormToFit == null)
+            {
+                throw new ArgumentNullException("no form to fit the size");
+            }
+
+            int width = 0;
+            int height = 0;
+            ControlCollection controls = i_FormToFit.Controls;
+
+            foreach (Control control in controls)
+            {
+                width = Math.Max(width, control.Location.X);
+                height = Math.Max(width, control.Location.Y);
+            }
+
+            i_FormToFit.Width = width + i_Margin;
+            i_FormToFit.Height = height + i_Margin;
         }
     }
 }
