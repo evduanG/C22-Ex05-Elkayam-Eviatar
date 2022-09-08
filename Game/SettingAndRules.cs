@@ -27,7 +27,7 @@ namespace Game
         };
 
         /******     number of players       ******/
-        public const int k_SleepBetweenTurns = 2000;
+        public const int k_SleepBetweenTurns = 1500;
 
         /****** number of Choice In players Turn ******/
         private const int k_NumOfChoiceInPlayerTurn = 2;

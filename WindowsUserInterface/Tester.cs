@@ -22,6 +22,8 @@ namespace WindowsUserInterface
 
             // SetUpNewGameForm form1 = SetUpNewGameForm.RestartGameForm(form.FirstPlayerName, form.SecondPlayerName);
             // form1.ShowDialog();
+            // NumberOfPlayersBox box = new NumberOfPlayersBox();
+            // box.ShowDialog();
         }
     }
 }
