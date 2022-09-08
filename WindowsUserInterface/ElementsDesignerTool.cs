@@ -129,8 +129,6 @@ namespace WindowsUserInterface
             }
 
             i_FormToFit.ClientSize = new Size(width + i_Margin, height + i_Margin);
-            //i_FormToFit.Width = width + i_Margin;
-            //i_FormToFit.Height = height + i_Margin;
         }
     }
 }
