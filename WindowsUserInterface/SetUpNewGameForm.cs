@@ -9,7 +9,6 @@ namespace WindowsUserInterface
 
     public class SetUpNewGameForm : Form
     {
-        // TODO: change board size setup button
         private const string k_TitleForm = "Memory Game - Settings";
         private const string k_TitleLabelFirstplayer = "First Player Name:";
         private const string k_TitleLabelSecondPlayer = "Second Player Name:";
@@ -22,6 +21,8 @@ namespace WindowsUserInterface
         private const bool k_Enable = true;
         private const bool k_FirstGame = true;
         private const int k_BoardSizeButtonBase = 20;
+
+        // TODO : sr_BoardSizes get at val form Game engine
         private static readonly string[] sr_BoardSizes = { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
         private byte m_BoardSizeIndex = 0;
 
@@ -33,6 +34,7 @@ namespace WindowsUserInterface
         private Label m_LabelBordSize;
         private TextBox m_TextBoxFirstPlayer;
         private TextBox m_TextBoxSecondPlayer;
+
         // private ComboBox m_ComboBoxBordSize;
         private Button m_BoardSizes;
         private Button m_ButtonAgainstAFriend;
@@ -151,9 +153,10 @@ namespace WindowsUserInterface
             m_ButtonStart = new Button();
             m_ButtonStart.Text = k_TitleButtonStart;
             ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Right, m_ButtonAgainstAFriend);
-            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Bottom, m_BoardSizes);
+            modifyFormAndStarButtn();
             m_ButtonStart.Click += ButtonStart_Click;
             this.Controls.Add(m_ButtonStart);
+
             if (!r_IsFirstGame)
             {
                 m_ButtonAgainstAFriend.Enabled = !k_Enable;
@@ -280,7 +283,18 @@ namespace WindowsUserInterface
         private void boardSizes_Click(object i_BoardSizesButton, EventArgs i_EventArgs)
         {
             m_BoardSizeIndex = (byte)((m_BoardSizeIndex + 1) % sr_BoardSizes.Length);
+            modifyTheBoardSize();
+            modifyFormAndStarButtn();
+        }
 
+        private void modifyFormAndStarButtn()
+        {
+            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Bottom, m_BoardSizes);
+            ElementsDesignerTool.FitTheSizeOfForm(this, k_Margin);
+        }
+
+        private void modifyTheBoardSize()
+        {
             setBoardSizesText();
             byte nextHeight = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
             byte nextWidth = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
