@@ -66,12 +66,12 @@ namespace WindowsUserInterface
             ButtonOk.Text = "Okay";
             ButtonOk.Top = ErrorLabel.Bottom + (MainGameForm.k_Margin * 2);
             ElementsDesignerTool.DesignElements(ErrorLabel, ePositionBy.VerticalCentre, ButtonOk, MainGameForm.k_Margin);
-            ButtonOk.Click += buttonOk_Click;
+            ButtonOk.Click += ButtonOk_Click;
 
             Controls.Add(ButtonOk);
         }
 
-        private void buttonOk_Click(object i_ButtonClicked, EventArgs i_EventArgs)
+        protected virtual void ButtonOk_Click(object i_ButtonClicked, EventArgs i_EventArgs)
         {
             // ((Button)i_ButtonClicked).DialogResult = DialogResult.OK;
             Close();

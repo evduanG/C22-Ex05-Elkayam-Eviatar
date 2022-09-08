@@ -64,7 +64,7 @@ namespace MemoryCardGame
             List<string> i_ValidSlotTOChase,
             char[,] i_boardToDraw)
         {
-            string ans = string.Empty;
+            string ans;
 
             if (i_ValidSlotTOChase.Count % 2 == 0)
             {
@@ -75,8 +75,8 @@ namespace MemoryCardGame
                 ans = getAISecondPlayerChoice(i_ValidSlotTOChase, i_boardToDraw);
             }
 
-            // when AI don't know what to do
-            if (ans == null)
+            bool heveSmartChoice = ans != string.Empty;
+            if (!heveSmartChoice)
             {
                 ans = getRandomChoice(i_ValidSlotTOChase);
             }
@@ -242,5 +242,4 @@ namespace MemoryCardGame
             }
         }
     }
-
 }

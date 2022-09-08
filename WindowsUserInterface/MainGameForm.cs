@@ -9,17 +9,6 @@ namespace WindowsUserInterface
 
     public class MainGameForm : Form
     {
-        public const int k_Margin = 10;
-        public const int k_ButtonSize = 75;
-        private const string k_GameTitle = "Memory Game";
-        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
-        private const string k_CurrentPlayerLabel = "Current Player: {0}";
-        private const int k_StartingScore = 0;
-        private const int k_WindowHeightModifier = 16;
-        private const int k_WindowWidthModifier = 3;
-        private const bool k_Enabled = true;
-        private readonly byte r_NumOfRows;
-        private readonly byte r_NumOfCols;
         private static readonly List<char> sr_ABC = new List<char>()
         {
             'A',
@@ -50,6 +39,18 @@ namespace WindowsUserInterface
             'Z',
         };
 
+        public const int k_Margin = 10;
+        public const int k_ButtonSize = 75;
+        private const string k_GameTitle = "Memory Game";
+        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
+        private const string k_CurrentPlayerLabel = "Current Player: {0}";
+        private const int k_StartingScore = 0;
+        private const int k_WindowHeightModifier = 16;
+        private const int k_WindowWidthModifier = 3;
+        private const bool k_Enabled = true;
+        private readonly byte r_NumOfRows;
+        private readonly byte r_NumOfCols;
+
         public event AnyButtonHandler AnyButtonClick;
 
         private Label m_CurrentPlayerName;
@@ -61,12 +62,12 @@ namespace WindowsUserInterface
         // =======================================================
         // constructor  and methods for the constructor
         // =======================================================
-        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, byte i_numOfPlayers, string i_CurrentPlayer)
+        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, byte i_numOfPlayers)
         {
             r_NumOfCols = i_BoardHeight;
             r_NumOfRows = i_BoardWidth;
             m_Players = new Label[i_numOfPlayers];
-            initializeComponents(i_CurrentPlayer);
+            initializeComponents();
         }
 
         // Initializers:
@@ -76,11 +77,11 @@ namespace WindowsUserInterface
             GameOverDialog.FormClosed += GameOverDialog_FormClosed;
         }
 
-        private void initializeComponents(string i_CurrentPlayer)
+        private void initializeComponents()
         {
             initializeMainForm();
             initilizeGameBoardButtons();
-            initializeLabels(i_CurrentPlayer);
+            initializeLabels();
             ElementsDesignerTool.FitTheSizeOfForm(this, k_Margin);
             initializeGameOverDialog();
         }
@@ -137,7 +138,7 @@ namespace WindowsUserInterface
             }
         }
 
-        private void initializeLabels(string i_CurrentPlayer)
+        private void initializeLabels()
         {
             // setup current player
             CurrentPlayerName = new Label();
@@ -418,7 +419,7 @@ namespace WindowsUserInterface
 }
 
 /*
- *
+ * TODO:  del
  *         private void positionButtonsOnGrid()
         {
             // setup the rest
@@ -526,4 +527,3 @@ namespace WindowsUserInterface
 }
 
 */
-
