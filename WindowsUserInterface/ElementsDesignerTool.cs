@@ -8,8 +8,8 @@ namespace WindowsUserInterface
     internal class ElementsDesignerTool
     {
         private const int k_NoMargin = 0;
+        private const bool k_Show = true;
 
-        // TODO : make form nop show in toolbar 
         public static void DesignElements(Control i_ControlToSetPosition, ePositionBy i_PositionBy, Control i_ControlCompareTo)
         {
             DesignElements(i_ControlToSetPosition, i_PositionBy, i_ControlCompareTo, k_NoMargin);
@@ -96,6 +96,21 @@ namespace WindowsUserInterface
             return 0;
         }
 
+        private static void displayInTaskbar(Form i_FormToHid, bool i_IsShowingInToolBar)
+        {
+            i_FormToHid.ShowInTaskbar = i_IsShowingInToolBar;
+        }
+
+        public static void ShowInTaskbar(Form i_FormToHid)
+        {
+            displayInTaskbar(i_FormToHid, k_Show);
+        }
+
+        public static void HideInTaskbar(Form i_FormToHid)
+        {
+            displayInTaskbar(i_FormToHid, !k_Show);
+        }
+
         public static void FitTheSizeOfForm(Form i_FormToFit, int i_Margin)
         {
             if (i_FormToFit == null)
@@ -114,8 +129,6 @@ namespace WindowsUserInterface
             }
 
             i_FormToFit.ClientSize = new Size(width + i_Margin, height + i_Margin);
-            //i_FormToFit.Width = width + i_Margin;
-            //i_FormToFit.Height = height + i_Margin;
         }
     }
 }

@@ -24,14 +24,6 @@ namespace MemoryCardGame
         private Timer m_InbetweenTurnsTimer;
         private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
 
-        private Player CurrentPlayer
-        {
-            get
-            {
-                int indx = m_TurnCounter % m_AllPlayersInGame.Length;
-                return m_AllPlayersInGame[indx];
-            }
-        }
 
         public Timer InbetweenTurnsTimer
         {
@@ -68,6 +60,37 @@ namespace MemoryCardGame
             m_InbetweenTurnsTimer = new Timer();
             InbetweenTurnsTimer.Interval = m_SleepBetweenTurns;
             InbetweenTurnsTimer.Tick += inbetweenTurnsTimer_Tick;
+
+        }
+
+        // =======================================================
+        // Propertys
+        // =======================================================
+        private Player CurrentPlayer
+        {
+            get
+            {
+                int indx = m_TurnCounter % m_AllPlayersInGame.Length;
+                return m_AllPlayersInGame[indx];
+            }
+        }
+
+        // ===================================================================
+        //   start methods
+        // ===================================================================
+        public void DisplaySetUpForm()
+        {
+            Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
+            form.SetListOfBordSizeOptions(4, 6, 4, 6);
+            form.StartClick += ButtonStart_Click;
+            form.ShowDialog();
+
+            if (form.ShowDialog() == DialogResult.Yes)
+            {
+                form.RestartGameForm();
+            }
+
+            // TODO: asq for more game ?
         }
 
         // start the game
@@ -76,7 +99,9 @@ namespace MemoryCardGame
             m_GameLogic = new GameLogic(i_Higt, i_Width);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2, CurrentPlayer.Name);
 
-            m_GameForm.AnyButtonHandler += FirstChoice_Occur;
+            // m_GameBoard.ApplyAllTheButtons(m_GameForm);
+            m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
+
 
             foreach(Player player in m_AllPlayersInGame)
             {
@@ -119,6 +144,9 @@ namespace MemoryCardGame
             return sb.ToString();
         }
 
+        // =======================================================
+        // Delegates and Events methods
+        // =======================================================
         protected virtual void ButtonStart_Click(object i_Sender, EventArgs i_ButtomIndexEvent)
         {
             Screen.SetUpNewGameForm setUpNewGameForm = i_Sender as Screen.SetUpNewGameForm;
@@ -138,6 +166,7 @@ namespace MemoryCardGame
             }
 
             setUpNewGameForm.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
+            setUpNewGameForm.HideInTaskbar();
             startNewGame(o_Higt, o_Width);
         }
 
@@ -146,7 +175,7 @@ namespace MemoryCardGame
             Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
         }
 
-        protected virtual void FirstChoice_Occur(object i_Sender, EventArgs i_ButtomIndexEvent)
+        protected virtual void AnyButtonClick_FirstClick(object i_Sender, EventArgs i_ButtomIndexEvent)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
@@ -156,11 +185,11 @@ namespace MemoryCardGame
                         // set form to the img
                         // add
             m_SelectedTileInTurn.Add(buttomIndexEvent);
-            m_GameForm.AnyButtonHandler -= FirstChoice_Occur;
-            m_GameForm.AnyButtonHandler += SecondChoice_Occur;
+            m_GameForm.AnyButtonClick -= AnyButtonClick_FirstClick;
+            m_GameForm.AnyButtonClick += AnyButtonClick_SecondClick;
         }
 
-        protected virtual void SecondChoice_Occur(object i_Sender, EventArgs e)
+        protected virtual void AnyButtonClick_SecondClick(object i_Sender, EventArgs e)
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
@@ -174,7 +203,7 @@ namespace MemoryCardGame
             // endOfTurn();
         }
 
-        private void endOfTurn()
+        private void endOfTurn() // TODO: find a good name
         {
             bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_SelectedTileInTurn.ToArray());
 
@@ -195,8 +224,8 @@ namespace MemoryCardGame
             if(m_GameLogic.HaveMoreMoves)
             {
                 m_SelectedTileInTurn.Clear();
-                m_GameForm.AnyButtonHandler += FirstChoice_Occur;
-                m_GameForm.AnyButtonHandler -= SecondChoice_Occur;
+                m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
+                m_GameForm.AnyButtonClick -= AnyButtonClick_SecondClick;
             }
 
             // System.Threading.Thread.Sleep(1000);
@@ -227,5 +256,6 @@ namespace MemoryCardGame
         {
             m_NumberOfPlayersBox = new NumberOfPlayersBox();
         }
+
     }
 }
