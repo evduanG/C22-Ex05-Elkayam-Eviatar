@@ -56,6 +56,7 @@ namespace WindowsUserInterface
         private Label[] m_Players;
         private Button[,] m_GameBoardButtons;
         private MessageBox m_GameOverDialog;
+        private NumberOfPlayersBox m_NumberOfPlayersBox;
 
         // =======================================================
         // constructor  and methods for the constructor
@@ -484,4 +485,45 @@ namespace WindowsUserInterface
                 }
             }
         }
+
+
+        protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)
+        {
+            // TODO: wht is this ?
+        }
+
+        protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
+        {
+            Button clickedTile = i_ClickedButton as Button;
+            bool isButtomExists;
+
+            if (isGameOver())
+            {
+                GameOverDialog.ShowDialog();
+            }
+
+            isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
+
+            if(!isButtomExists)
+            {
+                throw new FormatException("the button does not exists");
+            }
+
+            AnyButton_Click(clickedTile, new ButtomIndexEvent(o_Row, o_Col));
+            clickedTile.Focus();
+        }
+
+        protected virtual void AllButton_Click(object sender, EventArgs i_EventArgs)
+        {
+        }
+
+        protected virtual void AnyButton_Click(object sender, EventArgs i_EventArgs)
+        {
+            anyButtemInvoker(i_EventArgs);
+        }
+
+    }
+}
+
 */
+

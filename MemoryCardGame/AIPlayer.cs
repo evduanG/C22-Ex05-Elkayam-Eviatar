@@ -9,7 +9,7 @@ namespace MemoryCardGame
         private static readonly Random sr_Random = new Random();
         private readonly List<MemorySlot> r_Memory;
 
-        // TODO : enadle the form wan the ai plying
+        // TODO : enable the form when the AI playing
         public AIPlayer(List<MemorySlot> memory)
         {
             r_Memory = memory;

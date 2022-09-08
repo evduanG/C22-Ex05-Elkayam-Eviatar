@@ -13,6 +13,7 @@ namespace MemoryCardGame
         {
             // Application.EnableVisualStyles();
             GameEngine game = new GameEngine();
+            game.DisplayNumberOfPlayersForm();
             game.DisplaySetUpForm();
 
             /*

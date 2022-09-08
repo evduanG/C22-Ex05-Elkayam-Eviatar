@@ -14,7 +14,8 @@ namespace WindowsUserInterface
         private const string k_FormtWinnerScoreMessage = "{0} won with {1} points!";
         private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
-        public event MessageBoxHandler MessageBoxClick;
+
+        public event MessageBoxHandler Closed;
 
         private Label m_GameResultsMessage;
         private Label m_AnotherGameMessage;
@@ -101,14 +102,34 @@ namespace WindowsUserInterface
 
         public Button ButtonYes
         {
-            get { return m_ButtonYes; }
-            set { m_ButtonYes = value; }
+
+           Text = "GAME OVER";
+           Size = new Size(k_MessageBoxWidth, k_MessageBoxHeight);
+           StartPosition = FormStartPosition.CenterParent;
+           FormBorderStyle = FormBorderStyle.FixedDialog;
+           MaximizeBox = false;
+           ShowInTaskbar = false;
+           AcceptButton = ButtonYes;
         }
 
         public Button ButtonNo
         {
-            get { return m_ButtonNo; }
-            set { m_ButtonNo = value; }
+
+            GameResultsMessage = new Label();
+            GameResultsMessage.Text = k_FormtWinnerScoreMessage;
+            GameResultsMessage.TextAlign = ContentAlignment.MiddleCenter;
+            GameResultsMessage.BackColor = Color.LightGoldenrodYellow;
+            GameResultsMessage.AutoSize = true;
+            GameResultsMessage.Top = MainGameForm.k_Margin * 2;
+            GameResultsMessage.Left = (ClientSize.Width / 2) - (GameResultsMessage.Width / 2);
+
+            AnotherGameMessage = new Label();
+            AnotherGameMessage.Text = k_FormtAnotherGameMessage;
+            AnotherGameMessage.TextAlign = ContentAlignment.MiddleCenter;
+            AnotherGameMessage.BackColor = Color.LightGoldenrodYellow;
+            AnotherGameMessage.AutoSize = true;
+            AnotherGameMessage.Top = GameResultsMessage.Bottom + MainGameForm.k_Margin;
+            AnotherGameMessage.Left = GameResultsMessage.Left + (GameResultsMessage.Width / 2) - AnotherGameMessage.Width;
         }
 
         // =======================================================
@@ -118,6 +139,7 @@ namespace WindowsUserInterface
         {
             DialogResult = DialogResult.No;
         }
+
 
         protected virtual void ButtonYes_Click(object i_ButtonClicked, EventArgs i_EventArgs)
         {
