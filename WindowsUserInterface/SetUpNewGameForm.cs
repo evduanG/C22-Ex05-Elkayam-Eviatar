@@ -41,38 +41,17 @@ namespace WindowsUserInterface
         private Button m_ButtonStart;
         private List<BordSizeOptions> m_ListBordSizeOptions;
 
-        public string FirstPlayerName
+        // =======================================================
+        // constructor  and methods for the constructor
+        // =======================================================
+        public static SetUpNewGameForm StartGameForm()
         {
-            get { return m_TextBoxFirstPlayer.Text; }
+            return new SetUpNewGameForm(k_FirstGame, string.Empty, k_TitleDefultSecondPlayer);
         }
 
-        public string SecondPlayerName
+        public static SetUpNewGameForm RestartGameForm(string i_FirstplayerName, string i_SecondPlayerName)
         {
-            get { return m_TextBoxSecondPlayer.Text; }
-        }
-
-        public bool IsSecondPlayerComputer
-        {
-            get
-            {
-                return m_ButtonAgainstAFriend.Enabled;
-            }
-        }
-
-        public Button BoardSizes
-        {
-            get { return m_BoardSizes; }
-            set { m_BoardSizes = value; }
-        }
-
-        public void GetSelectedDimensions(out byte o_Height, out byte o_Width)
-        {
-            // object bordSize = m_ComboBoxBordSize.SelectedItem;
-            // o_Higt = ((BordSizeOptions)bordSize).Higt;
-            // o_Width = ((BordSizeOptions)bordSize).Width;
-
-            o_Height = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
-            o_Width = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
+            return new SetUpNewGameForm(!k_FirstGame, i_FirstplayerName, i_SecondPlayerName);
         }
 
         private SetUpNewGameForm(bool i_IsFirstGame, string i_FirstplayerName, string i_SecondPlayerName)
@@ -88,6 +67,13 @@ namespace WindowsUserInterface
             MinimizeBox = false;
             AcceptButton = m_ButtonStart;
             ShowInTaskbar = false;
+        }
+
+        public void RestartGameForm()
+        {
+            m_ButtonAgainstAFriend.Enabled = !k_Enable;
+            m_TextBoxFirstPlayer.Enabled = !k_Enable;
+            m_TextBoxSecondPlayer.Enabled = !k_Enable;
         }
 
         private void initiationForm(string i_FirstplayerName, string i_SecondPlayerName)
@@ -148,7 +134,7 @@ namespace WindowsUserInterface
             ElementsDesignerTool.DesignElements(m_BoardSizes, ePositionBy.Left, m_LabelBordSize);
             ElementsDesignerTool.DesignElements(m_BoardSizes, ePositionBy.Under, m_LabelBordSize, k_Margin);
             initilizeBoardSizesButton();
-            BoardSizes.Click += boardSizes_Click;
+            BoardSizes.Click += BoardSizes_Click;
             this.Controls.Add(m_BoardSizes);
 
             // Button-Start
@@ -166,21 +152,72 @@ namespace WindowsUserInterface
             }
         }
 
-        public static SetUpNewGameForm StartGameForm()
+        private void initilizeBoardSizesButton()
         {
-            return new SetUpNewGameForm(k_FirstGame, string.Empty, k_TitleDefultSecondPlayer);
+            setBoardSizesText();
+            byte defaultHeight = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
+            byte defaultWidth = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
+            setBoardSizesButtonDimensions(defaultHeight, defaultWidth);
+            BoardSizes.FlatStyle = FlatStyle.Popup;
+            BoardSizes.BackColor = Color.LightBlue;
         }
 
-        public static SetUpNewGameForm RestartGameForm(string i_FirstplayerName, string i_SecondPlayerName)
+        // =======================================================
+        // Propertys
+        // =======================================================
+        public string FirstPlayerName
         {
-            return new SetUpNewGameForm(!k_FirstGame, i_FirstplayerName, i_SecondPlayerName);
+            get { return m_TextBoxFirstPlayer.Text; }
         }
 
-        public void RestartGameForm()
+        public string SecondPlayerName
         {
-            m_ButtonAgainstAFriend.Enabled = !k_Enable;
-            m_TextBoxFirstPlayer.Enabled = !k_Enable;
-            m_TextBoxSecondPlayer.Enabled = !k_Enable;
+            get { return m_TextBoxSecondPlayer.Text; }
+        }
+
+        public bool IsSecondPlayerComputer
+        {
+            get
+            {
+                return m_ButtonAgainstAFriend.Enabled;
+            }
+        }
+
+        public Button BoardSizes
+        {
+            get { return m_BoardSizes; }
+            set { m_BoardSizes = value; }
+        }
+
+        // =======================================================
+        // Form methods
+        // =======================================================
+        public void HideInTaskbar()
+        {
+            ElementsDesignerTool.HideInTaskbar(this);
+        }
+
+        private void modifyFormAndStarButtn()
+        {
+            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Bottom, m_BoardSizes);
+            ElementsDesignerTool.FitTheSizeOfForm(this, k_Margin);
+        }
+
+        private void modifyTheBoardSize()
+        {
+            setBoardSizesText();
+            byte nextHeight = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
+            byte nextWidth = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
+            setBoardSizesButtonDimensions(nextHeight, nextWidth);
+        }
+
+        // =======================================================
+        // Dimensions of Bord-Size methods
+        // =======================================================
+        public void GetSelectedDimensions(out byte o_Height, out byte o_Width)
+        {
+            o_Height = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
+            o_Width = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
         }
 
         public void SetListOfBordSizeOptions(byte i_HigtMin, byte i_HigtMax, byte i_WidthMin, byte i_WidthMax)
@@ -195,7 +232,31 @@ namespace WindowsUserInterface
             }
         }
 
-        protected void ButtonAgainstAFriend_Click(object i_Sender, EventArgs e)
+        private void setBoardSizesText()
+        {
+            BoardSizes.Text = sr_BoardSizes[m_BoardSizeIndex];
+        }
+
+        private void setBoardSizesButtonDimensions(byte i_ButtonHeight, byte i_ButtonWidth)
+        {
+            BoardSizes.Height = i_ButtonHeight * k_BoardSizeButtonBase;
+            BoardSizes.Width = i_ButtonWidth * k_BoardSizeButtonBase;
+        }
+
+        private byte getDimensionHeight(string i_BoardSizeString)
+        {
+            return byte.Parse(i_BoardSizeString.Substring(0, 1));
+        }
+
+        private byte getDimensionWidth(string i_BoardSizeString)
+        {
+            return byte.Parse(i_BoardSizeString.Substring(i_BoardSizeString.Length - 1, 1));
+        }
+
+        // =======================================================
+        // Delegates and Events methods
+        // =======================================================
+        protected virtual void ButtonAgainstAFriend_Click(object i_Sender, EventArgs e)
         {
             if(r_IsFirstGame)
             {
@@ -214,7 +275,7 @@ namespace WindowsUserInterface
             }
         }
 
-        protected void ButtonStart_Click(object i_Sender, EventArgs e)
+        protected virtual void ButtonStart_Click(object i_Sender, EventArgs e)
         {
             if(!isValidForm())
             {
@@ -223,11 +284,11 @@ namespace WindowsUserInterface
             else
             {
                 this.Close();
-                startClickHandler();
+                OnStartClick();
             }
         }
 
-        private void startClickHandler()
+        protected virtual void OnStartClick()
         {
             if(StartClick != null)
             {
@@ -239,9 +300,15 @@ namespace WindowsUserInterface
         {
             bool isFirstPlayer = m_TextBoxFirstPlayer.Text != string.Empty;
             bool isSecondPlayer = m_TextBoxSecondPlayer.Text != string.Empty;
-            // bool isValid = m_ComboBoxBordSize.SelectedItem != null;
 
-            return isFirstPlayer && isSecondPlayer; //&& isValid;
+            return isFirstPlayer && isSecondPlayer;
+        }
+
+        protected virtual void BoardSizes_Click(object i_BoardSizesButton, EventArgs i_EventArgs)
+        {
+            m_BoardSizeIndex = (byte)((m_BoardSizeIndex + 1) % sr_BoardSizes.Length);
+            modifyTheBoardSize();
+            modifyFormAndStarButtn();
         }
 
         private struct BordSizeOptions
@@ -270,58 +337,6 @@ namespace WindowsUserInterface
             {
                 return string.Format(k_ToStringFormt, m_Width, m_Higt);
             }
-        }
-
-        private void initilizeBoardSizesButton()
-        {
-            setBoardSizesText();
-            byte defaultHeight = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
-            byte defaultWidth = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
-            setBoardSizesButtonDimensions(defaultHeight, defaultWidth);
-            BoardSizes.FlatStyle = FlatStyle.Popup;
-            BoardSizes.BackColor = Color.LightBlue;
-        }
-
-        private void boardSizes_Click(object i_BoardSizesButton, EventArgs i_EventArgs)
-        {
-            m_BoardSizeIndex = (byte)((m_BoardSizeIndex + 1) % sr_BoardSizes.Length);
-            modifyTheBoardSize();
-            modifyFormAndStarButtn();
-        }
-
-        private void modifyFormAndStarButtn()
-        {
-            ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Bottom, m_BoardSizes);
-            ElementsDesignerTool.FitTheSizeOfForm(this, k_Margin);
-        }
-
-        private void modifyTheBoardSize()
-        {
-            setBoardSizesText();
-            byte nextHeight = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
-            byte nextWidth = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
-            setBoardSizesButtonDimensions(nextHeight, nextWidth);
-        }
-
-        private void setBoardSizesText()
-        {
-            BoardSizes.Text = sr_BoardSizes[m_BoardSizeIndex];
-        }
-
-        private void setBoardSizesButtonDimensions(byte i_ButtonHeight, byte i_ButtonWidth)
-        {
-            BoardSizes.Height = i_ButtonHeight * k_BoardSizeButtonBase;
-            BoardSizes.Width = i_ButtonWidth * k_BoardSizeButtonBase;
-        }
-
-        private byte getDimensionHeight(string i_BoardSizeString)
-        {
-            return byte.Parse(i_BoardSizeString.Substring(0, 1));
-        }
-
-        private byte getDimensionWidth(string i_BoardSizeString)
-        {
-            return byte.Parse(i_BoardSizeString.Substring(i_BoardSizeString.Length - 1, 1));
         }
 
         /*

@@ -56,7 +56,7 @@ namespace WindowsUserInterface
         {
             m_Row = i_Row;
             m_Col = i_Col;
-            Console.WriteLine(String.Format(k_ToStringFormt, i_Row, i_Col));
+            Console.WriteLine(string.Format(k_ToStringFormt, i_Row, i_Col));
         }
 
         public static ButtomIndexEvent Parse(string i_ButtonIndexString)
