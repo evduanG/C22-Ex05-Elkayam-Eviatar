@@ -216,10 +216,6 @@ namespace WindowsUserInterface
         // =======================================================
         public void GetSelectedDimensions(out byte o_Height, out byte o_Width)
         {
-            // object bordSize = m_ComboBoxBordSize.SelectedItem;
-            // o_Higt = ((BordSizeOptions)bordSize).Higt;
-            // o_Width = ((BordSizeOptions)bordSize).Width;
-
             o_Height = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
             o_Width = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
         }

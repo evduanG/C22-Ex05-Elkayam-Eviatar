@@ -14,7 +14,6 @@ namespace WindowsUserInterface
         private const string k_FormtWinnerScoreMessage = "{0} won with {1} points!";
         private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
-
         public event MessageBoxHandler Closed;
 
         private Label m_GameResultsMessage;
@@ -22,7 +21,9 @@ namespace WindowsUserInterface
         private Button m_ButtonYes;
         private Button m_ButtonNo;
 
-        // Ctor:
+        // =======================================================
+        // constructor  and methods for the constructor
+        // =======================================================
         public MessageBox()
         {
             initializeComponents();
@@ -30,11 +31,13 @@ namespace WindowsUserInterface
 
         private void initializeForm()
         {
-           Text = "GAME OVER";
-           Size = new Size(k_MessageBoxWidth, k_MessageBoxHeight);
-           StartPosition = FormStartPosition.CenterParent;
-           FormBorderStyle = FormBorderStyle.FixedDialog;
-           MaximizeBox = false;
+            Text = "GAME OVER";
+            Size = new Size(k_MessageBoxWidth, k_MessageBoxHeight);
+            StartPosition = FormStartPosition.CenterParent;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            ShowInTaskbar = false;
+            AcceptButton = ButtonYes;
         }
 
         private void initializeLabels()
@@ -50,7 +53,6 @@ namespace WindowsUserInterface
             AnotherGameMessage = new Label();
             AnotherGameMessage.Text = k_FormtAnotherGameMessage;
             AnotherGameMessage.TextAlign = ContentAlignment.MiddleCenter;
-            // AnotherGameMessage.Width = k_LabelWidth;
             AnotherGameMessage.BackColor = Color.LightGoldenrodYellow;
             AnotherGameMessage.AutoSize = true;
             AnotherGameMessage.Top = GameResultsMessage.Bottom + MainGameForm.k_Margin;
@@ -73,13 +75,13 @@ namespace WindowsUserInterface
             ButtonYes.Text = "Yes";
             ButtonYes.Top = AnotherGameMessage.Bottom + (2 * MainGameForm.k_Margin);
             ButtonYes.Left = AnotherGameMessage.Left + (2 * MainGameForm.k_Margin);
-            ButtonYes.Click += ButtonYes_Click;
+            ButtonYes.Click += Yes_Click;
 
             ButtonNo = new Button();
             ButtonNo.Text = "No";
             ButtonNo.Top = ButtonYes.Top;
             ButtonNo.Left = ButtonYes.Right + (MainGameForm.k_Margin * 2);
-            ButtonNo.Click += ButtonNo_Click;
+            ButtonNo.Click += No_Click;
 
             Controls.Add(ButtonYes);
             Controls.Add(ButtonNo);
@@ -102,46 +104,25 @@ namespace WindowsUserInterface
 
         public Button ButtonYes
         {
-
-           Text = "GAME OVER";
-           Size = new Size(k_MessageBoxWidth, k_MessageBoxHeight);
-           StartPosition = FormStartPosition.CenterParent;
-           FormBorderStyle = FormBorderStyle.FixedDialog;
-           MaximizeBox = false;
-           ShowInTaskbar = false;
-           AcceptButton = ButtonYes;
+            get { return m_ButtonYes; }
+            set { m_ButtonYes = value; }
         }
 
         public Button ButtonNo
         {
-
-            GameResultsMessage = new Label();
-            GameResultsMessage.Text = k_FormtWinnerScoreMessage;
-            GameResultsMessage.TextAlign = ContentAlignment.MiddleCenter;
-            GameResultsMessage.BackColor = Color.LightGoldenrodYellow;
-            GameResultsMessage.AutoSize = true;
-            GameResultsMessage.Top = MainGameForm.k_Margin * 2;
-            GameResultsMessage.Left = (ClientSize.Width / 2) - (GameResultsMessage.Width / 2);
-
-            AnotherGameMessage = new Label();
-            AnotherGameMessage.Text = k_FormtAnotherGameMessage;
-            AnotherGameMessage.TextAlign = ContentAlignment.MiddleCenter;
-            AnotherGameMessage.BackColor = Color.LightGoldenrodYellow;
-            AnotherGameMessage.AutoSize = true;
-            AnotherGameMessage.Top = GameResultsMessage.Bottom + MainGameForm.k_Margin;
-            AnotherGameMessage.Left = GameResultsMessage.Left + (GameResultsMessage.Width / 2) - AnotherGameMessage.Width;
+            get { return m_ButtonNo; }
+            set { m_ButtonNo = value; }
         }
 
         // =======================================================
         // Delegates and Events methods
         // =======================================================
-        protected virtual void ButtonNo_Click(object i_ButtonClicked, EventArgs i_EventArgs)
+        protected virtual void No_Click(object i_ButtonClicked, EventArgs i_EventArgs)
         {
             DialogResult = DialogResult.No;
         }
 
-
-        protected virtual void ButtonYes_Click(object i_ButtonClicked, EventArgs i_EventArgs)
+        protected virtual void Yes_Click(object i_ButtonClicked, EventArgs i_EventArgs)
         {
             DialogResult = DialogResult.Yes;
         }
