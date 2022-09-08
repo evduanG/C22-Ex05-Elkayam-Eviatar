@@ -336,51 +336,35 @@ namespace WindowsUserInterface
 
         private void positionButtonsOnGrid()
         {
-            // setup top-left button
-            GameBoardButtons[0, 0].Top = k_Margin;
-            GameBoardButtons[0, 0].Left = k_Margin;
-            Controls.Add(GameBoardButtons[0, 0]);
-
-            // TODO : use the ElementsDesignerTool
             // setup the rest
+            int upOneSlot = 0;
+            Control controlToPlace = null;
+
             for (int i = 0; i < Rows; i++)
             {
-                for (int j = 0; j < Columns; j++)
+                bool isTopLeft = i == 0;
+
+                if (isTopLeft)
                 {
-                    // top-left button
-                    if (i == 0 && j == 0)
-                    {
-                        continue;
-                    }
+                    GameBoardButtons[0, 0].Top = k_Margin;
+                    GameBoardButtons[0, 0].Left = k_Margin;
+                    Controls.Add(GameBoardButtons[0, 0]);
+                }
+                else
+                {
+                    upOneSlot = i - 1;
+                    controlToPlace = GameBoardButtons[i, 0];
+                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.Left, GameBoardButtons[upOneSlot, 0]);
+                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.Under, GameBoardButtons[upOneSlot, 0], k_Margin);
+                    Controls.Add(GameBoardButtons[i, 0]);
+                }
 
-                    // left column
-                    if (j == 0)
-                    {
-                        GameBoardButtons[i, j].Left = k_Margin;
-                        GameBoardButtons[i, j].Top = k_Margin + ((k_ButtonSize + k_Margin) * i);
-                    }
-
-                    // right block
-                    else
-                    {
-                        // top row
-                        if (i == 0)
-                        {
-                            GameBoardButtons[i, j].Top = k_Margin;
-                            GameBoardButtons[i, j].Left = k_Margin + ((k_ButtonSize + k_Margin) * j);
-                        }
-
-                        // inner right block
-                        else
-                        {
-                            GameBoardButtons[i, j].Top = GameBoardButtons[i, j - 1].Top;
-                            GameBoardButtons[i, j].Left = GameBoardButtons[i - 1, j].Left;
-
-                            // ElementsDesignerTool.DesignElements(ePositionBy.Top, GameBoardButtons[row, col - 1], GameBoardButtons[row, col], k_Margin);
-                            // ElementsDesignerTool.DesignElements(ePositionBy.Left, GameBoardButtons[row - 1, col], GameBoardButtons[row, col], k_Margin);
-                        }
-                    }
-
+                for (int j = 1; j < Columns; j++)
+                {
+                    controlToPlace = GameBoardButtons[i, j];
+                    ePositionBy topPositionBy = i == 0 ? ePositionBy.Top : ePositionBy.Under;
+                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.NextToTheLeft, GameBoardButtons[i, j - 1], k_Margin);
+                    ElementsDesignerTool.DesignElements(controlToPlace, topPositionBy, GameBoardButtons[upOneSlot, j], k_Margin);
                     Controls.Add(GameBoardButtons[i, j]);
                 }
             }
@@ -419,6 +403,76 @@ namespace WindowsUserInterface
         {
             anyButtemInvoker(i_EventArgs);
         }
-
     }
 }
+
+/*
+ *
+ *         private void positionButtonsOnGrid()
+        {
+            // TODO : use the ElementsDesignerTool
+            // setup the rest
+            int upOneSlot = 0;
+
+            for (int i = 0; i < Rows; i++)
+            {
+                bool isTopLeft = i == 0;
+                if (isTopLeft)
+                {
+                    GameBoardButtons[0, 0].Top = k_Margin;
+                    GameBoardButtons[0, 0].Left = k_Margin;
+                    Controls.Add(GameBoardButtons[0, 0]);
+                }
+                else
+                {
+                    upOneSlot = i - 1;
+                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, 0], ePositionBy.Left, GameBoardButtons[upOneSlot, 0]);
+                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, 0], ePositionBy.Under, GameBoardButtons[upOneSlot, 0], k_Margin);
+                    Controls.Add(GameBoardButtons[i, 0]);
+                }
+
+                for (int j = 1; j < Columns; j++)
+                {
+                    //// top-left button
+                    //if (i == 0 && j == 0)
+                    //{
+                    //    continue;
+                    //}
+
+                    //// left column
+                    //if (j == 0)
+                    //{
+                    //    GameBoardButtons[i, j].Left = k_Margin;
+                    //    GameBoardButtons[i, j].Top = k_Margin + ((k_ButtonSize + k_Margin) * i);
+                    //}
+
+                    // right block
+                    //else
+                    //{
+                    // top row
+                    //if (i == 0)
+                    //{
+                    //    GameBoardButtons[i, j].Top = k_Margin;
+                    //    GameBoardButtons[i, j].Left = k_Margin + ((k_ButtonSize + k_Margin) * j);
+                    //}
+
+                    //// inner right block
+                    //else
+                    //{
+                    ePositionBy topPositionBy = i == 0 ? ePositionBy.Top : ePositionBy.Under;
+
+                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, j], ePositionBy.NextToTheLeft, GameBoardButtons[i, j - 1], k_Margin);
+                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, j], topPositionBy, GameBoardButtons[upOneSlot, j], k_Margin);
+                            //GameBoardButtons[i, j].Top = GameBoardButtons[i, j - 1].Top;
+                            //GameBoardButtons[i, j].Left = GameBoardButtons[upOneSlot, j].Left;
+
+                            // ElementsDesignerTool.DesignElements(ePositionBy.Top, GameBoardButtons[row, col - 1], GameBoardButtons[row, col], k_Margin);
+                            // ElementsDesignerTool.DesignElements(ePositionBy.Left, GameBoardButtons[row - 1, col], GameBoardButtons[row, col], k_Margin);
+                        //}
+                    //}
+
+                    Controls.Add(GameBoardButtons[i, j]);
+                }
+            }
+        }
+*/

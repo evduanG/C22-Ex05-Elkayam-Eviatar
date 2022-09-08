@@ -130,6 +130,7 @@ namespace MemoryCardGame
             }
 
             setUpNewGameForm.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
+            setUpNewGameForm.HideInTaskbar();
             startNewGame(o_Higt, o_Width);
         }
 
@@ -165,7 +166,7 @@ namespace MemoryCardGame
             endOfTurn();
         }
 
-        private void endOfTurn()
+        private void endOfTurn() // TODO: find a good name
         {
             bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_SelectedTileInTurn.ToArray());
 

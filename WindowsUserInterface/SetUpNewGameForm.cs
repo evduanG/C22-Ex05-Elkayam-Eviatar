@@ -41,6 +41,16 @@ namespace WindowsUserInterface
         private Button m_ButtonStart;
         private List<BordSizeOptions> m_ListBordSizeOptions;
 
+        public static SetUpNewGameForm StartGameForm()
+        {
+            return new SetUpNewGameForm(k_FirstGame, string.Empty, k_TitleDefultSecondPlayer);
+        }
+
+        public static SetUpNewGameForm RestartGameForm(string i_FirstplayerName, string i_SecondPlayerName)
+        {
+            return new SetUpNewGameForm(!k_FirstGame, i_FirstplayerName, i_SecondPlayerName);
+        }
+
         public string FirstPlayerName
         {
             get { return m_TextBoxFirstPlayer.Text; }
@@ -164,16 +174,6 @@ namespace WindowsUserInterface
             }
         }
 
-        public static SetUpNewGameForm StartGameForm()
-        {
-            return new SetUpNewGameForm(k_FirstGame, string.Empty, k_TitleDefultSecondPlayer);
-        }
-
-        public static SetUpNewGameForm RestartGameForm(string i_FirstplayerName, string i_SecondPlayerName)
-        {
-            return new SetUpNewGameForm(!k_FirstGame, i_FirstplayerName, i_SecondPlayerName);
-        }
-
         public void RestartGameForm()
         {
             m_ButtonAgainstAFriend.Enabled = !k_Enable;
@@ -191,6 +191,11 @@ namespace WindowsUserInterface
                     // m_ComboBoxBordSize.Items.Add(new BordSizeOptions(higt, widt));
                 }
             }
+        }
+
+        public void HideInTaskbar()
+        {
+            ElementsDesignerTool.HideInTaskbar(this);
         }
 
         protected void ButtonAgainstAFriend_Click(object i_Sender, EventArgs e)
@@ -240,34 +245,6 @@ namespace WindowsUserInterface
             // bool isValid = m_ComboBoxBordSize.SelectedItem != null;
 
             return isFirstPlayer && isSecondPlayer; //&& isValid;
-        }
-
-        private struct BordSizeOptions
-        {
-            private const string k_ToStringFormt = "{0}x{1}";
-            private byte m_Higt;
-            private byte m_Width;
-
-            public BordSizeOptions(byte i_Higt, byte i_Width)
-            {
-                this.m_Higt = i_Higt;
-                this.m_Width = i_Width;
-            }
-
-            public byte Higt
-            {
-                get { return m_Higt; }
-            }
-
-            public byte Width
-            {
-                get { return m_Width; }
-            }
-
-            public override string ToString()
-            {
-                return string.Format(k_ToStringFormt, m_Width, m_Higt);
-            }
         }
 
         private void initilizeBoardSizesButton()
@@ -320,6 +297,34 @@ namespace WindowsUserInterface
         private byte getDimensionWidth(string i_BoardSizeString)
         {
             return byte.Parse(i_BoardSizeString.Substring(i_BoardSizeString.Length - 1, 1));
+        }
+
+        private struct BordSizeOptions
+        {
+            private const string k_ToStringFormt = "{0}x{1}";
+            private byte m_Higt;
+            private byte m_Width;
+
+            public BordSizeOptions(byte i_Higt, byte i_Width)
+            {
+                this.m_Higt = i_Higt;
+                this.m_Width = i_Width;
+            }
+
+            public byte Higt
+            {
+                get { return m_Higt; }
+            }
+
+            public byte Width
+            {
+                get { return m_Width; }
+            }
+
+            public override string ToString()
+            {
+                return string.Format(k_ToStringFormt, m_Width, m_Higt);
+            }
         }
 
         /*
