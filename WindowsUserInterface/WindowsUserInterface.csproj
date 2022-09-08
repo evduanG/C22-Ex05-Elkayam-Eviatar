@@ -62,6 +62,9 @@
     <Compile Include="MessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="NumberOfPlayersBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SetUpNewGameForm.cs">
       <SubType>Form</SubType>
     </Compile>

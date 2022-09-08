@@ -14,8 +14,7 @@ namespace WindowsUserInterface
         private const string k_FormtWinnerScoreMessage = "{0} won with {1} points!";
         private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
-        public event MessageBoxHandler m_MessageBox; // TODO: rename
-
+        public event MessageBoxHandler Closed;
         private Label m_GameResultsMessage;
         private Label m_AnotherGameMessage;
         private Button m_ButtonYes;
@@ -94,6 +93,8 @@ namespace WindowsUserInterface
            StartPosition = FormStartPosition.CenterParent;
            FormBorderStyle = FormBorderStyle.FixedDialog;
            MaximizeBox = false;
+           ShowInTaskbar = false;
+           AcceptButton = ButtonYes;
         }
 
         private void initializeLabels()
@@ -101,7 +102,6 @@ namespace WindowsUserInterface
             GameResultsMessage = new Label();
             GameResultsMessage.Text = k_FormtWinnerScoreMessage;
             GameResultsMessage.TextAlign = ContentAlignment.MiddleCenter;
-            // GameResultsMessage.Width = k_LabelWidth;
             GameResultsMessage.BackColor = Color.LightGoldenrodYellow;
             GameResultsMessage.AutoSize = true;
             GameResultsMessage.Top = MainGameForm.k_Margin * 2;
@@ -110,7 +110,6 @@ namespace WindowsUserInterface
             AnotherGameMessage = new Label();
             AnotherGameMessage.Text = k_FormtAnotherGameMessage;
             AnotherGameMessage.TextAlign = ContentAlignment.MiddleCenter;
-            // AnotherGameMessage.Width = k_LabelWidth;
             AnotherGameMessage.BackColor = Color.LightGoldenrodYellow;
             AnotherGameMessage.AutoSize = true;
             AnotherGameMessage.Top = GameResultsMessage.Bottom + MainGameForm.k_Margin;

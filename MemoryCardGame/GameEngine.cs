@@ -14,13 +14,15 @@ namespace MemoryCardGame
         public const bool k_Running = true;
         public const bool k_FlippedTheCard = true;
         private Screen.MainGameForm m_GameForm;
+        private Screen.NumberOfPlayersBox m_NumberOfPlayersBox;
         private Player[] m_AllPlayersInGame;
         private List<ButtomIndexEvent> m_SelectedTileInTurn;
         private GameLogic m_GameLogic;
         private byte m_TurnCounter;
 
         private byte m_TotalPLayers;
-        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns; // TODO : remake this to be Ticker ..
+        private Timer m_InbetweenTurnsTimer;
+        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
 
         private Player CurrentPlayer
         {
@@ -31,8 +33,13 @@ namespace MemoryCardGame
             }
         }
 
+        public Timer InbetweenTurnsTimer
+        {
+            get { return m_InbetweenTurnsTimer; }
+        }
+
         // ===================================================================
-        //  constructor  and methods that the constructor uses
+        //  constructor and methods that the constructor uses
         // ===================================================================
         public GameEngine()
         {
@@ -43,22 +50,24 @@ namespace MemoryCardGame
             m_SelectedTileInTurn = new List<ButtomIndexEvent>();
 
             /******     number of players       ******/
+            m_NumberOfPlayersBox = new NumberOfPlayersBox();
+            m_NumberOfPlayersBox.ShowDialog();
+
             if (Setting.NumOfPlayers.v_IsFixed)
             {
                 m_TotalPLayers = Setting.NumOfPlayers.r_UpperBound;
             }
             else
             {
-                m_TotalPLayers = InputFromTheUserAccordingToTheRules(Setting.NumOfPlayers);
+                m_TotalPLayers = m_NumberOfPlayersBox.UserChoice;
             }
 
             m_AllPlayersInGame = new Player[m_TotalPLayers];
-        }
 
-        public byte InputFromTheUserAccordingToTheRules(Setting.Rules i_Rule)
-        {
-            // TODO: make this func
-            return 2;
+            // timer setup
+            m_InbetweenTurnsTimer = new Timer();
+            InbetweenTurnsTimer.Interval = m_SleepBetweenTurns;
+            InbetweenTurnsTimer.Tick += inbetweenTurnsTimer_Tick;
         }
 
         // start the game
@@ -67,7 +76,6 @@ namespace MemoryCardGame
             m_GameLogic = new GameLogic(i_Higt, i_Width);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2, CurrentPlayer.Name);
 
-            // m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonHandler += FirstChoice_Occur;
 
             foreach(Player player in m_AllPlayersInGame)
@@ -94,7 +102,7 @@ namespace MemoryCardGame
             foreach (Player player in m_AllPlayersInGame)
             {
                 player.ShowBoard(m_GameLogic.GetBoardToDraw());
-                // TODO : ShowBoard  m_SelectedTileInTurn and list of val 
+                // TODO : ShowBoard  m_SelectedTileInTurn and list of val ==> forgot what this means
             }
         }
 
@@ -162,7 +170,8 @@ namespace MemoryCardGame
                     // set form to the img
                     // add
             m_SelectedTileInTurn.Add(buttomIndexEvent);
-            endOfTurn();
+            InbetweenTurnsTimer.Start();
+            // endOfTurn();
         }
 
         private void endOfTurn()
@@ -190,8 +199,13 @@ namespace MemoryCardGame
                 m_GameForm.AnyButtonHandler -= SecondChoice_Occur;
             }
 
-            // TODO: chang it to Tiker
-            System.Threading.Thread.Sleep(1000);
+            // System.Threading.Thread.Sleep(1000);
+        }
+
+        private void inbetweenTurnsTimer_Tick(object sender, EventArgs e)
+        {
+            endOfTurn();
+            InbetweenTurnsTimer.Stop();
         }
 
         public void DisplaySetUpForm()
@@ -207,6 +221,11 @@ namespace MemoryCardGame
             }
 
             // asq for more game ?
+        }
+
+        public void DisplayNumberOfPlayersForm()
+        {
+            m_NumberOfPlayersBox = new NumberOfPlayersBox();
         }
     }
 }

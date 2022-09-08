@@ -81,11 +81,13 @@ namespace WindowsUserInterface
             Size = new Size(380, 300);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.Text = k_TitleForm;
+            Text = k_TitleForm;
             m_ListBordSizeOptions = new List<BordSizeOptions>();
             initiationForm(i_FirstplayerName, i_SecondPlayerName);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            AcceptButton = m_ButtonStart;
+            ShowInTaskbar = false;
         }
 
         private void initiationForm(string i_FirstplayerName, string i_SecondPlayerName)

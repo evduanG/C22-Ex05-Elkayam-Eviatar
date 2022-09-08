@@ -73,6 +73,7 @@ namespace WindowsUserInterface
         private Label[] m_Players;
         private Button[,] m_GameBoardButtons;
         private MessageBox m_GameOverDialog;
+        private NumberOfPlayersBox m_NumberOfPlayersBox;
 
         // Ctor:
         public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, byte i_numOfPlayers, string i_CurrentPlayer)
@@ -409,9 +410,10 @@ namespace WindowsUserInterface
             }
 
             AnyButton_Click(clickedTile, new ButtomIndexEvent(o_Row, o_Col));
+            clickedTile.Focus();
         }
 
-        protected virtual void AllButtem_Click(object sender, EventArgs i_EventArgs)
+        protected virtual void AllButton_Click(object sender, EventArgs i_EventArgs)
         {
         }
 
