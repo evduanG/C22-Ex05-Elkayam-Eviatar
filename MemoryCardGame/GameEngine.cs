@@ -15,7 +15,7 @@ namespace MemoryCardGame
         public const bool k_FlippedTheCard = true;
         private Screen.MainGameForm m_GameForm;
         private Player[] m_AllPlayersInGame;
-        private List<ButtomIndexEvent> m_PlayerChois = new List<ButtomIndexEvent>(); // TODO : move to constrcror 
+        private List<ButtomIndexEvent> m_SelectedTileInTurn;
         private GameLogic m_GameLogic;
         private byte m_TurnCounter;
 
@@ -40,7 +40,7 @@ namespace MemoryCardGame
 
             // r_IsPlaying = false;
             m_TurnCounter = 0;
-            m_PlayerChois = new List<ButtomIndexEvent>();
+            m_SelectedTileInTurn = new List<ButtomIndexEvent>();
 
             /******     number of players       ******/
             if (Setting.NumOfPlayers.v_IsFixed)
@@ -58,17 +58,6 @@ namespace MemoryCardGame
         public byte InputFromTheUserAccordingToTheRules(Setting.Rules i_Rule)
         {
             // TODO: make this func
-
-            // string strMsg = string.Format("Please enter the {0}", i_Rule.ToString());
-            // byte returnVal = 0;
-            // bool isInputValid = false;
-            // do
-            // {
-            //    // Screen.ShowMessage(strMsg);
-            //    isInputValid = i_Rule.IsValid(returnVal);
-            // } while (!isInputValid);
-
-            // return returnVal;
             return 2;
         }
 
@@ -105,7 +94,7 @@ namespace MemoryCardGame
             foreach (Player player in m_AllPlayersInGame)
             {
                 player.ShowBoard(m_GameLogic.GetBoardToDraw());
-                // TODO : ShowBoard  m_PlayerChois and list of val 
+                // TODO : ShowBoard  m_SelectedTileInTurn and list of val 
             }
         }
 
@@ -154,12 +143,11 @@ namespace MemoryCardGame
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
             char v = this.m_GameLogic.Flipped(buttomIndexEvent, true);
-
             m_GameForm.Flipped(buttomIndexEvent, v);
-            // m_GameBoard[x,y].flipe
-            // set form to the img
-            // add
-            m_PlayerChois.Add(buttomIndexEvent);
+                        // m_GameBoard[x,y].flipe
+                        // set form to the img
+                        // add
+            m_SelectedTileInTurn.Add(buttomIndexEvent);
             m_GameForm.AnyButtonHandler -= FirstChoice_Occur;
             m_GameForm.AnyButtonHandler += SecondChoice_Occur;
         }
@@ -168,17 +156,18 @@ namespace MemoryCardGame
         {
             Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
             ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
-
-            // m_GameBoard[x,y].flipe
-            // set form to the img
-            // add
-            m_PlayerChois.Add(buttomIndexEvent);
+            char v = this.m_GameLogic.Flipped(buttomIndexEvent, true);
+            m_GameForm.Flipped(buttomIndexEvent, v);
+                    // m_GameBoard[x,y].flipe
+                    // set form to the img
+                    // add
+            m_SelectedTileInTurn.Add(buttomIndexEvent);
             endOfTurn();
         }
 
         private void endOfTurn()
         {
-            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_PlayerChois.ToArray());
+            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_SelectedTileInTurn.ToArray());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
@@ -186,19 +175,23 @@ namespace MemoryCardGame
             if (!isThePlyerHaveAnderTurn)
             {
                 m_TurnCounter++;
-                m_GameForm.FlippCardsToFaceDown(m_PlayerChois);
+                m_GameForm.FlippCardsToFaceDown(m_SelectedTileInTurn);
+                m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             }
             else
             {
-                m_GameForm.ColorPair(m_PlayerChois, CurrentPlayer.Color);
+                m_GameForm.ColorPair(m_SelectedTileInTurn, CurrentPlayer.Color);
             }
 
             if(m_GameLogic.HaveMoreMoves)
             {
-                m_PlayerChois.Clear();
+                m_SelectedTileInTurn.Clear();
                 m_GameForm.AnyButtonHandler += FirstChoice_Occur;
                 m_GameForm.AnyButtonHandler -= SecondChoice_Occur;
             }
+
+            // TODO: chang it to Tiker
+            System.Threading.Thread.Sleep(1000);
         }
 
         public void DisplaySetUpForm()
@@ -217,125 +210,3 @@ namespace MemoryCardGame
         }
     }
 }
-
-/*
-private void start(byte i_Higt, byte i_Width)
-{
-    m_GameBoard = new GameLogic(i_Higt, i_Higt);
-    m_IsPlaying = true;
-    do
-    {
-        Screen.SetUpNewGameForm setUpForm = Screen.SetUpNewGameForm.StartGameForm();
-        setUpForm.SetListOfBordSizeOptions(Setting.Columns.r_LowerBound, Setting.Columns.r_UpperBound, Setting.Rows.r_LowerBound, Setting.Rows.r_UpperBound);
-        setUpForm.StartClick += ButtonStart_Click;
-        setUpForm.ShowDialog();
-
-        m_TurnCounter = 0;
-        playTheGame();
-        if (m_IsPlaying)
-        {
-            Screen.MessageBox messageBox = new Screen.MessageBox();
-            messageBox.m_MessageBox += MessageBox_Occur;
-            messageBox.ShowDialog();
-
-            if (m_IsPlaying)
-            {
-                // tell all the players that having a new game board
-                foreach (Player player in m_AllPlayersInGame)
-                {
-                    player.RestartNewGame();
-                }
-            }
-        }
-    }
-    while (m_IsPlaying);
-
-
-    private void playTheGame()
-    {
-        m_GameForm = new Screen.MainGameForm(m_GameBoard.Rows, m_GameBoard.Columns,
-            m_AllPlayersInGame[0].Name, m_AllPlayersInGame[1].Name);
-        try
-        {
-            do
-            {
-                m_PlayerChois.Clear();
-                // settheForm();
-                // TODO : set the name of the currnt pleayr:
-                // TODO : set the score of the players
-
-                m_GameForm.AnyButtonHandler += FirstChoice_Occur;
-                Player currentlyPlayingPlayer = m_AllPlayersInGame[getPlayerIndex()]; // chang in the form the name
-
-                for (int i = 0; i < Setting.s_NumOfChoiceInTurn.r_UpperBound; i++)
-                {
-                }
-
-                // Show all players the board
-                showAllPlayersTheBoard();
-                bool isThePlyerHaveAnderTurn = m_GameBoard.DoThePlayersChoicesMatch(out byte o_scoreForTheTurn, m_PlayerChois.ToArray());
-
-                if (!isThePlyerHaveAnderTurn)
-                {
-                    m_TurnCounter++;
-                }
-
-                currentlyPlayingPlayer.IncreaseScore(o_scoreForTheTurn);
-                Thread.Sleep(m_SleepBetweenTurns);
-            }
-            while (isRunning());
-        }
-        catch (Exception i_ButtomIndexEvent)
-        {
-            m_IsPlaying = false;
-            return;
-        }
-
-        showWhoWon();
-    }
-
-    private void showWhoWon()
-    {
-        byte highScore = 0;
-        string winnerName = "";
-
-        foreach (Player player in m_AllPlayersInGame)
-        {
-            if (player.Score > highScore)
-            {
-                highScore = player.Score;
-                winnerName = player.Name;
-            }
-        }
-
-        // Screen.ShowPrompt(ePromptType.Winning, winnerName, highScore.ToString());
-    }
-
-    player turn
-private string gameStage(Player i_currentlyPlayingPlayer)
-    {
-        bool userInputValid = true;
-        string indexChoice = string.Empty;
-        string mag = string.Format("{0} choose a tile", i_currentlyPlayingPlayer.Name);
-        List<string> validSlotForChose = m_GameBoard.GetAllValidTilesForChoice();
-
-        do
-        {
-            drawBoard();
-            // Screen.ShowMessage(mag);
-            if (!userInputValid)
-            {
-                // Screen.ShowError(eErrorType.CardTaken);
-            }
-
-            //indexChoice = i_currentlyPlayingPlayer.GetPlayerChoice(validSlotForChose, m_GameBoard.GetBoardToDraw());
-
-            // userInputValid = validSlotForChose.Contains(indexChoice.ToUpper());
-        }
-        while (!userInputValid);
-
-        m_GameBoard.Flipped(indexChoice, k_FlippedTheCard);
-
-        return indexChoice;
-    }
-*/

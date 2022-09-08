@@ -9,6 +9,7 @@ namespace MemoryCardGame
         private static readonly Random sr_Random = new Random();
         private readonly List<MemorySlot> r_Memory;
 
+        // TODO : enadle the form wan the ai plying
         public AIPlayer(List<MemorySlot> memory)
         {
             r_Memory = memory;
@@ -163,6 +164,7 @@ namespace MemoryCardGame
 
         internal struct MemorySlot : IComparable
         {
+            // TODO : string m_Index to ButtomIndexEvent
             private char m_Value;
             private string m_Index;
 

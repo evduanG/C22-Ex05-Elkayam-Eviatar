@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using static System.Windows.Forms.Control;
 
@@ -8,6 +9,7 @@ namespace WindowsUserInterface
     {
         private const int k_NoMargin = 0;
 
+        // TODO : make form nop show in toolbar 
         public static void DesignElements(Control i_ControlToSetPosition, ePositionBy i_PositionBy, Control i_ControlCompareTo)
         {
             DesignElements(i_ControlToSetPosition, i_PositionBy, i_ControlCompareTo, k_NoMargin);
@@ -66,7 +68,7 @@ namespace WindowsUserInterface
 
         private static void setControlToTheBottom(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
-            i_ControlToSetPosition.Top = i_ControlCompareTo.Bottom + i_ControlToSetPosition.Height;
+            i_ControlToSetPosition.Top = i_ControlCompareTo.Bottom - i_ControlToSetPosition.Height;
         }
 
         private static void setControlToTheTop(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
@@ -107,12 +109,13 @@ namespace WindowsUserInterface
 
             foreach (Control control in controls)
             {
-                width = Math.Max(width, control.Location.X);
-                height = Math.Max(width, control.Location.Y);
+                width = Math.Max(width, control.Location.X + control.Width);
+                height = Math.Max(height, control.Location.Y + control.Height);
             }
 
-            i_FormToFit.Width = width + i_Margin;
-            i_FormToFit.Height = height + i_Margin;
+            i_FormToFit.ClientSize = new Size(width + i_Margin, height + i_Margin);
+            //i_FormToFit.Width = width + i_Margin;
+            //i_FormToFit.Height = height + i_Margin;
         }
     }
 }
