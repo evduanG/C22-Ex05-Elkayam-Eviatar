@@ -34,6 +34,10 @@ namespace Game
         public static Rules s_NumOfChoiceInTurn = new Rules("Num Of Choice In player Turn",
             k_NumOfChoiceInPlayerTurn, k_NumOfChoiceInPlayerTurn, v_IsFixed, k_ThrowFixedMsg);
 
+        // TODO: 2.0 : 
+        /// make a arr of link to pic  or comfig how to get the resdpons link 
+        /// 
+        /// 
         public struct Rules
         {
             public readonly string r_Name;
