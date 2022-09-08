@@ -176,8 +176,6 @@ namespace Game
             }
         }
 
-        // TODO: change the indexer and make it work with row 0 col 0
-
         /// indexer:
         private Card this[string i_indexFormt]
         {
@@ -259,7 +257,6 @@ namespace Game
             return this[i_Index].Value;
         }
 
-        // TODO: fix
         // return true  The player got another turn
         public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params ButtomIndexEvent[] i_argsChosenInTurn)
         {

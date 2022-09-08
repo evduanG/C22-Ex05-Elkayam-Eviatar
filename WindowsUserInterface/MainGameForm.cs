@@ -17,6 +17,7 @@ namespace WindowsUserInterface
         private const int k_StartingScore = 0;
         private const int k_WindowHeightModifier = 16;
         private const int k_WindowWidthModifier = 3;
+        private const bool k_Enabled = true;
         private readonly byte r_NumOfRows;
         private readonly byte r_NumOfCols;
 
@@ -70,8 +71,6 @@ namespace WindowsUserInterface
 
         private Label m_CurrentPlayerName;
         private Label[] m_Players;
-        // private Label m_PlayerOne;
-        // private Label m_PlayerTwo;
         private Button[,] m_GameBoardButtons;
         private MessageBox m_GameOverDialog;
 
@@ -94,6 +93,14 @@ namespace WindowsUserInterface
         {
             get { return m_CurrentPlayerName; }
             set { m_CurrentPlayerName = value; }
+        }
+
+        public Color DefulltColor
+        {
+            get
+            {
+                return Color.LightGray;
+            }
         }
 
         public Label[] Players
@@ -134,14 +141,6 @@ namespace WindowsUserInterface
         }
 
         // Initializers:
-        private void initializeComponents(string i_CurrentPlayer)
-        {
-            initializeMainForm();
-            initilizeGameBoardButtons();
-            initializeLabels(i_CurrentPlayer);
-            initializeGameOverDialog();
-        }
-
         public void SetPlayerNamesAndScore(string i_PlayerNameAndScore, byte i_ID)
         {
             m_Players[i_ID].Text = i_PlayerNameAndScore;
@@ -152,27 +151,57 @@ namespace WindowsUserInterface
             m_Players[i_ID].BackColor = i_Color;
         }
 
-        // Main Form:
-        private void initializeMainForm()
-        {
-            Text = k_GameTitle;
-            Size = getWindowSize();
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.Fixed3D;
-            MaximizeBox = false;
-        }
-
-        private Size getWindowSize()
-        {
-            // TODO: 16 and 3 to const ==> done!
-            int buttonSizeAndMargin = k_ButtonSize + k_Margin;
-            int formHeight = (buttonSizeAndMargin * Rows) + (k_WindowHeightModifier * k_Margin);
-            int formWidth = (buttonSizeAndMargin * Columns) + (k_WindowWidthModifier * k_Margin);
-
-            return new Size(formWidth, formHeight);
-        }
-
         // Game Board:
+        public void Flipped(ButtomIndexEvent buttomIndexEvent, char v)
+        {
+            this[buttomIndexEvent].Text = v.ToString();
+            this[buttomIndexEvent].Enabled = false;
+        }
+
+        public void ColorPair(List<ButtomIndexEvent> m_PlayerChoice, Color color)
+        {
+            foreach (ButtomIndexEvent choice in m_PlayerChoice)
+            {
+                GameBoardButtons[choice.Row, choice.Col].BackColor = color;
+            }
+        }
+
+        public void FlippCardsToFaceDown(List<ButtomIndexEvent> m_PlayerChoice)
+        {
+            foreach (ButtomIndexEvent choice in m_PlayerChoice)
+            {
+                Button buttonClick = GameBoardButtons[choice.Row, choice.Col];
+
+                buttonClick.Enabled = k_Enabled;
+                buttonClick.BackColor = DefulltColor;
+                buttonClick.Text = string.Empty;
+            }
+        }
+
+        private void initializeComponents(string i_CurrentPlayer)
+        {
+            initializeMainForm();
+            initilizeGameBoardButtons();
+            initializeLabels(i_CurrentPlayer);
+            ElementsDesignerTool.FitTheSizeOfForm(this, k_Margin);
+            initializeGameOverDialog();
+        }
+
+        private bool isGameOver()
+        {
+            bool isComplete = true;
+
+            foreach (Button button in GameBoardButtons)
+            {
+                if (button.BackColor != CurrentPlayerName.BackColor)
+                {
+                    isComplete = false;
+                }
+            }
+
+            return isComplete;
+        }
+
         private void initilizeGameBoardButtons()
         {
             m_GameBoardButtons = new Button[Rows, Columns];
@@ -190,17 +219,119 @@ namespace WindowsUserInterface
                     GameBoardButtons[i, j] = new Button
                     {
                         Size = new Size(k_ButtonSize, k_ButtonSize),
-                        BackColor = Color.LightGray,
+                        BackColor = DefulltColor,
                     };
                     GameBoardButtons[i, j].Click += GameBoardTile_Click;
                 }
             }
         }
 
-        public void Flipped(ButtomIndexEvent buttomIndexEvent, char v)
+        public void SetCurrentPlayer(string i_PlayerName, Color i_PlayerColor)
         {
-            this[buttomIndexEvent].Text = v.ToString();
-            this[buttomIndexEvent].Enabled = false;
+            CurrentPlayerName.Text = string.Format(k_CurrentPlayerLabel, i_PlayerName);
+            CurrentPlayerName.BackColor = i_PlayerColor;
+        }
+
+        public void SetPlayer(string i_PlayerName, Color i_PlayerColor, byte i_ID)
+        {
+            setColor(i_PlayerColor, i_ID);
+            SetPlayerNamesAndScore(i_PlayerName, i_ID);
+        }
+
+        public bool GetCoordinates(Button i_ClickedButton, out byte o_Row, out byte o_Col)
+        {
+            bool buttonExist = false;
+            o_Row = 0;
+            o_Col = 0;
+
+            for (byte row = 0; row < GameBoardButtons.GetLength(0); row++)
+            {
+                for(byte col = 0; col < GameBoardButtons.GetLength(1); col++)
+                {
+                    if (GameBoardButtons[row, col] == i_ClickedButton)
+                    {
+                        buttonExist = true;
+                        o_Row = row;
+                        o_Col = col;
+                        break;
+                    }
+                }
+            }
+
+            return buttonExist;
+        }
+
+        // Main Form:
+        private void initializeMainForm()
+        {
+            Text = k_GameTitle;
+            Size = getWindowSize();
+            StartPosition = FormStartPosition.CenterScreen;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            MaximizeBox = false;
+        }
+
+        private Size getWindowSize()
+        {
+            int buttonSizeAndMargin = k_ButtonSize + k_Margin;
+            int formHeight = (buttonSizeAndMargin * Rows) + (k_WindowHeightModifier * k_Margin);
+            int formWidth = (buttonSizeAndMargin * Columns) + (k_WindowWidthModifier * k_Margin);
+
+            return new Size(formWidth, formHeight);
+        }
+
+        private void anyButtemInvoker(EventArgs i_EventArgs)
+        {
+            if(AnyButtonHandler != null)
+            {
+                AnyButtonHandler.Invoke(this, (ButtomIndexEvent)i_EventArgs);
+            }
+        }
+
+        // Names and Score:
+        private void initializeLabels(string i_CurrentPlayer)
+        {
+            // setup current player
+            CurrentPlayerName = new Label();
+            Button lastButton = GameBoardButtons[GameBoardButtons.GetLength(0) - 1, 0];
+            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Under, lastButton, k_Margin);
+            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Left, lastButton);
+            CurrentPlayerName.AutoSize = true;
+            Controls.Add(CurrentPlayerName);
+
+            Label temp = CurrentPlayerName;
+
+            for(int i = 0; i < m_Players.Length; i++)
+            {
+                m_Players[i] = new Label();
+                ElementsDesignerTool.DesignElements(m_Players[i], ePositionBy.Under, temp, k_Margin);
+                ElementsDesignerTool.DesignElements(m_Players[i], ePositionBy.Left, temp);
+                m_Players[i].AutoSize = true;
+                temp = m_Players[i];
+                Controls.Add(m_Players[i]);
+            }
+        }
+
+        private void gameOverDialog_FormClosed(object i_ClosedForm, FormClosedEventArgs i_EventArgs)
+        {
+            DialogResult userChoice = ((MessageBox)i_ClosedForm).DialogResult;
+
+            if(userChoice == DialogResult.No)
+            {
+                DialogResult = DialogResult.Cancel;
+            }
+            else
+            {
+                // TODO: this ??;
+               // rematch
+            }
+        }
+
+        // Game Over Dialog:
+        private void initializeGameOverDialog()
+        {
+            m_GameOverDialog = new MessageBox();
+            GameOverDialog.FormClosed += gameOverDialog_FormClosed;
         }
 
         private void positionButtonsOnGrid()
@@ -210,7 +341,7 @@ namespace WindowsUserInterface
             GameBoardButtons[0, 0].Left = k_Margin;
             Controls.Add(GameBoardButtons[0, 0]);
 
-            // TODO : use the ElementsDesignerTool 
+            // TODO : use the ElementsDesignerTool
             // setup the rest
             for (int i = 0; i < Rows; i++)
             {
@@ -255,162 +386,29 @@ namespace WindowsUserInterface
             }
         }
 
-        public void ColorPair(List<ButtomIndexEvent> m_PlayerChoice, Color color)
+        protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)
         {
-            foreach (ButtomIndexEvent choice in m_PlayerChoice)
-            {
-                GameBoardButtons[choice.Row, choice.Col].BackColor = color;
-            }
-        }
-
-        public void FlippCardsToFaceDown(List<ButtomIndexEvent> m_PlayerChoice)
-        {
-            foreach (ButtomIndexEvent choice in m_PlayerChoice)
-            {
-                Button buttonClick = GameBoardButtons[choice.Row, choice.Col];
-
-                // TODO : make the Enabled to be const
-                // TODO : make the Color to be statir redonly 
-                buttonClick.Enabled = true;
-                buttonClick.BackColor = Color.LightGray;
-                buttonClick.Text = " ";
-            }
+            // TODO: wht is this ?
         }
 
         protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             Button clickedTile = i_ClickedButton as Button;
+            bool isButtomExists;
 
             if (isGameOver())
             {
                 GameOverDialog.ShowDialog();
             }
 
-            bool isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
+            isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
+
             if(!isButtomExists)
             {
                 throw new FormatException("the button does not exists");
             }
 
             AnyButton_Click(clickedTile, new ButtomIndexEvent(o_Row, o_Col));
-        }
-
-        private bool isGameOver()
-        {
-            bool isComplete = true;
-
-            foreach (Button button in GameBoardButtons)
-            {
-                if (button.BackColor != CurrentPlayerName.BackColor)
-                {
-                    isComplete = false;
-                }
-            }
-
-            return isComplete;
-        }
-
-        // Names and Score:
-        private void initializeLabels(string i_CurrentPlayer)
-        {
-            //// setup labels:
-            //PlayerOne = new Label();
-            //PlayerOne.Text = getPlayerNameAndScore(i_PlayerOneName, k_StartingScore);
-            //PlayerOne.TextAlign = ContentAlignment.MiddleCenter;
-            //PlayerOne.BackColor = Color.LightSteelBlue;
-            //PlayerOne.Left = k_Margin;
-            //PlayerOne.AutoSize = true;
-            //PlayerOne.Top = ClientSize.Height - k_Margin - PlayerOne.Height;
-
-            //PlayerTwo = new Label
-            //{
-            //    Text = getPlayerNameAndScore(i_PlayerTwoName, k_StartingScore),
-            //    TextAlign = PlayerOne.TextAlign,
-            //    BackColor = Color.PaleGreen,
-            //    Left = PlayerOne.Left,
-            //    AutoSize = true,
-            //    Top = ClientSize.Height - ((PlayerOne.Height + k_Margin) * 2),
-            //};
-
-            // setup current player
-            CurrentPlayerName = new Label();
-            Button lastButton = GameBoardButtons[GameBoardButtons.GetLength(0) - 1, 0];
-            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Under, lastButton, k_Margin);
-            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Left, lastButton);
-            CurrentPlayerName.AutoSize = true;
-            Controls.Add(CurrentPlayerName);
-
-            Label temp = CurrentPlayerName;
-
-            for(int i = 0; i < m_Players.Length; i++)
-            {
-                m_Players[i] = new Label();
-                ElementsDesignerTool.DesignElements(m_Players[i], ePositionBy.Under, temp);
-                ElementsDesignerTool.DesignElements(m_Players[i], ePositionBy.Left, temp);
-                m_Players[i].AutoSize = true;
-                temp = m_Players[i];
-                Controls.Add(m_Players[i]);
-            }
-
-        }
-
-        public void SetCurrentPlayer(string i_PlayerName, Color i_PlayerColor)
-        {
-            CurrentPlayerName.Text = string.Format(k_CurrentPlayerLabel, i_PlayerName);
-            CurrentPlayerName.BackColor = i_PlayerColor;
-        }
-
-        public void SetPlayer(string i_PlayerName, Color i_PlayerColor, byte i_ID)
-        {
-            setColor(i_PlayerColor, i_ID);
-            SetPlayerNamesAndScore(i_PlayerName, i_ID);
-        }
-
-        // Game Over Dialog:
-        private void initializeGameOverDialog()
-        {
-            m_GameOverDialog = new MessageBox();
-            GameOverDialog.FormClosed += gameOverDialog_FormClosed;
-        }
-
-        private void gameOverDialog_FormClosed(object i_ClosedForm, FormClosedEventArgs i_EventArgs)
-        {
-            DialogResult userChoice = ((MessageBox)i_ClosedForm).DialogResult;
-            if(userChoice == DialogResult.No)
-            {
-                DialogResult = DialogResult.Cancel;
-            }
-            else
-            {
-               // rematch
-            }
-        }
-
-        public bool GetCoordinates(Button i_ClickedButton, out byte o_Row, out byte o_Col)
-        {
-            bool buttonExit = false;
-            o_Row = 0;
-            o_Col = 0;
-
-            for (byte row = 0; row < GameBoardButtons.GetLength(0); row++)
-            {
-                for(byte col = 0; col < GameBoardButtons.GetLength(1); col++)
-                {
-                    if (GameBoardButtons[row, col] == i_ClickedButton)
-                    {
-                        buttonExit = true;
-                        o_Row = row;
-                        o_Col = col;
-                        break;
-                    }
-                }
-            }
-
-            return buttonExit;
-        }
-
-        protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)
-        {
         }
 
         protected virtual void AllButtem_Click(object sender, EventArgs i_EventArgs)
@@ -422,12 +420,5 @@ namespace WindowsUserInterface
             anyButtemInvoker(i_EventArgs);
         }
 
-        private void anyButtemInvoker(EventArgs i_EventArgs)
-        {
-            if(AnyButtonHandler != null)
-            {
-                AnyButtonHandler.Invoke(this, (ButtomIndexEvent)i_EventArgs);
-            }
-        }
     }
 }
