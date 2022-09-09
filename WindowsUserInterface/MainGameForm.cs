@@ -55,7 +55,6 @@ namespace WindowsUserInterface
         private Label m_CurrentPlayerName;
         private Label[] m_Players;
         private Button[,] m_GameBoardButtons;
-        private MessageBox m_GameOverDialog;
         private NumberOfPlayersBox m_NumberOfPlayersBox;
 
         // =======================================================
@@ -70,12 +69,6 @@ namespace WindowsUserInterface
         }
 
         // Initializers:
-        private void initializeGameOverDialog()
-        {
-            m_GameOverDialog = new MessageBox();
-            GameOverDialog.FormClosed += GameOverDialog_FormClosed;
-        }
-
         private void initializeComponents(string i_CurrentPlayer)
         {
             initializeMainForm();
@@ -220,13 +213,6 @@ namespace WindowsUserInterface
             get { return m_Players; }
         }
 
-         // TODO : this is not need to be here :: Checking whether the game is over is part of the logic
-        public MessageBox GameOverDialog
-        {
-            get { return m_GameOverDialog; }
-            set { m_GameOverDialog = value; }
-        }
-
         // Indexer:
         public Button this[byte i_Row, byte i_Col]
         {
@@ -337,22 +323,6 @@ namespace WindowsUserInterface
             m_Players[i_ID].BackColor = i_Color;
         }
 
-        private bool isGameOver()
-        {
-            // TODO : this is not need to be here :: Checking whether the game is over is part of the logic
-            bool isComplete = true;
-
-            foreach (Button button in GameBoardButtons)
-            {
-                if (button.BackColor != CurrentPlayerName.BackColor)
-                {
-                    isComplete = false;
-                }
-            }
-
-            return isComplete;
-        }
-
         // =======================================================
         // Delegates and Events methods
         // =======================================================
@@ -373,13 +343,6 @@ namespace WindowsUserInterface
         {
             Button clickedTile = i_ClickedButton as Button;
             bool isButtomExists;
-
-            // TODO : this is not need to be here :: Checking whether the game is over is part of the logic
-            if (isGameOver())
-            {
-                GameOverDialog.ShowDialog();
-            }
-
             isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
 
             if(!isButtomExists)
@@ -397,22 +360,6 @@ namespace WindowsUserInterface
         protected virtual void OnAnyButtonClick(object sender, EventArgs i_EventArgs)
         {
             anyButtemInvoker(i_EventArgs);
-        }
-
-        protected virtual void GameOverDialog_FormClosed(object i_ClosedForm, FormClosedEventArgs i_EventArgs)
-        {
-            DialogResult userChoice = ((MessageBox)i_ClosedForm).DialogResult;
-
-            // TODO : this is not need to be here :: Checking whether the game is over is part of the logic
-            if(userChoice == DialogResult.No)
-            {
-                DialogResult = DialogResult.Cancel;
-            }
-            else
-            {
-                // TODO: this ??;
-               // rematch
-            }
         }
     }
 }
@@ -489,7 +436,6 @@ namespace WindowsUserInterface
 
         protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)
         {
-            // TODO: wht is this ?
         }
 
         protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)

@@ -5,7 +5,7 @@ namespace MemoryCardGame
 {
     internal class Player
     {
-        private static readonly Color[] sr_Colors = { System.Drawing.Color.LightBlue, System.Drawing.Color.LightGreen, System.Drawing.Color.LightPink };
+        private static readonly Color[] sr_Colors = { System.Drawing.Color.LightBlue, System.Drawing.Color.PaleGreen, System.Drawing.Color.LightPink };
 
         private readonly bool r_IsHuman;
         private byte m_Score;

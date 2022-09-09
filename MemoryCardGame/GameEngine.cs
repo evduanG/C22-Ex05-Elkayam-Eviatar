@@ -57,7 +57,7 @@ namespace MemoryCardGame
         }
 
         // =======================================================
-        // Propertys
+        // Properties
         // =======================================================
         private Player CurrentPlayer
         {
