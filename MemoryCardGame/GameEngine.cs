@@ -124,7 +124,7 @@ namespace MemoryCardGame
         private void startNewGame(byte i_Higt, byte i_Width)
         {
             m_GameLogic = new GameLogic(i_Higt, i_Width);
-            m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2, CurrentPlayer.Name);
+            m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2);
 
             // m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
@@ -154,6 +154,7 @@ namespace MemoryCardGame
             foreach (Player player in m_AllPlayersInGame)
             {
                 player.ShowBoard(m_GameLogic.GetBoardToDraw());
+
                 // TODO : ShowBoard  m_SelectedTileInTurn and list of val ==> forgot what this means
             }
         }
@@ -255,6 +256,7 @@ namespace MemoryCardGame
                 m_GameForm.Flipped(buttomIndexEvent, v);
                 m_SelectedTileInTurn.Add(buttomIndexEvent);
                 InbetweenTurnsTimer.Start();
+
                 // endOfTurn();
             }
         }
