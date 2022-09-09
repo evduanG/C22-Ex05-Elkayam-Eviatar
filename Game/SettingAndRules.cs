@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Game
 {
@@ -31,10 +31,50 @@ namespace Game
         public struct Rules
         {
             private readonly string r_Name;
+            private readonly byte r_UpperBound;
             private readonly byte r_LowerBound;
-            public readonly byte r_UpperBound;
-            public readonly bool r_IsFixed;
-            public readonly string r_TrowMsg;
+            private readonly bool r_IsFixed;
+            private readonly string r_ThrowMsg;
+
+            public string Name
+            {
+                get
+                {
+                    return r_Name;
+                }
+            }
+
+            public byte UpperBound
+            {
+                get
+                {
+                    return r_UpperBound;
+                }
+            }
+
+            public byte LowerBound
+            {
+                get
+                {
+                    return r_LowerBound;
+                }
+            }
+
+            public bool IsFixed
+            {
+                get
+                {
+                    return r_IsFixed;
+                }
+            }
+
+            public string ThrowMsg
+            {
+                get
+                {
+                    return r_ThrowMsg;
+                }
+            }
 
             public Rules(string i_Name, byte i_UpperBound, byte i_LowerBound, bool i_IsFixed, string i_TorwStr)
             {
@@ -42,7 +82,7 @@ namespace Game
                 r_UpperBound = i_UpperBound;
                 r_LowerBound = i_LowerBound;
                 r_IsFixed = i_IsFixed;
-                r_TrowMsg = i_TorwStr;
+                r_ThrowMsg = i_TorwStr;
             }
 
             // check if value is within upper and lower bounds
@@ -54,17 +94,17 @@ namespace Game
             // authenticate value, throw exception if invalid
             public bool IsValid(byte i_valueChecked)
             {
-                if (r_IsFixed)
+                if (IsFixed)
                 {
                     throw new ArgumentException();
                 }
 
-                return IsBetween(i_valueChecked, r_UpperBound, r_LowerBound);
+                return IsBetween(i_valueChecked, UpperBound, LowerBound);
             }
 
             public override string ToString()
             {
-                return string.Format(" the {0} between {1} to {2} ", r_Name, r_LowerBound, r_UpperBound);
+                return string.Format(" the {0} between {1} to {2} ", Name, LowerBound, UpperBound);
             }
         }
     }

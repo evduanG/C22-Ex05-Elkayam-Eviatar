@@ -4,20 +4,22 @@ using Game;
 
 namespace MemoryCardGame
 {
-    internal struct AIPlayer
+    internal class AIPlayer : Player
     {
+        public const string k_NamePc = "PC";
         private static readonly Random sr_Random = new Random();
         private readonly List<MemorySlot> r_Memory;
 
         // TODO : enable the form when the AI playing
-        public AIPlayer(List<MemorySlot> memory)
+        // public AIPlayer(List<MemorySlot> memory)
+        // {
+        //    base()
+        //    r_Memory = memory;
+        // }
+        public AIPlayer(byte i_ID)
+            : base(k_NamePc, i_ID)
         {
-            r_Memory = memory;
-        }
-
-        public static AIPlayer CreateNew()
-        {
-            return new AIPlayer(new List<MemorySlot>());
+            r_Memory = new List<MemorySlot>();
         }
 
         private List<MemorySlot> Memory
@@ -28,12 +30,12 @@ namespace MemoryCardGame
             }
         }
 
-        public void ResetMemory()
+        public override void RestartNewGame()
         {
             Memory.Clear();
         }
 
-        public void ShowBoard(char[,] i_GameBoard)
+        public override void ShowBoard(char[,] i_GameBoard)
         {
             byte row = 0;
             byte col = 0;
@@ -60,7 +62,7 @@ namespace MemoryCardGame
             }
         }
 
-        internal string GetAIPlayerChoice(
+        public override string GetPlayerChoice(
             List<string> i_ValidSlotTOChase,
             char[,] i_boardToDraw)
         {

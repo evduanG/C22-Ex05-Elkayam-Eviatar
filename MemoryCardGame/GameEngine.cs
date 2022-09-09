@@ -20,6 +20,9 @@ namespace MemoryCardGame
         private readonly List<ButtomIndexEvent> r_SelectedTileInTurn;
 
         private Screen.MainGameForm m_GameForm;
+        private Screen.NumberOfPlayersBox m_NumberOfPlayersBox;
+        private Player[] m_AllPlayersInGame;
+        private List<BoardLocation> m_SelectedTileInTurn;
         private GameLogic m_GameLogic;
         private byte m_TurnCounter;
 
@@ -32,9 +35,22 @@ namespace MemoryCardGame
 
             // r_IsPlaying = false;
             m_TurnCounter = 0;
-            r_SelectedTileInTurn = new List<ButtomIndexEvent>();
-            r_TotalPLayers = Setting.sr_NumOfPlayers.r_UpperBound;
-            r_AllPlayersInGame = new Player[r_TotalPLayers];
+            m_SelectedTileInTurn = new List<BoardLocation>();
+
+            /******     number of players       ******/
+            m_NumberOfPlayersBox = new NumberOfPlayersBox();
+            m_NumberOfPlayersBox.ShowDialog();
+
+            if (Setting.NumOfPlayers.IsFixed)
+            {
+                m_TotalPLayers = Setting.NumOfPlayers.UpperBound;
+            }
+            else
+            {
+                m_TotalPLayers = m_NumberOfPlayersBox.UserChoice;
+            }
+
+            m_AllPlayersInGame = new Player[m_TotalPLayers];
 
             // timer setup
             r_InbetweenTurnsTimer = new Timer();
@@ -90,6 +106,8 @@ namespace MemoryCardGame
         public void DisplaySetUpForm()
         {
             Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
+
+            // TODO : make this func to be from input of setting
             form.SetListOfBordSizeOptions(4, 6, 4, 6);
             form.StartClick += ButtonStart_Click;
             form.ShowDialog();
@@ -110,7 +128,7 @@ namespace MemoryCardGame
             // m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
 
-            foreach(Player player in r_AllPlayersInGame)
+            foreach(Player player in m_AllPlayersInGame)
             {
                 m_GameForm.SetPlayer(player.ToString(), player.Color, player.ID);
             }
@@ -171,7 +189,7 @@ namespace MemoryCardGame
 
                 if(setUpNewGameForm.IsSecondPlayerComputer)
                 {
-                    r_AllPlayersInGame[1] = new Player(1);
+                    m_AllPlayersInGame[1] = new AIPlayer(1);
                 }
                 else
                 {
@@ -186,30 +204,40 @@ namespace MemoryCardGame
 
         protected virtual void AnyButtonClick_FirstClick(object i_Sender, EventArgs i_ButtomIndexEvent)
         {
-            if (!IsInBetweenTurns)
+            bool isGameAction = gameAction(i_Sender, i_ButtomIndexEvent);
+
+            if(isGameAction)
             {
-                Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
-                ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
-                char v = this.m_GameLogic.Flipped(buttomIndexEvent, true);
-                m_GameForm.Flipped(buttomIndexEvent, v);
-                r_SelectedTileInTurn.Add(buttomIndexEvent);
                 m_GameForm.AnyButtonClick -= AnyButtonClick_FirstClick;
                 m_GameForm.AnyButtonClick += AnyButtonClick_SecondClick;
             }
         }
 
-        protected virtual void AnyButtonClick_SecondClick(object i_Sender, EventArgs e)
+        protected virtual void AnyButtonClick_SecondClick(object i_Sender, EventArgs i_ButtomIndexEvent)
         {
+            bool isGameAction = gameAction(i_Sender, i_ButtomIndexEvent);
+
+            if(isGameAction)
+            {
+                InbetweenTurnsTimer.Start();
+            }
+        }
+
+        private bool gameAction(object i_Sender, EventArgs i_ButtomIndexEvent)
+        {
+            bool ans = false;
+
             if (!IsInBetweenTurns)
             {
-                ButtomIndexEvent buttomIndexEvent = e as ButtomIndexEvent;
-                char v = this.m_GameLogic.Flipped(buttomIndexEvent, true);
-                m_GameForm.Flipped(buttomIndexEvent, v);
-                r_SelectedTileInTurn.Add(buttomIndexEvent);
-                InbetweenTurnsTimer.Start();
-
-                // endOfTurn();
+                Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
+                ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
+                char v = this.m_GameLogic.Flipped(buttomIndexEvent.Location, true);
+                m_GameForm.Flipped(buttomIndexEvent.Location, v);
+                m_SelectedTileInTurn.Add(buttomIndexEvent.Location);
+                ans = true;
             }
+
+            return ans;
         }
 
         protected virtual void InbetweenTurnsTimer_Tick(object sender, EventArgs e)
