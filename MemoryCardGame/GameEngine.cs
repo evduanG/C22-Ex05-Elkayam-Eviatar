@@ -162,7 +162,7 @@ namespace MemoryCardGame
 
         private void endOfTurn() // TODO: find a good name
         {
-            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_SelectedTileInTurn.ToArray());
+            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
@@ -170,15 +170,15 @@ namespace MemoryCardGame
             if (!isThePlyerHaveAnderTurn)
             {
                 TurnCounter++;
-                m_GameForm.FlippCardsToFaceDown(m_SelectedTileInTurn);
+                m_GameForm.FlippCardsToFaceDown(r_SelectedTileInTurn);
                 m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             }
             else
             {
-                m_GameForm.ColorPair(m_SelectedTileInTurn, CurrentPlayer.Color);
+                m_GameForm.ColorPair(r_SelectedTileInTurn, CurrentPlayer.Color);
             }
 
-            m_SelectedTileInTurn.Clear();
+            r_SelectedTileInTurn.Clear();
 
             if(m_GameLogic.HaveMoreMoves)
             {
