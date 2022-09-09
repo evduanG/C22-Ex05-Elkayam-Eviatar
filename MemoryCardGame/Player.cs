@@ -34,23 +34,10 @@ namespace MemoryCardGame
             }
         }
 
-        //private AIPlayer? m_AiPlayer;
-
-        //public Player(byte i_ID)
-        //{
-        //    m_Name = "PC";
-        //    m_Score = 0;
-        //    r_IsHuman = false;
-        //    m_AiPlayer = AIPlayer.CreateNew();
-        //    m_ID = i_ID;
-        //}
-
         public Player(string i_name, byte i_ID)
         {
             m_Score = 0;
-            //r_IsHuman = true;
             m_Name = i_name;
-            //m_AiPlayer = null;
             m_ID = i_ID;
         }
 
@@ -67,33 +54,18 @@ namespace MemoryCardGame
         public virtual string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
         {
             string returnChosice = string.Empty;
-            
-            //if (IsHuman)
-            //{
-            //    // returnChosice = UserInput.GetPlayerGameMove();
-            //}
-            //else
-            //{
-            //    returnChosice = m_AiPlayer.GetAIPlayerChoice(i_validSlotTOChase, i_BoardToDraw);
-            //}
-
+            // TODO : this is an empty func not a good way to do it
             return returnChosice;
         }
 
         public virtual void ShowBoard(char[,] i_GameBoard)
         {
-            //if (!IsHuman)
-            //{
-            //    m_AiPlayer?.ShowBoard(i_GameBoard);
-            //}
+            // TODO : this is an empty func not a good way to do it
         }
 
         public virtual void RestartNewGame()
         {
-            //if (!IsHuman)
-            //{
-            //    m_AiPlayer?.ResetMemory();
-            //}
+            // TODO : this is an empty func not a good way to do it
         }
     }
 }
