@@ -13,16 +13,18 @@ namespace MemoryCardGame
     {
         public const bool k_Running = true;
         public const bool k_FlippedTheCard = true;
+        private readonly byte r_TotalPLayers;
+        private readonly Timer r_InbetweenTurnsTimer;
+        private readonly int r_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
+        private readonly Player[] r_AllPlayersInGame;
+        private readonly List<ButtomIndexEvent> r_SelectedTileInTurn;
+
         private Screen.MainGameForm m_GameForm;
         private Screen.NumberOfPlayersBox m_NumberOfPlayersBox;
         private Player[] m_AllPlayersInGame;
         private List<BoardLocation> m_SelectedTileInTurn;
         private GameLogic m_GameLogic;
         private byte m_TurnCounter;
-
-        private byte m_TotalPLayers;
-        private Timer m_InbetweenTurnsTimer;
-        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
 
         // ===================================================================
         //  constructor and methods that the constructor uses
@@ -51,31 +53,31 @@ namespace MemoryCardGame
             m_AllPlayersInGame = new Player[m_TotalPLayers];
 
             // timer setup
-            m_InbetweenTurnsTimer = new Timer();
-            InbetweenTurnsTimer.Interval = m_SleepBetweenTurns;
+            r_InbetweenTurnsTimer = new Timer();
+            InbetweenTurnsTimer.Interval = r_SleepBetweenTurns;
             InbetweenTurnsTimer.Tick += InbetweenTurnsTimer_Tick;
         }
 
         // =======================================================
-        // Propertys
+        // Properties
         // =======================================================
         private Player CurrentPlayer
         {
             get
             {
-                int indx = TurnCounter % m_AllPlayersInGame.Length;
-                return m_AllPlayersInGame[indx];
+                int indx = TurnCounter % r_AllPlayersInGame.Length;
+                return r_AllPlayersInGame[indx];
             }
         }
 
         public Timer InbetweenTurnsTimer
         {
-            get { return m_InbetweenTurnsTimer; }
+            get { return r_InbetweenTurnsTimer; }
         }
 
         public bool IsInBetweenTurns
         {
-            get { return m_InbetweenTurnsTimer.Enabled; }
+            get { return r_InbetweenTurnsTimer.Enabled; }
         }
 
         public byte TurnCounter
@@ -118,11 +120,6 @@ namespace MemoryCardGame
             // asq for more game ?
         }
 
-        public void DisplayNumberOfPlayersForm()
-        {
-            m_NumberOfPlayersBox = new NumberOfPlayersBox();
-        }
-
         private void startNewGame(byte i_Higt, byte i_Width)
         {
             m_GameLogic = new GameLogic(i_Higt, i_Width);
@@ -140,19 +137,9 @@ namespace MemoryCardGame
             m_GameForm.ShowDialog();
         }
 
-        // render the game board and show stats
-        private void drawBoard()
-        {
-            /*
-            screen.clearboard();
-            screen.showboard(m_gameboard.getboardtodraw());
-            screen.showmessage(getplayersscoreline());
-            */
-        }
-
         private void showAllPlayersTheBoard()
         {
-            foreach (Player player in m_AllPlayersInGame)
+            foreach (Player player in r_AllPlayersInGame)
             {
                 player.ShowBoard(m_GameLogic.GetBoardToDraw());
 
@@ -160,22 +147,9 @@ namespace MemoryCardGame
             }
         }
 
-        // show the current score
-        private string getPlayersScoreLine()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Player player in m_AllPlayersInGame)
-            {
-                sb.Append(player.ToString());
-            }
-
-            return sb.ToString();
-        }
-
         private void endOfTurn() // TODO: find a good name
         {
-            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_SelectedTileInTurn.ToArray());
+            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
@@ -183,15 +157,15 @@ namespace MemoryCardGame
             if (!isThePlyerHaveAnderTurn)
             {
                 TurnCounter++;
-                m_GameForm.FlippCardsToFaceDown(m_SelectedTileInTurn);
+                m_GameForm.FlippCardsToFaceDown(r_SelectedTileInTurn);
                 m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             }
             else
             {
-                m_GameForm.ColorPair(m_SelectedTileInTurn, CurrentPlayer.Color);
+                m_GameForm.ColorPair(r_SelectedTileInTurn, CurrentPlayer.Color);
             }
 
-            m_SelectedTileInTurn.Clear();
+            r_SelectedTileInTurn.Clear();
 
             if(m_GameLogic.HaveMoreMoves)
             {
@@ -211,7 +185,7 @@ namespace MemoryCardGame
 
             if (setUpNewGameForm != null)
             {
-                m_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName, 0);
+                r_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName, 0);
 
                 if(setUpNewGameForm.IsSecondPlayerComputer)
                 {
@@ -219,18 +193,13 @@ namespace MemoryCardGame
                 }
                 else
                 {
-                    m_AllPlayersInGame[1] = new Player(setUpNewGameForm.SecondPlayerName, 1);
+                    r_AllPlayersInGame[1] = new Player(setUpNewGameForm.SecondPlayerName, 1);
                 }
             }
 
             setUpNewGameForm.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
             setUpNewGameForm.HideInTaskbar();
             startNewGame(o_Higt, o_Width);
-        }
-
-        protected virtual void MessageBox_Occur(object i_Sender, EventArgs i_ButtomIndexEvent)
-        {
-            Screen.MessageBox messageBox = i_Sender as Screen.MessageBox;
         }
 
         protected virtual void AnyButtonClick_FirstClick(object i_Sender, EventArgs i_ButtomIndexEvent)

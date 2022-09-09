@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace MemoryCardGame
 {
     internal class Player
     {
-        private static readonly Color[] sr_Colors = { System.Drawing.Color.LightBlue, System.Drawing.Color.LightGreen, System.Drawing.Color.LightPink };
+        private static readonly Color[] sr_Colors = { System.Drawing.Color.LightBlue, System.Drawing.Color.PaleGreen, System.Drawing.Color.LightPink };
 
         private byte m_Score;
         private string m_Name;
@@ -67,7 +67,7 @@ namespace MemoryCardGame
         public virtual string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
         {
             string returnChosice = string.Empty;
-
+            
             //if (IsHuman)
             //{
             //    // returnChosice = UserInput.GetPlayerGameMove();

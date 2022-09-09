@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Game
 {
@@ -6,37 +6,24 @@ namespace Game
     {
         private const bool k_IsFixed = true;
         private const string k_ThrowFixedMsg = "The value is fixed";
-        public const char k_ExitTheGame = 'Q';
 
         private const byte k_UpperBound = 6;
         private const byte k_LowerBound = 4;
         private const string k_ThrowDimensionsMsg = "The game dimensions heva a fix size";
-
-        public static Rules Rows = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
-        public static Rules Columns = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
-
-        // or add to user input
-        /******     number of players       ******/
-        private const byte k_NumOfParticipants = 2;
-        public static readonly Rules NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
-
-        /******     input format       ******/
-
-        // private const string k_InputFormatMsg = "The input format of the game is Capital letter between A - F , and a number between 1-6";
-        // private static readonly Rules[] InputFormat =
-        // {
-        //    new Rules("input Format Letter", (byte)'A', (byte)'F', !k_IsFixed, k_InputFormatMsg),
-        //    new Rules("input Format number", (byte)'1', (byte)'6', !k_IsFixed, k_InputFormatMsg),
-        // };
 
         /******     number of players       ******/
         public const int k_SleepBetweenTurns = 1500;
 
         /****** number of Choice In players Turn ******/
         private const int k_NumOfChoiceInPlayerTurn = 2;
-        public static Rules NumOfChoiceInTurn = new Rules(
-            "Num Of Choice In player Turn",
-            k_NumOfChoiceInPlayerTurn, k_NumOfChoiceInPlayerTurn, k_IsFixed, k_ThrowFixedMsg);
+        private static readonly Rules sr_NumOfChoiceInTurn = new Rules("Num Of Choice In player Turn", k_NumOfChoiceInPlayerTurn, k_NumOfChoiceInPlayerTurn, k_IsFixed, k_ThrowFixedMsg);
+
+        /******     number of players       ******/
+        private const byte k_NumOfParticipants = 2;
+        public static readonly Rules sr_NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
+
+        private static readonly Rules sr_Rows = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
+        private static readonly Rules sr_Columns = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
 
         // TODO: 2.0 :
 
