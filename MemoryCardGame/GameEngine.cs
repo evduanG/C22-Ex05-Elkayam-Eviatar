@@ -15,10 +15,7 @@ namespace MemoryCardGame
         private readonly byte r_TotalPLayers;
         private readonly Timer r_InbetweenTurnsTimer;
         private readonly Player[] r_AllPlayersInGame;
-        private readonly List<ButtomIndexEvent> r_SelectedTileInTurn;
         private Screen.MainGameForm m_GameForm;
-        private Screen.NumberOfPlayersBox m_NumberOfPlayersBox;
-        private Player[] m_AllPlayersInGame;
         private List<BoardLocation> m_SelectedTileInTurn;
         private GameLogic m_GameLogic;
         private byte m_TurnCounter;
@@ -34,19 +31,9 @@ namespace MemoryCardGame
             m_SelectedTileInTurn = new List<BoardLocation>();
 
             /******     number of players       ******/
-            m_NumberOfPlayersBox = new NumberOfPlayersBox();
-            m_NumberOfPlayersBox.ShowDialog();
+            r_TotalPLayers = Setting.sr_NumOfPlayers.UpperBound;
 
-            if (Setting.NumOfPlayers.IsFixed)
-            {
-                m_TotalPLayers = Setting.NumOfPlayers.UpperBound;
-            }
-            else
-            {
-                m_TotalPLayers = m_NumberOfPlayersBox.UserChoice;
-            }
-
-            m_AllPlayersInGame = new Player[m_TotalPLayers];
+            r_AllPlayersInGame = new Player[r_TotalPLayers];
 
             /******     timer setup       ******/
             m_InbetweenTurnsTimer = new Timer();
@@ -124,7 +111,7 @@ namespace MemoryCardGame
             // m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
 
-            foreach(Player player in m_AllPlayersInGame)
+            foreach(Player player in r_AllPlayersInGame)
             {
                 m_GameForm.SetPlayer(player.ToString(), player.Color, player.ID);
             }
@@ -176,7 +163,7 @@ namespace MemoryCardGame
 
         private void endOfTurn() // TODO: find a good name
         {
-            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
+            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, m_SelectedTileInTurn.ToArray());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
@@ -184,15 +171,15 @@ namespace MemoryCardGame
             if (!isThePlyerHaveAnderTurn)
             {
                 TurnCounter++;
-                m_GameForm.FlippCardsToFaceDown(r_SelectedTileInTurn);
+                m_GameForm.FlippCardsToFaceDown(m_SelectedTileInTurn);
                 m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             }
             else
             {
-                m_GameForm.ColorPair(r_SelectedTileInTurn, CurrentPlayer.Color);
+                m_GameForm.ColorPair(m_SelectedTileInTurn, CurrentPlayer.Color);
             }
 
-            r_SelectedTileInTurn.Clear();
+            m_SelectedTileInTurn.Clear();
 
             if(m_GameLogic.HaveMoreMoves)
             {
@@ -214,7 +201,7 @@ namespace MemoryCardGame
 
                 if(setUpNewGameForm.IsSecondPlayerComputer)
                 {
-                    m_AllPlayersInGame[1] = new AIPlayer(1);
+                    r_AllPlayersInGame[1] = new AIPlayer(1);
                 }
                 else
                 {
