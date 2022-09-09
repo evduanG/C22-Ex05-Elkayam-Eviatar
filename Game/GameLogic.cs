@@ -40,11 +40,11 @@ namespace Game
         };
 
         private readonly byte r_NumOfCols;
-        private Card[,] m_GameBoard;
+        private readonly byte r_NumOfRows;
+        private readonly Card[,] r_GameBoard;
         private byte m_FlippedCardsCounter;
 
         /******     Dimensions   ******/
-        private readonly byte r_NumOfRows;
 
         public byte Rows
         {
@@ -73,7 +73,6 @@ namespace Game
             {
                 m_FlippedCardsCounter = value;
             }
-
         }
 
         /// constructor
@@ -91,7 +90,7 @@ namespace Game
             }
 
             shuffleCard(ref chars);
-            m_GameBoard = new Card[Rows, Columns];
+            r_GameBoard = new Card[Rows, Columns];
             byte indexInChars = 0;
 
             for (int i = 0; i < Rows; i++)
@@ -99,8 +98,8 @@ namespace Game
                 for (int j = 0; j < Columns; j++)
                 {
                     byte k = indexInChars;
-                    m_GameBoard[i, j] = new Card(chars[indexInChars++], !k_FaceUp);
-                    Console.WriteLine(string.Format("card : {0} , row = {1} ,col = {2}",chars[k],i ,j));
+                    r_GameBoard[i, j] = new Card(chars[indexInChars++], !k_FaceUp);
+                    Console.WriteLine(string.Format("card : {0} , row = {1} ,col = {2}", chars[k], i, j));
                 }
             }
         }
@@ -120,7 +119,7 @@ namespace Game
             {
                 for(byte j = 0; j < Columns; j++)
                 {
-                    i_GameForm[i, j].Click += m_GameBoard[i, j].Card_Clicked;
+                    i_GameForm[i, j].Click += r_GameBoard[i, j].Card_Clicked;
                 }
             }
         }
@@ -211,19 +210,18 @@ namespace Game
             {
                 try
                 {
-                    return m_GameBoard[i_Rows, i_Columns];
+                    return r_GameBoard[i_Rows, i_Columns];
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(String.Format("i_Rows = {0}, Rows = {1}, i_Columns= {2}, Columns= {3}", i_Rows, Rows, i_Columns, Columns), e);
+                    throw new Exception(string.Format("i_Rows = {0}, Rows = {1}, i_Columns= {2}, Columns= {3}", i_Rows, Rows, i_Columns, Columns), e);
                 }
-                // isValidLocation(i_Rows, i_Columns);
             }
 
             set
             {
                 // isValidLocation(i_Rows, i_Columns);
-                m_GameBoard[i_Rows, i_Columns] = value;
+                r_GameBoard[i_Rows, i_Columns] = value;
             }
         }
 
@@ -307,7 +305,7 @@ namespace Game
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    boardToDraw[i, j] = m_GameBoard[i, j].Value;
+                    boardToDraw[i, j] = r_GameBoard[i, j].Value;
                 }
             }
 
@@ -325,7 +323,7 @@ namespace Game
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    bool isCardFlip = m_GameBoard[i, j].Flipped;
+                    bool isCardFlip = r_GameBoard[i, j].Flipped;
 
                     if (!isCardFlip)
                     {
@@ -374,7 +372,7 @@ charToReplaceTheIndex,
 charToFindTheIndex,
 isSuccessTryParse,
 isUpper,
-m_GameBoard[io_rowIndex, io_colIndex]));
+r_GameBoard[io_rowIndex, io_colIndex]));
             }
 
             bool isInvalueRow = io_rowIndex < 0 || io_rowIndex >= Rows;
@@ -389,7 +387,7 @@ m_GameBoard[io_rowIndex, io_colIndex]));
         private struct Card
         {
             // private const string km_formatToPrint = " {} |";
-            private const char m_default = ' ';
+            private const char k_Default = ' ';
 
             private char m_Value;
             private bool m_Flipped;
@@ -413,7 +411,7 @@ m_GameBoard[io_rowIndex, io_colIndex]));
             {
                 get
                 {
-                    char retunValue = m_default;
+                    char retunValue = k_Default;
                     if (Flipped)
                     {
                         retunValue = m_Value;

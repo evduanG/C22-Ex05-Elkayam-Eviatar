@@ -29,7 +29,7 @@ namespace WindowsUserInterface
                     setControlToTheTop(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
                     break;
                 case ePositionBy.Bottom:
-                    setControlToTheBottom(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
+                    setControlToTheBottom(i_ControlCompareTo, i_ControlToSetPosition);
                     break;
                 case ePositionBy.Under:
                     setControlToTheUnder(i_ControlCompareTo, i_ControlToSetPosition, i_Margin);
@@ -66,7 +66,7 @@ namespace WindowsUserInterface
             i_ControlToSetPosition.Left = i_ControlCompareTo.Left + (i_ControlCompareTo.Width / 2) - (i_ControlToSetPosition.Width / 2) + i_Margin;
         }
 
-        private static void setControlToTheBottom(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
+        private static void setControlToTheBottom(Control i_ControlCompareTo, Control i_ControlToSetPosition)
         {
             i_ControlToSetPosition.Top = i_ControlCompareTo.Bottom - i_ControlToSetPosition.Height;
         }
@@ -84,16 +84,6 @@ namespace WindowsUserInterface
         private static void setControlToTheLeft(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
             i_ControlToSetPosition.Left = i_ControlCompareTo.Left + i_Margin;
-        }
-
-        public static int ConfigClientSizeWidth(Control i_First, Control i_Last, int i_Margin)
-        {
-            return 0;
-        }
-
-        public static int ConfigClientSizeHeight(Control i_First, Control i_Last, int i_Margin)
-        {
-            return 0;
         }
 
         private static void displayInTaskbar(Form i_FormToHid, bool i_IsShowingInToolBar)

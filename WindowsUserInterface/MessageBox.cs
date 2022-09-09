@@ -10,12 +10,10 @@ namespace WindowsUserInterface
     {
         private const int k_MessageBoxHeight = 180;
         private const int k_MessageBoxWidth = 360;
-        private const int k_LabelWidth = 200; // TODO : not in use
         private const string k_FormtWinnerScoreMessage = "{0} won with {1} points!";
         private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
-        public event MessageBoxHandler Closed;
-
+        // public event MessageBoxHandler Closed;
         private Label m_GameResultsMessage;
         private Label m_AnotherGameMessage;
         private Button m_ButtonYes;
@@ -97,7 +95,7 @@ namespace WindowsUserInterface
         }
 
         // =======================================================
-        // Propertys
+        // Properties
         // =======================================================
         public Label GameResultsMessage
         {

@@ -17,23 +17,23 @@ namespace WindowsUserInterface
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";
         private const int k_Margin = 12;
-        private const bool k_Show = true;
         private const bool k_Enable = true;
         private const bool k_FirstGame = true;
         private const int k_BoardSizeButtonBase = 20;
 
         // TODO : sr_BoardSizes get at val form Game engine
         private static readonly string[] sr_BoardSizes = { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
-        private static readonly BordSizeOptions[] sr_BoardSizesOp =
+        private static readonly BoardSizeOptions[] sr_BoardSizesOp =
         {
-            new BordSizeOptions(4, 4), new BordSizeOptions(4, 5), new BordSizeOptions(4, 6), new BordSizeOptions(5, 4),
-            new BordSizeOptions(5, 6), new BordSizeOptions(6, 4), new BordSizeOptions(6, 5), new BordSizeOptions(6, 6),
+            new BoardSizeOptions(4, 4), new BoardSizeOptions(4, 5), new BoardSizeOptions(4, 6), new BoardSizeOptions(5, 4),
+            new BoardSizeOptions(5, 6), new BoardSizeOptions(6, 4), new BoardSizeOptions(6, 5), new BoardSizeOptions(6, 6),
         };
 
         private byte m_BoardSizeIndex = 0;
 
         public event StartClickHandler StartClick;
 
+        private readonly List<BoardSizeOptions> r_ListBordSizeOptions;
         private readonly bool r_IsFirstGame;
         private Label m_LabelFirstPlayer;
         private Label m_LabelSecondPlayer;
@@ -45,7 +45,6 @@ namespace WindowsUserInterface
         private Button m_BoardSizes;
         private Button m_ButtonAgainstAFriend;
         private Button m_ButtonStart;
-        private List<BordSizeOptions> m_ListBordSizeOptions;
 
         // =======================================================
         // constructor  and methods for the constructor
@@ -67,7 +66,7 @@ namespace WindowsUserInterface
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Text = k_TitleForm;
-            m_ListBordSizeOptions = new List<BordSizeOptions>();
+            r_ListBordSizeOptions = new List<BoardSizeOptions>();
             initiationForm(i_FirstplayerName, i_SecondPlayerName);
             MaximizeBox = false;
             MinimizeBox = false;
@@ -237,7 +236,7 @@ namespace WindowsUserInterface
             {
                 for(byte widt = i_WidthMin; widt <= i_WidthMax; widt++)
                 {
-                    m_ListBordSizeOptions.Add(new BordSizeOptions(higt, widt));
+                    r_ListBordSizeOptions.Add(new BoardSizeOptions(higt, widt));
 
                     // m_ComboBoxBordSize.Items.Add(new BordSizeOptions(higt, widt));
                 }
@@ -323,31 +322,31 @@ namespace WindowsUserInterface
             modifyFormAndStarButtn();
         }
 
-        private struct BordSizeOptions
+        private struct BoardSizeOptions
         {
             private const string k_ToStringFormt = "{0} x {1}";
-            private byte m_Higt;
-            private byte m_Width;
+            private readonly byte r_Height;
+            private readonly byte r_Width;
 
-            public BordSizeOptions(byte i_Higt, byte i_Width)
+            public BoardSizeOptions(byte i_Height, byte i_Width)
             {
-                this.m_Higt = i_Higt;
-                this.m_Width = i_Width;
+                this.r_Height = i_Height;
+                this.r_Width = i_Width;
             }
 
             public byte Higt
             {
-                get { return m_Higt; }
+                get { return r_Height; }
             }
 
             public byte Width
             {
-                get { return m_Width; }
+                get { return r_Width; }
             }
 
             public override string ToString()
             {
-                return string.Format(k_ToStringFormt, m_Width, m_Higt);
+                return string.Format(k_ToStringFormt, r_Width, r_Height);
             }
         }
 
