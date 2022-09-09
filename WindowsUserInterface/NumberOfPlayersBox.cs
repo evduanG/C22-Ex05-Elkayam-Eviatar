@@ -102,12 +102,12 @@ namespace WindowsUserInterface
             ElementsDesignerTool.DesignElements(ButtonOK, ePositionBy.Under, NumberOfPlayers, MainGameForm.k_Margin);
             ElementsDesignerTool.DesignElements(ButtonOK, ePositionBy.Left, NumberOfPlayers, MainGameForm.k_Margin);
             ButtonOK.Text = k_ButtonOkText;
-            ButtonOK.Click += buttonOK_Click;
+            ButtonOK.Click += ButtonOK_Click;
 
             Controls.Add(ButtonOK);
         }
 
-        private void buttonOK_Click(object i_ButtonOK, EventArgs i_EventArgs)
+        protected virtual void ButtonOK_Click(object i_ButtonOK, EventArgs i_EventArgs)
         {
             DialogResult = DialogResult.OK;
         }
