@@ -20,7 +20,6 @@ namespace MemoryCardGame
         private readonly List<ButtomIndexEvent> r_SelectedTileInTurn;
 
         private Screen.MainGameForm m_GameForm;
-        private Player[] m_AllPlayersInGame;
         private List<BoardLocation> m_SelectedTileInTurn;
         private GameLogic m_GameLogic;
         private byte m_TurnCounter;
@@ -117,7 +116,7 @@ namespace MemoryCardGame
             // m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
 
-            foreach(Player player in m_AllPlayersInGame)
+            foreach(Player player in r_AllPlayersInGame)
             {
                 m_GameForm.SetPlayer(player.ToString(), player.Color, player.ID);
             }
@@ -178,7 +177,7 @@ namespace MemoryCardGame
 
                 if(setUpNewGameForm.IsSecondPlayerComputer)
                 {
-                    m_AllPlayersInGame[1] = new AIPlayer(1);
+                    r_AllPlayersInGame[1] = new AIPlayer(1);
                 }
                 else
                 {
