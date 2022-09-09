@@ -41,12 +41,6 @@ namespace WindowsUserInterface
 
         public const int k_Margin = 10;
         public const int k_ButtonSize = 75;
-//<<<<<<< master
-        private const string k_GameTitle = "Memory Game";
-        private const string k_CurrentPlayerLabel = "Current Player: {0}";
-//=======
-        private const int k_StartingScore = 0;
-//>>>>>>> eviatar-dec
         private const int k_WindowHeightModifier = 16;
         private const int k_WindowWidthModifier = 3;
         private const bool k_Enabled = true;
@@ -367,4 +361,3 @@ namespace WindowsUserInterface
         }
     }
 }
-

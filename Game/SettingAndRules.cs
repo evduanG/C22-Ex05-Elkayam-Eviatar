@@ -9,9 +9,7 @@ namespace Game
         private const byte k_UpperBound = 6;
         private const byte k_LowerBound = 4;
         private const byte k_NumOfParticipants = 2;
-        private const string k_ThrowFixedMsg = "The value is fixed";
         private const string k_ThrowDimensionsMsg = "The game dimensions heva a fix size";
-
 
         /******     number of players       ******/
         public const int k_SleepBetweenTurns = 1500;
@@ -21,12 +19,11 @@ namespace Game
         private static readonly Rules sr_NumOfChoiceInTurn = new Rules("Num Of Choice In player Turn", k_NumOfChoiceInPlayerTurn, k_NumOfChoiceInPlayerTurn, k_IsFixed, k_ThrowFixedMsg);
 
         /******     number of players       ******/
-        private const byte k_NumOfParticipants = 2;
+        // private const byte k_NumOfParticipants = 2;
         public static readonly Rules sr_NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
 
         private static readonly Rules sr_Rows = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
         private static readonly Rules sr_Columns = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
-
 
         // TODO: 2.0 :
         /// make a arr of link to pic  or comfig how to get the resdpons link
