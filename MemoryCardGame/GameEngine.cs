@@ -17,7 +17,6 @@ namespace MemoryCardGame
         private readonly Timer r_InbetweenTurnsTimer;
         private readonly int r_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
         private readonly Player[] r_AllPlayersInGame;
-        private readonly List<ButtomIndexEvent> r_SelectedTileInTurn;
 
         private Screen.MainGameForm m_GameForm;
         private List<BoardLocation> m_SelectedTileInTurn;
@@ -153,7 +152,7 @@ namespace MemoryCardGame
                 m_GameForm.ColorPair(m_SelectedTileInTurn, CurrentPlayer.Color);
             }
 
-            r_SelectedTileInTurn.Clear();
+            m_SelectedTileInTurn.Clear();
 
             if(m_GameLogic.HaveMoreMoves)
             {
