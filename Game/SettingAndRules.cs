@@ -9,12 +9,10 @@ namespace Game
         private const byte k_UpperBound = 6;
         private const byte k_LowerBound = 4;
         private const byte k_NumOfParticipants = 2;
-        private const string k_ThrowFixedMsg = "The value is fixed";
         private const string k_ThrowDimensionsMsg = "The game dimensions heva a fix size";
 
 
         /******     number of players       ******/
-        private const byte k_NumOfParticipants = 2;
         public static readonly Rules sr_NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
 
         /******     number of players       ******/
