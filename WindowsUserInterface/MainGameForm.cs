@@ -41,13 +41,13 @@ namespace WindowsUserInterface
 
         public const int k_Margin = 10;
         public const int k_ButtonSize = 75;
-        private const string k_GameTitle = "Memory Game";
-        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
-        private const string k_CurrentPlayerLabel = "Current Player: {0}";
         private const int k_StartingScore = 0;
         private const int k_WindowHeightModifier = 16;
         private const int k_WindowWidthModifier = 3;
         private const bool k_Enabled = true;
+        private const string k_GameTitle = "Memory Game";
+        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
+        private const string k_CurrentPlayerLabel = "Current Player: {0}";
         private readonly byte r_NumOfRows;
         private readonly byte r_NumOfCols;
 
@@ -417,113 +417,3 @@ namespace WindowsUserInterface
         }
     }
 }
-
-/*
- * TODO:  del
- *         private void positionButtonsOnGrid()
-        {
-            // setup the rest
-            int upOneSlot = 0;
-
-            for (int i = 0; i < Rows; i++)
-            {
-                bool isTopLeft = i == 0;
-                if (isTopLeft)
-                {
-                    GameBoardButtons[0, 0].Top = k_Margin;
-                    GameBoardButtons[0, 0].Left = k_Margin;
-                    Controls.Add(GameBoardButtons[0, 0]);
-                }
-                else
-                {
-                    upOneSlot = i - 1;
-                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, 0], ePositionBy.Left, GameBoardButtons[upOneSlot, 0]);
-                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, 0], ePositionBy.Under, GameBoardButtons[upOneSlot, 0], k_Margin);
-                    Controls.Add(GameBoardButtons[i, 0]);
-                }
-
-                for (int j = 1; j < Columns; j++)
-                {
-                    //// top-left button
-                    //if (i == 0 && j == 0)
-                    //{
-                    //    continue;
-                    //}
-
-                    //// left column
-                    //if (j == 0)
-                    //{
-                    //    GameBoardButtons[i, j].Left = k_Margin;
-                    //    GameBoardButtons[i, j].Top = k_Margin + ((k_ButtonSize + k_Margin) * i);
-                    //}
-
-                    // right block
-                    //else
-                    //{
-                    // top row
-                    //if (i == 0)
-                    //{
-                    //    GameBoardButtons[i, j].Top = k_Margin;
-                    //    GameBoardButtons[i, j].Left = k_Margin + ((k_ButtonSize + k_Margin) * j);
-                    //}
-
-                    //// inner right block
-                    //else
-                    //{
-                    ePositionBy topPositionBy = i == 0 ? ePositionBy.Top : ePositionBy.Under;
-
-                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, j], ePositionBy.NextToTheLeft, GameBoardButtons[i, j - 1], k_Margin);
-                    ElementsDesignerTool.DesignElements(GameBoardButtons[i, j], topPositionBy, GameBoardButtons[upOneSlot, j], k_Margin);
-                            //GameBoardButtons[i, j].Top = GameBoardButtons[i, j - 1].Top;
-                            //GameBoardButtons[i, j].Left = GameBoardButtons[upOneSlot, j].Left;
-
-                            // ElementsDesignerTool.DesignElements(ePositionBy.Top, GameBoardButtons[row, col - 1], GameBoardButtons[row, col], k_Margin);
-                            // ElementsDesignerTool.DesignElements(ePositionBy.Left, GameBoardButtons[row - 1, col], GameBoardButtons[row, col], k_Margin);
-                        //}
-                    //}
-
-                    Controls.Add(GameBoardButtons[i, j]);
-                }
-            }
-        }
-
-
-        protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)
-        {
-            // TODO: wht is this ?
-        }
-
-        protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
-        {
-            Button clickedTile = i_ClickedButton as Button;
-            bool isButtomExists;
-
-            if (isGameOver())
-            {
-                GameOverDialog.ShowDialog();
-            }
-
-            isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
-
-            if(!isButtomExists)
-            {
-                throw new FormatException("the button does not exists");
-            }
-
-            AnyButton_Click(clickedTile, new ButtomIndexEvent(o_Row, o_Col));
-            clickedTile.Focus();
-        }
-
-        protected virtual void AllButton_Click(object sender, EventArgs i_EventArgs)
-        {
-        }
-
-        protected virtual void AnyButton_Click(object sender, EventArgs i_EventArgs)
-        {
-            anyButtemInvoker(i_EventArgs);
-        }
-
-    }
-}
-
-*/

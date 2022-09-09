@@ -386,7 +386,7 @@ m_GameBoard[io_rowIndex, io_colIndex]));
         }
 
         // represents a game card
-        internal struct Card
+        private struct Card
         {
             // private const string km_formatToPrint = " {} |";
             private const char m_default = ' ';

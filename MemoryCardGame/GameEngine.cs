@@ -11,18 +11,16 @@ namespace MemoryCardGame
 {
     public class GameEngine
     {
-        public const bool k_Running = true;
         public const bool k_FlippedTheCard = true;
-        private Screen.MainGameForm m_GameForm;
-        private Screen.NumberOfPlayersBox m_NumberOfPlayersBox;
+
+        private byte m_TurnCounter;
+        private byte m_TotalPLayers;
         private Player[] m_AllPlayersInGame;
         private List<BoardLocation> m_SelectedTileInTurn;
         private GameLogic m_GameLogic;
-        private byte m_TurnCounter;
-
-        private byte m_TotalPLayers;
+        private Screen.MainGameForm m_GameForm;
+        private Screen.NumberOfPlayersBox m_NumberOfPlayersBox;
         private Timer m_InbetweenTurnsTimer;
-        private int m_SleepBetweenTurns = Setting.k_SleepBetweenTurns;
 
         // ===================================================================
         //  constructor and methods that the constructor uses
@@ -30,8 +28,6 @@ namespace MemoryCardGame
         public GameEngine()
         {
             m_GameLogic = null;
-
-            // r_IsPlaying = false;
             m_TurnCounter = 0;
             m_SelectedTileInTurn = new List<BoardLocation>();
 
@@ -50,9 +46,9 @@ namespace MemoryCardGame
 
             m_AllPlayersInGame = new Player[m_TotalPLayers];
 
-            // timer setup
+            /******     timer setup       ******/
             m_InbetweenTurnsTimer = new Timer();
-            InbetweenTurnsTimer.Interval = m_SleepBetweenTurns;
+            InbetweenTurnsTimer.Interval = Setting.k_SleepBetweenTurns;
             InbetweenTurnsTimer.Tick += InbetweenTurnsTimer_Tick;
         }
 
@@ -155,8 +151,6 @@ namespace MemoryCardGame
             foreach (Player player in m_AllPlayersInGame)
             {
                 player.ShowBoard(m_GameLogic.GetBoardToDraw());
-
-                // TODO : ShowBoard  m_SelectedTileInTurn and list of val ==> forgot what this means
             }
         }
 
@@ -171,6 +165,26 @@ namespace MemoryCardGame
             }
 
             return sb.ToString();
+        }
+
+        // =======================================================
+        // Game Progress
+        // ======================================================
+        private bool gameAction(object i_Sender, EventArgs i_ButtomIndexEvent)
+        {
+            bool ans = false;
+
+            if (!IsInBetweenTurns)
+            {
+                Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
+                ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
+                char v = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
+                m_GameForm.Flipped(buttomIndexEvent.Location, v);
+                m_SelectedTileInTurn.Add(buttomIndexEvent.Location);
+                ans = true;
+            }
+
+            return ans;
         }
 
         private void endOfTurn() // TODO: find a good name
@@ -198,8 +212,6 @@ namespace MemoryCardGame
                 m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
                 m_GameForm.AnyButtonClick -= AnyButtonClick_SecondClick;
             }
-
-            // System.Threading.Thread.Sleep(1000);
         }
 
         // =======================================================
@@ -252,23 +264,6 @@ namespace MemoryCardGame
             {
                 InbetweenTurnsTimer.Start();
             }
-        }
-
-        private bool gameAction(object i_Sender, EventArgs i_ButtomIndexEvent)
-        {
-            bool ans = false;
-
-            if (!IsInBetweenTurns)
-            {
-                Screen.MainGameForm mainGameForm = i_Sender as Screen.MainGameForm;
-                ButtomIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtomIndexEvent;
-                char v = this.m_GameLogic.Flipped(buttomIndexEvent.Location, true);
-                m_GameForm.Flipped(buttomIndexEvent.Location, v);
-                m_SelectedTileInTurn.Add(buttomIndexEvent.Location);
-                ans = true;
-            }
-
-            return ans;
         }
 
         protected virtual void InbetweenTurnsTimer_Tick(object sender, EventArgs e)
