@@ -10,7 +10,7 @@ namespace WindowsUserInterface
     {
         private const int k_MessageBoxHeight = 180;
         private const int k_MessageBoxWidth = 360;
-        private const int k_LabelWidth = 200;
+        private const int k_LabelWidth = 200; // TODO : not in use
         private const string k_FormtWinnerScoreMessage = "{0} won with {1} points!";
         private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
@@ -42,22 +42,27 @@ namespace WindowsUserInterface
 
         private void initializeLabels()
         {
-            GameResultsMessage = new Label();
-            GameResultsMessage.Text = k_FormtWinnerScoreMessage;
-            GameResultsMessage.TextAlign = ContentAlignment.MiddleCenter;
-            GameResultsMessage.BackColor = Color.LightGoldenrodYellow;
-            GameResultsMessage.AutoSize = true;
-            GameResultsMessage.Top = MainGameForm.k_Margin * 2;
+            GameResultsMessage = new Label
+            {
+                Text = k_FormtWinnerScoreMessage,
+                TextAlign = ContentAlignment.MiddleCenter,
+                BackColor = Color.LightGoldenrodYellow,
+                AutoSize = true,
+                Top = MainGameForm.k_Margin * 2,
+            };
             GameResultsMessage.Left = (ClientSize.Width / 2) - (GameResultsMessage.Width / 2);
 
-            AnotherGameMessage = new Label();
-            AnotherGameMessage.Text = k_FormtAnotherGameMessage;
-            AnotherGameMessage.TextAlign = ContentAlignment.MiddleCenter;
-            AnotherGameMessage.BackColor = Color.LightGoldenrodYellow;
-            AnotherGameMessage.AutoSize = true;
-            AnotherGameMessage.Top = GameResultsMessage.Bottom + MainGameForm.k_Margin;
+            AnotherGameMessage = new Label
+            {
+                Text = k_FormtAnotherGameMessage,
+                TextAlign = ContentAlignment.MiddleCenter,
+                BackColor = Color.LightGoldenrodYellow,
+                AutoSize = true,
+                Top = GameResultsMessage.Bottom + MainGameForm.k_Margin,
+            };
             AnotherGameMessage.Left = GameResultsMessage.Left + (GameResultsMessage.Width / 2) - AnotherGameMessage.Width;
 
+            // ElementsDesignerTool(AnotherGameMessage, GameResultsMessage);
             Controls.Add(m_GameResultsMessage);
             Controls.Add(m_AnotherGameMessage);
         }
@@ -71,16 +76,20 @@ namespace WindowsUserInterface
 
         private void initializeButtons()
         {
-            ButtonYes = new Button();
-            ButtonYes.Text = "Yes";
-            ButtonYes.Top = AnotherGameMessage.Bottom + (2 * MainGameForm.k_Margin);
-            ButtonYes.Left = AnotherGameMessage.Left + (2 * MainGameForm.k_Margin);
+            ButtonYes = new Button
+            {
+                Text = "Yes",
+                Top = AnotherGameMessage.Bottom + (2 * MainGameForm.k_Margin),
+                Left = AnotherGameMessage.Left + (2 * MainGameForm.k_Margin),
+            };
             ButtonYes.Click += Yes_Click;
 
-            ButtonNo = new Button();
-            ButtonNo.Text = "No";
-            ButtonNo.Top = ButtonYes.Top;
-            ButtonNo.Left = ButtonYes.Right + (MainGameForm.k_Margin * 2);
+            ButtonNo = new Button
+            {
+                Text = "No",
+                Top = ButtonYes.Top,
+                Left = ButtonYes.Right + (MainGameForm.k_Margin * 2),
+            };
             ButtonNo.Click += No_Click;
 
             Controls.Add(ButtonYes);

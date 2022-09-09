@@ -24,11 +24,17 @@ namespace WindowsUserInterface
 
         // TODO : sr_BoardSizes get at val form Game engine
         private static readonly string[] sr_BoardSizes = { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
+        private static readonly BordSizeOptions[] sr_BoardSizesOp =
+        {
+            new BordSizeOptions(4, 4), new BordSizeOptions(4, 5), new BordSizeOptions(4, 6), new BordSizeOptions(5, 4),
+            new BordSizeOptions(5, 6), new BordSizeOptions(6, 4), new BordSizeOptions(6, 5), new BordSizeOptions(6, 6),
+        };
+
         private byte m_BoardSizeIndex = 0;
 
         public event StartClickHandler StartClick;
 
-        public readonly bool r_IsFirstGame;
+        private readonly bool r_IsFirstGame;
         private Label m_LabelFirstPlayer;
         private Label m_LabelSecondPlayer;
         private Label m_LabelBordSize;
@@ -90,6 +96,7 @@ namespace WindowsUserInterface
             m_TextBoxFirstPlayer.Text = i_FirstplayerName;
             ElementsDesignerTool.DesignElements(m_TextBoxFirstPlayer, ePositionBy.NextToTheLeft, m_LabelFirstPlayer, k_Margin);
             ElementsDesignerTool.DesignElements(m_TextBoxFirstPlayer, ePositionBy.HorizontalCentre, m_LabelFirstPlayer);
+            m_TextBoxFirstPlayer.TabIndex = 0;
             this.Controls.Add(m_TextBoxFirstPlayer);
 
             // Label-Second-player
@@ -105,6 +112,7 @@ namespace WindowsUserInterface
             ElementsDesignerTool.DesignElements(m_TextBoxSecondPlayer, ePositionBy.NextToTheLeft, m_LabelSecondPlayer, k_Margin);
             ElementsDesignerTool.DesignElements(m_TextBoxSecondPlayer, ePositionBy.HorizontalCentre, m_LabelSecondPlayer, k_Margin);
             m_TextBoxSecondPlayer.Enabled = !k_Enable;
+            m_TextBoxSecondPlayer.TabIndex = 2;
             this.Controls.Add(m_TextBoxSecondPlayer);
 
             // Button-Against-A-Friend
@@ -114,6 +122,7 @@ namespace WindowsUserInterface
             ElementsDesignerTool.DesignElements(m_ButtonAgainstAFriend, ePositionBy.HorizontalCentre, m_TextBoxSecondPlayer);
             m_ButtonAgainstAFriend.Click += ButtonAgainstAFriend_Click;
             m_ButtonAgainstAFriend.AutoSize = true;
+            m_ButtonAgainstAFriend.TabIndex = 1;
             this.Controls.Add(m_ButtonAgainstAFriend);
 
             // Label-ComboBox-Bord-Size
@@ -135,6 +144,7 @@ namespace WindowsUserInterface
             ElementsDesignerTool.DesignElements(m_BoardSizes, ePositionBy.Under, m_LabelBordSize, k_Margin);
             initilizeBoardSizesButton();
             BoardSizes.Click += BoardSizes_Click;
+            m_BoardSizes.TabIndex = 3;
             this.Controls.Add(m_BoardSizes);
 
             // Button-Start
@@ -143,6 +153,7 @@ namespace WindowsUserInterface
             ElementsDesignerTool.DesignElements(m_ButtonStart, ePositionBy.Right, m_ButtonAgainstAFriend);
             modifyFormAndStarButtn();
             m_ButtonStart.Click += ButtonStart_Click;
+            m_ButtonStart.TabIndex = 4;
             this.Controls.Add(m_ButtonStart);
 
             if (!r_IsFirstGame)
@@ -227,6 +238,7 @@ namespace WindowsUserInterface
                 for(byte widt = i_WidthMin; widt <= i_WidthMax; widt++)
                 {
                     m_ListBordSizeOptions.Add(new BordSizeOptions(higt, widt));
+
                     // m_ComboBoxBordSize.Items.Add(new BordSizeOptions(higt, widt));
                 }
             }
@@ -313,7 +325,7 @@ namespace WindowsUserInterface
 
         private struct BordSizeOptions
         {
-            private const string k_ToStringFormt = "{0}x{1}";
+            private const string k_ToStringFormt = "{0} x {1}";
             private byte m_Higt;
             private byte m_Width;
 
