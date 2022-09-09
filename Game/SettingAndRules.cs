@@ -43,30 +43,59 @@ namespace Game
         /// make a arr of link to pic  or comfig how to get the resdpons link
         public struct Rules
         {
-            public readonly string sr_Name;
-            public readonly byte sr_UpperBound;
-            public readonly byte sr_LowerBound;
-            public readonly bool sv_IsFixed;
-            private readonly string sr_TrowMsg;
+            private readonly string r_Name;
+            private readonly byte r_UpperBound;
+            private readonly byte r_LowerBound;
+            private readonly bool r_IsFixed;
+            private readonly string r_ThrowMsg;
+
+            public string Name
+            {
+                get
+                {
+                    return r_Name;
+                }
+            }
+
+            public byte UpperBound
+            {
+                get
+                {
+                    return r_UpperBound;
+                }
+            }
+
+            public byte LowerBound
+            {
+                get
+                {
+                    return r_LowerBound;
+                }
+            }
+
+            public bool IsFixed
+            {
+                get
+                {
+                    return r_IsFixed;
+                }
+            }
+
+            public string ThrowMsg
+            {
+                get
+                {
+                    return r_ThrowMsg;
+                }
+            }
 
             public Rules(string i_Name, byte i_UpperBound, byte i_LowerBound, bool i_IsFixed, string i_TorwStr)
             {
-                sr_Name = i_Name;
-                sr_UpperBound = i_UpperBound;
-                sr_LowerBound = i_LowerBound;
-                sv_IsFixed = i_IsFixed;
-                sr_TrowMsg = i_TorwStr;
-            }
-
-            // authenticate value, throw exception if invalid
-            public bool IsValid(byte i_valueChecked)
-            {
-                if (sv_IsFixed)
-                {
-                    throw new ArgumentException();
-                }
-
-                return IsBetween(i_valueChecked, sr_UpperBound, sr_LowerBound);
+                r_Name = i_Name;
+                r_UpperBound = i_UpperBound;
+                r_LowerBound = i_LowerBound;
+                r_IsFixed = i_IsFixed;
+                r_ThrowMsg = i_TorwStr;
             }
 
             // check if value is within upper and lower bounds
@@ -75,9 +104,20 @@ namespace Game
                 return i_valueChecked <= i_upperBound && i_valueChecked >= i_lowerBound;
             }
 
+            // authenticate value, throw exception if invalid
+            public bool IsValid(byte i_valueChecked)
+            {
+                if (IsFixed)
+                {
+                    throw new ArgumentException();
+                }
+
+                return IsBetween(i_valueChecked, UpperBound, LowerBound);
+            }
+
             public override string ToString()
             {
-                return string.Format(" the {0} between {1} to {2} ", sr_Name, sr_LowerBound, sr_UpperBound);
+                return string.Format(" the {0} between {1} to {2} ", Name, LowerBound, UpperBound);
             }
         }
     }

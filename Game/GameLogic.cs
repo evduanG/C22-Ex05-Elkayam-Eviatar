@@ -192,7 +192,7 @@ namespace Game
             }
         }
 
-        private Card this[ButtomIndexEvent i_indexFormt]
+        private Card this[BoardLocation i_indexFormt]
         {
             get
             {
@@ -249,7 +249,7 @@ namespace Game
             this[i_Index] = c;
         }
 
-        public char Flipped(ButtomIndexEvent i_Index, bool i_Value)
+        public char Flipped(BoardLocation i_Index, bool i_Value)
         {
             Card c = this[i_Index];
             c.Flipped = i_Value;
@@ -258,7 +258,7 @@ namespace Game
         }
 
         // return true  The player got another turn
-        public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params ButtomIndexEvent[] i_argsChosenInTurn)
+        public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params BoardLocation[] i_argsChosenInTurn)
         {
             io_scoreForTheTurn = 0;
             bool isPair = true;
@@ -270,7 +270,7 @@ namespace Game
 
             Card firstCard = this[i_argsChosenInTurn[0]];
 
-            foreach (ButtomIndexEvent index in i_argsChosenInTurn)
+            foreach (BoardLocation index in i_argsChosenInTurn)
             {
                 isPair = firstCard == this[index];
 
@@ -282,7 +282,7 @@ namespace Game
 
             if (!isPair)
             {
-                foreach (ButtomIndexEvent index in i_argsChosenInTurn)
+                foreach (BoardLocation index in i_argsChosenInTurn)
                 {
                     Flipped(index, !k_FaceUp);
                 }

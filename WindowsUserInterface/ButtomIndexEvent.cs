@@ -8,55 +8,31 @@ namespace WindowsUserInterface
 {
     public class ButtomIndexEvent : EventArgs
     {
-        public static readonly char[] sr_ABC =
-      {
-            'A',
-            'B',
-            'C',
-            'D',
-            'E',
-            'F',
-            'G',
-            'H',
-            'I',
-            'J',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'Q',
-            'R',
-            'S',
-            'T',
-            'U',
-            'V',
-            'W',
-            'X',
-            'Y',
-            'Z',
-      };
-
-        private const string k_ToStringFormt = "{0} {1}";
-        private byte m_Row;
-        private byte m_Col;
+        private BoardLocation m_Location;
 
         public byte Row
         {
-            get { return m_Row; }
+            get { return m_Location.Row; }
         }
 
         public byte Col
         {
-            get { return m_Col; }
+            get { return m_Location.Col; }
+        }
+
+        public BoardLocation Location
+        {
+            get { return m_Location; }
         }
 
         public ButtomIndexEvent(byte i_Row, byte i_Col)
         {
-            m_Row = i_Row;
-            m_Col = i_Col;
-            Console.WriteLine(string.Format(k_ToStringFormt, i_Row, i_Col));
+            m_Location = new BoardLocation(i_Row, i_Col);
+        }
+
+        public ButtomIndexEvent(BoardLocation i_Location)
+        {
+            m_Location = i_Location;
         }
 
         public static ButtomIndexEvent Parse(string i_ButtonIndexString)
@@ -69,7 +45,7 @@ namespace WindowsUserInterface
 
         public override string ToString()
         {
-            return string.Format(k_ToStringFormt, sr_ABC[m_Col], m_Row);
+            return m_Location.ToString();
         }
     }
 }
