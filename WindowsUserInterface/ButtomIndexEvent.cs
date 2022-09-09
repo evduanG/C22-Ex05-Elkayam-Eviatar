@@ -39,23 +39,23 @@ namespace WindowsUserInterface
       };
 
         private const string k_ToStringFormt = "{0} {1}";
-        private byte m_Row;
-        private byte m_Col;
+        private readonly byte r_Row;
+        private readonly byte r_Col;
 
         public byte Row
         {
-            get { return m_Row; }
+            get { return r_Row; }
         }
 
         public byte Col
         {
-            get { return m_Col; }
+            get { return r_Col; }
         }
 
         public ButtomIndexEvent(byte i_Row, byte i_Col)
         {
-            m_Row = i_Row;
-            m_Col = i_Col;
+            r_Row = i_Row;
+            r_Col = i_Col;
             Console.WriteLine(string.Format(k_ToStringFormt, i_Row, i_Col));
         }
 
@@ -69,7 +69,7 @@ namespace WindowsUserInterface
 
         public override string ToString()
         {
-            return string.Format(k_ToStringFormt, sr_ABC[m_Col], m_Row);
+            return string.Format(k_ToStringFormt, sr_ABC[r_Col], r_Row);
         }
     }
 }

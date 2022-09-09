@@ -19,14 +19,14 @@ namespace MemoryCardGame
 
         public byte ID { get => m_ID; set => m_ID = value; }
 
-        private AIPlayer? m_AiPlayer;
+        private readonly AIPlayer? r_AiPlayer;
 
         public Player(byte i_ID)
         {
             m_Name = "PC";
             m_Score = 0;
             r_IsHuman = false;
-            m_AiPlayer = AIPlayer.CreateNew();
+            r_AiPlayer = AIPlayer.CreateNew();
             m_ID = i_ID;
         }
 
@@ -35,7 +35,7 @@ namespace MemoryCardGame
             m_Score = 0;
             r_IsHuman = true;
             m_Name = i_name;
-            m_AiPlayer = null;
+            r_AiPlayer = null;
             m_ID = i_ID;
         }
 
@@ -67,7 +67,7 @@ namespace MemoryCardGame
             }
             else
             {
-                returnChosice = m_AiPlayer?.GetAIPlayerChoice(i_validSlotTOChase, i_BoardToDraw);
+                returnChosice = r_AiPlayer?.GetAIPlayerChoice(i_validSlotTOChase, i_BoardToDraw);
             }
 
             return returnChosice;
@@ -77,7 +77,7 @@ namespace MemoryCardGame
         {
             if (!IsHuman)
             {
-                m_AiPlayer?.ShowBoard(i_GameBoard);
+                r_AiPlayer?.ShowBoard(i_GameBoard);
             }
         }
 
@@ -85,7 +85,7 @@ namespace MemoryCardGame
         {
             if (!IsHuman)
             {
-                m_AiPlayer?.ResetMemory();
+                r_AiPlayer?.ResetMemory();
             }
         }
 
