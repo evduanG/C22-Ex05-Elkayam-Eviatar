@@ -36,7 +36,7 @@ namespace MemoryCardGame
             r_AllPlayersInGame = new Player[r_TotalPLayers];
 
             /******     timer setup       ******/
-            m_InbetweenTurnsTimer = new Timer();
+            r_InbetweenTurnsTimer = new Timer();
             InbetweenTurnsTimer.Interval = Setting.k_SleepBetweenTurns;
             InbetweenTurnsTimer.Tick += InbetweenTurnsTimer_Tick;
         }
@@ -133,7 +133,7 @@ namespace MemoryCardGame
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (Player player in m_AllPlayersInGame)
+            foreach (Player player in r_AllPlayersInGame)
             {
                 sb.Append(player.ToString());
             }
