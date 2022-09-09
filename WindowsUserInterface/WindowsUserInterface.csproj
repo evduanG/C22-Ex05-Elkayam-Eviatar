@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoardLocation.cs" />
     <Compile Include="ButtomIndexEvent.cs" />
     <Compile Include="ElementsDesignerTool.cs" />
     <Compile Include="ePositionBy.cs" />

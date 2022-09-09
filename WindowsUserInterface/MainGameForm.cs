@@ -242,7 +242,7 @@ namespace WindowsUserInterface
             }
         }
 
-        public Button this[ButtomIndexEvent indexEvent]
+        public Button this[BoardLocation indexEvent]
         {
             get
             {
@@ -272,23 +272,23 @@ namespace WindowsUserInterface
             m_Players[i_ID].Text = i_PlayerNameAndScore;
         }
 
-        public void Flipped(ButtomIndexEvent buttomIndexEvent, char v)
+        public void Flipped(BoardLocation buttomIndexEvent, char v)
         {
             this[buttomIndexEvent].Text = v.ToString();
             this[buttomIndexEvent].Enabled = false;
         }
 
-        public void ColorPair(List<ButtomIndexEvent> m_PlayerChoice, Color color)
+        public void ColorPair(List<BoardLocation> m_PlayerChoice, Color color)
         {
-            foreach (ButtomIndexEvent choice in m_PlayerChoice)
+            foreach (BoardLocation choice in m_PlayerChoice)
             {
                 GameBoardButtons[choice.Row, choice.Col].BackColor = color;
             }
         }
 
-        public void FlippCardsToFaceDown(List<ButtomIndexEvent> m_PlayerChoice)
+        public void FlippCardsToFaceDown(List<BoardLocation> m_PlayerChoice)
         {
-            foreach (ButtomIndexEvent choice in m_PlayerChoice)
+            foreach (BoardLocation choice in m_PlayerChoice)
             {
                 Button buttonClick = GameBoardButtons[choice.Row, choice.Col];
 
