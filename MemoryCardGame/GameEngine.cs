@@ -16,6 +16,7 @@ namespace MemoryCardGame
         public const bool k_FlippedTheCard = true;
         private readonly byte r_TotalPLayers;
         private readonly Timer r_InbetweenTurnsTimer;
+        private readonly Timer r_AiTimer;
         private readonly Player[] r_AllPlayersInGame;
         private readonly List<BoardLocation> r_SelectedTileInTurn;
         private Screen.MainGameForm m_GameForm;
@@ -40,8 +41,11 @@ namespace MemoryCardGame
 
             /******     timer setup       ******/
             r_InbetweenTurnsTimer = new Timer();
+            r_AiTimer = new Timer();
             InbetweenTurnsTimer.Interval = Setting.k_SleepBetweenTurns;
-            InbetweenTurnsTimer.Tick += InbetweenTurnsTimer_Tick;
+            r_AiTimer.Interval = Setting.k_SleepBetweenTurns;
+            InbetweenTurnsTimer.Tick += InbetweenTurnsTimer_TickHuman;
+            r_AiTimer.Tick += InbetweenTurnsTimer_TickNonHuman;
         }
 
         // =======================================================
@@ -169,6 +173,7 @@ namespace MemoryCardGame
         private void endOfTurn()
         {
             bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
+            Console.WriteLine("in : endOfTurn" + CurrentPlayer.Name + "isThePlyerHaveAnderTurn :" + isThePlyerHaveAnderTurn.ToString());
 
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
@@ -192,11 +197,14 @@ namespace MemoryCardGame
                 m_GameForm.AnyButtonClick -= AnyButtonClick_SecondClick;
                 if (!CurrentPlayer.IsHuman)
                 {
+                    Console.WriteLine("in !CurrentPlayer.IsHuman");
+
                     m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
                 }
                 else
                 {
-                    AIPlaying.Invoke();
+                    Console.WriteLine("in CurrentPlayer.IsHuman");
+                    r_AiTimer.Start();
                 }
             }
         }
@@ -248,14 +256,24 @@ namespace MemoryCardGame
             }
         }
 
-        protected virtual void InbetweenTurnsTimer_Tick(object sender, EventArgs e)
+        protected virtual void InbetweenTurnsTimer_TickHuman(object sender, EventArgs e)
         {
-            endOfTurn();
-            InbetweenTurnsTimer.Stop();
+                Console.WriteLine("in : InbetweenTurnsTimer_Tick" + CurrentPlayer.Name);
+                endOfTurn();
+                InbetweenTurnsTimer.Stop();
         }
+
+        protected virtual void InbetweenTurnsTimer_TickNonHuman(object sender, EventArgs e)
+        {
+            r_AiTimer.Stop();
+            AIPlaying.Invoke();
+        }
+
 
         protected virtual void AIPlaying_Move()
         {
+            InbetweenTurnsTimer.Stop();
+
             for (int i = 0; i < 2; i++)
             {
                 ButtonIndexEvent AIChoice = (CurrentPlayer as AIPlayer).GetPlayerChoice(m_GameLogic.GetAllValidTilesForChoice(), m_GameLogic.GetBoardToDraw());
@@ -265,7 +283,8 @@ namespace MemoryCardGame
                 r_SelectedTileInTurn.Add(AIChoice.Location);
             }
 
-            InbetweenTurnsTimer.Start();
+            System.Threading.Thread.Sleep(1000);
+            endOfTurn();
         }
     }
 }

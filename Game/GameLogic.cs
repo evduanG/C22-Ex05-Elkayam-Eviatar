@@ -316,18 +316,18 @@ namespace Game
         // methods that are used to select a new tile
         // ===================================================================
         // return list of available tiles to choose from
-        public List<string> GetAllValidTilesForChoice()
+        public List<BoardLocation> GetAllValidTilesForChoice()
         {
-            List<string> validSlots = new List<string>();
-            for (int i = 0; i < Rows; i++)
+            List<BoardLocation> validSlots = new List<BoardLocation>();
+            for (byte i = 0; i < Rows; i++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (byte j = 0; j < Columns; j++)
                 {
                     bool isCardFlip = r_GameBoard[i, j].Flipped;
 
                     if (!isCardFlip)
                     {
-                        validSlots.Add(string.Format("{0} {1}", sr_ABC[j], i + 1));
+                        validSlots.Add(new BoardLocation(i, j));
                     }
                 }
             }
