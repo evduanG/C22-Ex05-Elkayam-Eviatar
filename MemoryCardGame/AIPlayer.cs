@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Game;
 using WindowsUserInterface;
 
@@ -65,42 +66,36 @@ namespace MemoryCardGame
             }
         }
 
-        public ButtonIndexEvent GetPlayerChoice(
-            List<string> i_ValidSlotTOChase,
-            char[,] i_boardToDraw)
+        public ButtonIndexEvent GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, char[,] i_boardToDraw)
         {
-            BoardLocation? ans = null;
+            BoardLocation ans = BoardLocation.Defult();
+            bool isFind = false;
+
             if (r_Memory.Count != 0)
             {
                 if (i_ValidSlotTOChase.Count % 2 == 0)
                 {
-                    ans = getAIFirstPlayerChoice(i_ValidSlotTOChase);
+                    isFind = getAIFirstPlayerChoice(i_ValidSlotTOChase, ref ans);
                 }
                 else
                 {
-                    ans = getAISecondPlayerChoice(i_ValidSlotTOChase, i_boardToDraw);
+                    isFind = getAISecondPlayerChoice(i_ValidSlotTOChase, i_boardToDraw, ref ans);
                 }
             }
 
-            bool heveSmartChoice = ans != null;
-            BoardLocation returnLocation;
-
-            if (!heveSmartChoice)
+            if (!isFind)
             {
-                returnLocation = getRandomChoice(i_ValidSlotTOChase);
-            }
-            else
-            {
-                returnLocation = (BoardLocation)ans;
+                ans = getRandomChoice(i_ValidSlotTOChase);
             }
 
-            return new ButtonIndexEvent(returnLocation);
+            return new ButtonIndexEvent(ans);
         }
 
-        private BoardLocation? getAIFirstPlayerChoice(List<string> i_ValidSlotTOChase)
+        private bool getAIFirstPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, ref BoardLocation io_Location)
         {
             r_Memory.Sort();
-            i_ValidSlotTOChase.Sort();
+            // i_ValidSlotTOChase.Sort();
+            bool isItFound = false;
             MemorySlot valueFirst = r_Memory[0];
             MemorySlot valueSecond;
 
@@ -116,10 +111,10 @@ namespace MemoryCardGame
 
                 if (valueSecond.Value == valueFirst.Value)
                 {
-                    if (!i_ValidSlotTOChase.Contains(valueSecond.StrLocation))
+                    if (!i_ValidSlotTOChase.Contains(valueSecond.BoardLocation))
                     {
                         r_Memory.Remove(valueFirst);
-                        bool isItFound = true;
+                        isItFound = false;
                         break;
                     }
                     else
@@ -129,52 +124,49 @@ namespace MemoryCardGame
                 }
             }
 
-            BoardLocation? returnValue = valueFirst.BoardLocation;
+            io_Location = isItFound ? valueFirst.BoardLocation : BoardLocation.Defult();
 
-            return (BoardLocation)returnValue;
+            return isItFound;
         }
 
-        private BoardLocation? getAISecondPlayerChoice(
-            List<string> i_validSlotToChase,
-            char[,] i_boardToDraw)
+        private bool getAISecondPlayerChoice(List<BoardLocation> i_validSlotToChase, char[,] i_boardToDraw, ref BoardLocation io_Location)
         {
             r_Memory.Sort();
-            BoardLocation? returnedIndex = null;
+            MemorySlot returnedIndex = default;
+            bool isItFound = false;
 
             foreach (char value in i_boardToDraw)
             {
                 foreach (MemorySlot mem in r_Memory)
                 {
-                    char memVal = mem.Value;
-                    if (memVal == value)
+                    if (mem.Value == value)
                     {
-                        returnedIndex = mem.BoardLocation;
+                        returnedIndex = mem;
                     }
                 }
 
-                bool isItFound = i_validSlotToChase.Contains(returnedIndex.ToString());
+                if (((object)returnedIndex) != null)
+                {
+                    isItFound = i_validSlotToChase.Contains(returnedIndex.BoardLocation);
 
-                // in case of possible move
-                if (isItFound)
-                {
-                    break;
-                }
-                else
-                {
-                    // otherwise choose null
-                    returnedIndex = null;
+                    // in case of possible move
+                    if (isItFound)
+                    {
+                        break;
+                    }
                 }
             }
 
-            return returnedIndex;
+            io_Location = isItFound ? (BoardLocation)returnedIndex.BoardLocation : BoardLocation.Defult();
+
+            return isItFound;
         }
 
-        private BoardLocation getRandomChoice(List<string> i_validSlotTOChase)
+        private BoardLocation getRandomChoice(List<BoardLocation> i_validSlotTOChase)
         {
             int randomTile = sr_Random.Next(i_validSlotTOChase.Count);
-            _ = BoardLocation.TryParse(i_validSlotTOChase[randomTile], out BoardLocation o_BoardLocation);
 
-            return o_BoardLocation;
+            return i_validSlotTOChase[randomTile];
         }
 
         internal struct MemorySlot : IComparable

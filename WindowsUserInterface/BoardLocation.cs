@@ -8,6 +8,7 @@ namespace WindowsUserInterface
 {
     public struct BoardLocation
     {
+        private const string k_ToStringFormtForSetUpBord = "{0} x {1}";
         private const string k_ToStringFormt = "{0} {1}";
         private static readonly char[] sr_ABC =
         {
@@ -58,6 +59,10 @@ namespace WindowsUserInterface
             m_Col = i_Col;
         }
 
+        public static BoardLocation Defult()
+        {
+            return new BoardLocation(byte.MaxValue, byte.MaxValue);
+        }
         // TODO (in case of bugs): operator == and !=
 
         public override string ToString()
@@ -82,5 +87,11 @@ namespace WindowsUserInterface
 
             return isRow && isCol;
         }
+
+        public string GetStrForSetUpBord()
+        {
+            return string.Format(k_ToStringFormtForSetUpBord, Row, Col);
+        }
+
     }
 }
