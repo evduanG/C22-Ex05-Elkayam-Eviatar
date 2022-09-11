@@ -95,10 +95,9 @@ namespace MemoryCardGame
         // ===================================================================
         public void DisplaySetUpForm()
         {
-            Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
+            Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm(Setting.GetBoardLocations());
 
             // TODO : make this func to be from input of setting
-            form.SetListOfBordSizeOptions(4, 6, 4, 6);
             form.StartClick += ButtonStart_Click;
             form.ShowDialog();
 

@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
+using WindowsUserInterface;
 
 namespace Game
 {
@@ -62,6 +63,25 @@ namespace Game
             }
 
             return ret.ToArray();
+        }
+
+        public static List<BoardLocation> GetBoardLocations()
+        {
+            List<BoardLocation> ret = new List<BoardLocation>();
+
+            for(byte i = sr_Rows.LowerBound; i <= sr_Rows.UpperBound; i++)
+            {
+                for (byte j = sr_Columns.LowerBound; j <= sr_Columns.UpperBound; j++)
+                {
+                    bool isEven = (i * j) % 2 == 0;
+                    if(isEven)
+                    {
+                        ret.Add(new BoardLocation(i, j));
+                    }
+                }
+            }
+
+            return ret;
         }
 
         /// make a arr of link to pix  or config how to get the resdpons link
