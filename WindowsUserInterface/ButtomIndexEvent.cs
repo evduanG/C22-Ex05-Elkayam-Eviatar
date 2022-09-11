@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WindowsUserInterface
 {
-    public class ButtomIndexEvent : EventArgs
+    public class ButtonIndexEvent : EventArgs
     {
         private BoardLocation m_Location;
 
@@ -25,22 +25,22 @@ namespace WindowsUserInterface
             get { return m_Location; }
         }
 
-        public ButtomIndexEvent(byte i_Row, byte i_Col)
+        public ButtonIndexEvent(byte i_Row, byte i_Col)
         {
             m_Location = new BoardLocation(i_Row, i_Col);
         }
 
-        public ButtomIndexEvent(BoardLocation i_Location)
+        public ButtonIndexEvent(BoardLocation i_Location)
         {
             m_Location = i_Location;
         }
 
-        public static ButtomIndexEvent Parse(string i_ButtonIndexString)
+        public static ButtonIndexEvent Parse(string i_ButtonIndexString)
         {
             byte row = byte.Parse(i_ButtonIndexString.Substring(0, 1));
-            byte col = byte.Parse(i_ButtonIndexString.Substring(2, 1));
+            byte col = byte.Parse(i_ButtonIndexString.Substring(1, 1));
 
-            return new ButtomIndexEvent(row, col);
+            return new ButtonIndexEvent(row, col);
         }
 
         public override string ToString()
