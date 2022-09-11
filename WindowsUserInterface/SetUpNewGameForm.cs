@@ -9,6 +9,10 @@ namespace WindowsUserInterface
 
     public class SetUpNewGameForm : Form
     {
+        private const int k_Margin = 12;
+        private const bool k_Enable = true;
+        private const bool k_FirstGame = true;
+        private const int k_BoardSizeButtonBase = 20;
         private const string k_TitleForm = "Memory Game - Settings";
         private const string k_TitleLabelFirstplayer = "First Player Name:";
         private const string k_TitleLabelSecondPlayer = "Second Player Name:";
@@ -16,35 +20,23 @@ namespace WindowsUserInterface
         private const string k_TitleButtonAgainstAFriend = "Against a Friend";
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";
-        private const int k_Margin = 12;
-        private const bool k_Enable = true;
-        private const bool k_FirstGame = true;
-        private const int k_BoardSizeButtonBase = 20;
 
         // TODO : sr_BoardSizes get at val form Game engine
         private static readonly string[] sr_BoardSizes = { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
-        private static readonly BoardSizeOptions[] sr_BoardSizesOp =
-        {
-            new BoardSizeOptions(4, 4), new BoardSizeOptions(4, 5), new BoardSizeOptions(4, 6), new BoardSizeOptions(5, 4),
-            new BoardSizeOptions(5, 6), new BoardSizeOptions(6, 4), new BoardSizeOptions(6, 5), new BoardSizeOptions(6, 6),
-        };
+        private static readonly BoardLocation[] sr_BoardSizesOp;
+        private readonly bool r_IsFirstGame;
 
         private byte m_BoardSizeIndex = 0;
-
-        public event StartClickHandler StartClick;
-
-        private readonly List<BoardSizeOptions> r_ListBordSizeOptions;
-        private readonly bool r_IsFirstGame;
         private Label m_LabelFirstPlayer;
         private Label m_LabelSecondPlayer;
         private Label m_LabelBordSize;
         private TextBox m_TextBoxFirstPlayer;
         private TextBox m_TextBoxSecondPlayer;
-
-        // private ComboBox m_ComboBoxBordSize;
         private Button m_BoardSizes;
         private Button m_ButtonAgainstAFriend;
         private Button m_ButtonStart;
+
+        public event StartClickHandler StartClick;
 
         // =======================================================
         // constructor  and methods for the constructor
@@ -66,7 +58,6 @@ namespace WindowsUserInterface
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Text = k_TitleForm;
-            r_ListBordSizeOptions = new List<BoardSizeOptions>();
             initiationForm(i_FirstplayerName, i_SecondPlayerName);
             MaximizeBox = false;
             MinimizeBox = false;
@@ -232,13 +223,11 @@ namespace WindowsUserInterface
 
         public void SetListOfBordSizeOptions(byte i_HigtMin, byte i_HigtMax, byte i_WidthMin, byte i_WidthMax)
         {
-            for(byte higt = i_HigtMin; higt <= i_HigtMax; higt++)
+            // TODO : get this to set the sr_BoardSizes
+            for (byte higt = i_HigtMin; higt <= i_HigtMax; higt++)
             {
                 for(byte widt = i_WidthMin; widt <= i_WidthMax; widt++)
                 {
-                    r_ListBordSizeOptions.Add(new BoardSizeOptions(higt, widt));
-
-                    // m_ComboBoxBordSize.Items.Add(new BordSizeOptions(higt, widt));
                 }
             }
         }
@@ -256,12 +245,12 @@ namespace WindowsUserInterface
 
         private byte getDimensionHeight(string i_BoardSizeString)
         {
-            return byte.Parse(i_BoardSizeString.Substring(0, 1));
+            return byte.Parse(i_BoardSizeString.Substring(i_BoardSizeString.Length - 1, 1));
         }
 
         private byte getDimensionWidth(string i_BoardSizeString)
         {
-            return byte.Parse(i_BoardSizeString.Substring(i_BoardSizeString.Length - 1, 1));
+            return byte.Parse(i_BoardSizeString.Substring(0, 1));
         }
 
         // =======================================================
@@ -321,47 +310,5 @@ namespace WindowsUserInterface
             modifyTheBoardSize();
             modifyFormAndStarButtn();
         }
-
-        private struct BoardSizeOptions
-        {
-            private const string k_ToStringFormt = "{0} x {1}";
-            private readonly byte r_Height;
-            private readonly byte r_Width;
-
-            public BoardSizeOptions(byte i_Height, byte i_Width)
-            {
-                this.r_Height = i_Height;
-                this.r_Width = i_Width;
-            }
-
-            public byte Higt
-            {
-                get { return r_Height; }
-            }
-
-            public byte Width
-            {
-                get { return r_Width; }
-            }
-
-            public override string ToString()
-            {
-                return string.Format(k_ToStringFormt, r_Width, r_Height);
-            }
-        }
-
-        /*
-        private void initializecomponent()
-        {
-            this.suspendlayout();
-            //
-            // setupnewgameform
-            //
-            this.clientsize = new system.drawing.size(282, 253);
-            this.name = "setupnewgameform";
-            this.resumelayout(false);
-
-        }
-        */
     }
 }
