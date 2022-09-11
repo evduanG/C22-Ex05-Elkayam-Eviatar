@@ -149,8 +149,8 @@ namespace WindowsUserInterface
         private void initilizeBoardSizesButton()
         {
             setBoardSizesText();
-            byte defaultHeight = m_BoardSizesOp[m_BoardSizeIndex].Row;
-            byte defaultWidth = m_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte defaultHeight = m_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte defaultWidth = m_BoardSizesOp[m_BoardSizeIndex].Row;
             setBoardSizesButtonDimensions(defaultHeight, defaultWidth);
             BoardSizes.FlatStyle = FlatStyle.Popup;
             BoardSizes.BackColor = Color.LightBlue;
@@ -173,7 +173,7 @@ namespace WindowsUserInterface
         {
             get
             {
-                return m_ButtonAgainstAFriend.Enabled;
+                return !m_TextBoxSecondPlayer.Enabled;
             }
         }
 
@@ -200,8 +200,8 @@ namespace WindowsUserInterface
         private void modifyTheBoardSize()
         {
             setBoardSizesText();
-            byte nextHeight = m_BoardSizesOp[m_BoardSizeIndex].Row;
-            byte nextWidth = m_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte nextHeight = m_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte nextWidth = m_BoardSizesOp[m_BoardSizeIndex].Row;
             setBoardSizesButtonDimensions(nextHeight, nextWidth);
         }
 

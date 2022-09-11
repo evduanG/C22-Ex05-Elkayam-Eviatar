@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.IO;
 using System.Collections.Generic;
+using System.Drawing;
 using WindowsUserInterface;
 
 namespace Game
@@ -10,27 +11,53 @@ namespace Game
     {
         private static string[] m_Link =
         {
-            @"https://i.picsum.photos/id/880/80/80.jpg?hmac=680-5_pQ5l25TOXAYzuLA3nhycuYB910Qc4DJ-KfCMY",
-            @"https://i.picsum.photos/id/936/80/80.jpg?hmac=sZw54wNmri4TL29yfZJT3NsIVfCVyQ3GkwP2TC8V1JU",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\1015-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\247-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\25-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\30-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\310-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\353-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\376-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\416-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\427-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\476-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\48-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\485-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\488-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\493-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\615-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\723-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\765-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\80-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\880-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\936-80x80.jpg",
+        };
+
+        private static string[] m_LinkO =
+{
+            @"https://i.picsum.photos/id/25/80/80.jpg?hmac=pzK6FjNKpAJWffMtnj_ko5UwkYllroQ23YINkLBzDZ0",
+            @"https://i.picsum.photos/id/30/80/80.jpg?hmac=Zgep64WdlaMQdQbL5Hima-hzvojJJP7zN4IGM2gxutU",
+            @"https://i.picsum.photos/id/48/80/80.jpg?hmac=WybqawWvwaF11Nj88_mZkxqivgz9yznCh-VmOSmsP7I",
+            @"https://i.picsum.photos/id/80/80/80.jpg?hmac=KCN7yqJV-4KbonMgzkSkLRI2V7Pr_KhALlnouzoIsKY",
+            @"https://i.picsum.photos/id/247/80/80.jpg?hmac=PSjSs_obpzxKCgk2oOMnEyDe_UgjruRHVJPxZf-N9Yc",
+            @"https://i.picsum.photos/id/310/80/80.jpg?hmac=uZ8ldB4CmrLxzguUOLjbqllENRi2VklZsc4gGmdnfoU",
+            @"https://i.picsum.photos/id/353/80/80.jpg?hmac=BWQ7KuaJ0teqLghZOlAl6TkN2k6f94WOvRGcRKOM--4",
+            @"https://i.picsum.photos/id/376/80/80.jpg?hmac=Mxg9CeVBTpoBw0O_TZGG7Fvd4LlvzFF99yGaIKwBDQY",
+            @"https://i.picsum.photos/id/416/80/80.jpg?hmac=khvRDqKe_LGx-Enq4za0M3EndIkG_GKaaYVhK5phpY4",
+            @"https://i.picsum.photos/id/427/80/80.jpg?hmac=a2SISMkkFvvpaeI650fZrO5RiWMmabCLVua77WQzEnc",
             @"https://i.picsum.photos/id/476/80/80.jpg?hmac=ssImL_jvuT76YYjzqn8AMjg_zuyuP2UpAc2_oMYYgNo",
+            @"https://i.picsum.photos/id/493/80/80.jpg?hmac=N7c5JkrVmTCiiGNeqzhZaMK1xKdwf5UzWTMA_V4GaOs",
+            @"https://i.picsum.photos/id/488/80/80.jpg?hmac=thGJivubFS_NxpiNPNq10OyHWT7YtQXPswfv8zYv8eA",
             @"https://i.picsum.photos/id/485/80/80.jpg?hmac=WbVLZyNv434G9mOrtncUKLc-jpG6EN_HR_988Sku0MI",
             @"https://i.picsum.photos/id/615/80/80.jpg?hmac=ikStaZgsnTu9LKUpRx7AE5sYBYoOFFuJ-PHHdwZv3Gk",
-            @"https://i.picsum.photos/id/427/80/80.jpg?hmac=a2SISMkkFvvpaeI650fZrO5RiWMmabCLVua77WQzEnc",
-            @"https://i.picsum.photos/id/30/80/80.jpg?hmac=Zgep64WdlaMQdQbL5Hima-hzvojJJP7zN4IGM2gxutU",
-            @"https://i.picsum.photos/id/310/80/80.jpg?hmac=uZ8ldB4CmrLxzguUOLjbqllENRi2VklZsc4gGmdnfoU",
-            @"https://i.picsum.photos/id/488/80/80.jpg?hmac=thGJivubFS_NxpiNPNq10OyHWT7YtQXPswfv8zYv8eA",
-            @"https://i.picsum.photos/id/48/80/80.jpg?hmac=WybqawWvwaF11Nj88_mZkxqivgz9yznCh-VmOSmsP7I",
-            @"https://i.picsum.photos/id/765/80/80.jpg?hmac=NJx9yZvvs25CZ-fb8JSl1qUnIoCUzjxI6DL9Vrb32Bo",
-            @"https://i.picsum.photos/id/247/80/80.jpg?hmac=PSjSs_obpzxKCgk2oOMnEyDe_UgjruRHVJPxZf-N9Yc",
-            @"https://i.picsum.photos/id/376/80/80.jpg?hmac=Mxg9CeVBTpoBw0O_TZGG7Fvd4LlvzFF99yGaIKwBDQY",
-            @"https://i.picsum.photos/id/80/80/80.jpg?hmac=KCN7yqJV-4KbonMgzkSkLRI2V7Pr_KhALlnouzoIsKY",
-            @"https://i.picsum.photos/id/1015/80/80.jpg?hmac=kN_c4gtIcr9tt2Od4uqye5EXzpPIZxGRzi_RifG8foU",
-            @"https://i.picsum.photos/id/353/80/80.jpg?hmac=BWQ7KuaJ0teqLghZOlAl6TkN2k6f94WOvRGcRKOM--4",
-            @"https://i.picsum.photos/id/416/80/80.jpg?hmac=khvRDqKe_LGx-Enq4za0M3EndIkG_GKaaYVhK5phpY4",
-            @"https://i.picsum.photos/id/493/80/80.jpg?hmac=N7c5JkrVmTCiiGNeqzhZaMK1xKdwf5UzWTMA_V4GaOs",
             @"https://i.picsum.photos/id/723/80/80.jpg?hmac=eJLWsM3F-i5LGUTlbzNEmda4A7fjv5fb67yAOZF4LEs",
-            @"https://i.picsum.photos/id/25/80/80.jpg?hmac=pzK6FjNKpAJWffMtnj_ko5UwkYllroQ23YINkLBzDZ0",
-        };
+            @"https://i.picsum.photos/id/765/80/80.jpg?hmac=NJx9yZvvs25CZ-fb8JSl1qUnIoCUzjxI6DL9Vrb32Bo",
+            @"https://i.picsum.photos/id/880/80/80.jpg?hmac=680-5_pQ5l25TOXAYzuLA3nhycuYB910Qc4DJ-KfCMY",
+            @"https://i.picsum.photos/id/936/80/80.jpg?hmac=sZw54wNmri4TL29yfZJT3NsIVfCVyQ3GkwP2TC8V1JU",
+            @"https://i.picsum.photos/id/1015/80/80.jpg?hmac=kN_c4gtIcr9tt2Od4uqye5EXzpPIZxGRzi_RifG8foU",
+};
+
+        public static string[] Link { get { return m_Link; } }
 
         private const bool k_IsFixed = true;
         private const string k_ThrowFixedMsg = "The value is fixed";
@@ -60,6 +87,8 @@ namespace Game
             {
                 ret.Add(m_Link[i]);
                 ret.Add(m_Link[i]);
+                //ret.Add(@"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTUixBnM6uZD6Rlq3rut-jfK45mMAQdefbzUzFtXONkVxxCAxon");
+                //ret.Add(@"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTUixBnM6uZD6Rlq3rut-jfK45mMAQdefbzUzFtXONkVxxCAxon");
             }
 
             return ret.ToArray();

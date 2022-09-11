@@ -40,7 +40,7 @@ namespace WindowsUserInterface
         };
 
         public const int k_Margin = 10;
-        public const int k_ButtonSize = 75;
+        public const int k_ButtonSize = 90;
         private const int k_WindowHeightModifier = 16;
         private const int k_WindowWidthModifier = 3;
         private const bool k_Enabled = true;
@@ -257,7 +257,8 @@ namespace WindowsUserInterface
 
         public void Flipped(BoardLocation buttomIndexEvent, string i_LikImg)
         {
-            this[buttomIndexEvent].ImageLocation = i_LikImg;
+            this[buttomIndexEvent].Image = Image.FromFile(i_LikImg);
+            this[buttomIndexEvent].SizeMode = PictureBoxSizeMode.CenterImage;
             this[buttomIndexEvent].Enabled = false;
         }
 
@@ -273,11 +274,11 @@ namespace WindowsUserInterface
         {
             foreach (BoardLocation choice in m_PlayerChoice)
             {
-                PictureBox buttonClick = GameBoardButtons[choice.Row, choice.Col];
+                PictureBox picBoxClick = GameBoardButtons[choice.Row, choice.Col];
 
-                buttonClick.Enabled = k_Enabled;
-                buttonClick.BackColor = DefulltColor;
-                buttonClick.ImageLocation = string.Empty;
+                picBoxClick.Enabled = k_Enabled;
+                picBoxClick.BackColor = DefulltColor;
+                picBoxClick.Image = null;
             }
         }
 
