@@ -39,12 +39,12 @@ namespace MemoryCardGame
             Memory.Clear();
         }
 
-        public void ShowBoard(char[,] i_GameBoard)
+        public void ShowBoard(string[,] i_GameBoard)
         {
             byte row = 0;
             byte col = 0;
 
-            foreach (char ch in i_GameBoard)
+            foreach (string link in i_GameBoard)
             {
                 if (col < i_GameBoard.Rank)
                 {
@@ -52,9 +52,9 @@ namespace MemoryCardGame
                     row++;
                 }
 
-                if (ch != ' ')
+                if (link != string.Empty)
                 {
-                    MemorySlot memoryToCheck = new MemorySlot(ch, row, col);
+                    MemorySlot memoryToCheck = new MemorySlot(link, row, col);
 
                     if (!r_Memory.Contains(memoryToCheck))
                     {
@@ -66,7 +66,7 @@ namespace MemoryCardGame
             }
         }
 
-        public ButtonIndexEvent GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, char[,] i_boardToDraw)
+        public ButtonIndexEvent GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, string[,] i_boardToDraw)
         {
             BoardLocation ans = BoardLocation.Defult();
             bool isFind = false;
@@ -129,13 +129,13 @@ namespace MemoryCardGame
             return isItFound;
         }
 
-        private bool getAISecondPlayerChoice(List<BoardLocation> i_validSlotToChase, char[,] i_boardToDraw, ref BoardLocation io_Location)
+        private bool getAISecondPlayerChoice(List<BoardLocation> i_validSlotToChase, string[,] i_boardToDraw, ref BoardLocation io_Location)
         {
             r_Memory.Sort();
             MemorySlot returnedIndex = default;
             bool isItFound = false;
 
-            foreach (char value in i_boardToDraw)
+            foreach (string value in i_boardToDraw)
             {
                 foreach (MemorySlot mem in r_Memory)
                 {
@@ -169,12 +169,12 @@ namespace MemoryCardGame
             return i_validSlotTOChase[randomTile];
         }
 
-        internal struct MemorySlot : IComparable
+        internal struct MemorySlot
         {
-            private char m_Value;
+            private string m_Value;
             private BoardLocation m_BoardLocation;
 
-            public char Value
+            public string Value
             {
                 get { return m_Value; }
                 set { m_Value = value; }
@@ -193,34 +193,35 @@ namespace MemoryCardGame
             /// ===============================================
             // Constructors
             /// ===============================================
-            public MemorySlot(char i_Value, byte i_Row, byte i_col)
+            public MemorySlot(string i_Value, byte i_Row, byte i_col)
             {
                 m_Value = i_Value;
                 m_BoardLocation = new BoardLocation(i_Row, i_col);
             }
 
-            public MemorySlot(char i_Value, BoardLocation i_BoardLocation)
+            public MemorySlot(string i_Value, BoardLocation i_BoardLocation)
             {
                 m_Value = i_Value;
                 m_BoardLocation = i_BoardLocation;
             }
 
             // implementing CompareTo for sort()
-            public int CompareTo(object obj)
-            {
-                int ans;
+            //public int CompareTo(object obj)
+            //{
 
-                if (this > (MemorySlot?)obj)
-                {
-                    ans = 1;
-                }
-                else
-                {
-                    ans = -1;
-                }
+            //    //int ans;
 
-                return ans;
-            }
+            //    //if (this > (MemorySlot?)obj)
+            //    //{
+            //    //    ans = 1;
+            //    //}
+            //    //else
+            //    //{
+            //    //    ans = -1;
+            //    //}
+
+            //    //return ans;
+            //}
 
             public static bool operator ==(MemorySlot i_Other1, MemorySlot i_Other2)
             {
@@ -232,15 +233,15 @@ namespace MemoryCardGame
                 return !(i_Other1 == i_Other2);
             }
 
-            public static bool operator >(MemorySlot i_Other1, MemorySlot i_Other2)
-            {
-                return i_Other1.Value > i_Other2.Value;
-            }
+            //public static bool operator >(MemorySlot i_Other1, MemorySlot i_Other2)
+            //{
+            //    return i_Other1.Value > i_Other2.Value;
+            //}
 
-            public static bool operator <(MemorySlot i_Other1, MemorySlot i_Other2)
-            {
-                return !(i_Other1 > i_Other2);
-            }
+            //public static bool operator <(MemorySlot i_Other1, MemorySlot i_Other2)
+            //{
+            //    return !(i_Other1 > i_Other2);
+            //}
 
             public override bool Equals(object obj)
             {

@@ -161,8 +161,8 @@ namespace MemoryCardGame
             if (!IsClickale)
             {
                 ButtonIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtonIndexEvent;
-                char v = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
-                m_GameForm.Flipped(buttomIndexEvent.Location, v);
+                string link = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
+                m_GameForm.Flipped(buttomIndexEvent.Location, link);
                 r_SelectedTileInTurn.Add(buttomIndexEvent.Location);
                 ans = true;
             }
@@ -269,7 +269,6 @@ namespace MemoryCardGame
             AIPlaying.Invoke();
         }
 
-
         protected virtual void AIPlaying_Move()
         {
             InbetweenTurnsTimer.Stop();
@@ -278,7 +277,7 @@ namespace MemoryCardGame
             {
                 ButtonIndexEvent AIChoice = (CurrentPlayer as AIPlayer).GetPlayerChoice(m_GameLogic.GetAllValidTilesForChoice(), m_GameLogic.GetBoardToDraw());
 
-                char boardSlotValue = this.m_GameLogic.Flipped(AIChoice.Location, k_FlippedTheCard);
+                string boardSlotValue = this.m_GameLogic.Flipped(AIChoice.Location, k_FlippedTheCard);
                 m_GameForm.Flipped(AIChoice.Location, boardSlotValue);
                 r_SelectedTileInTurn.Add(AIChoice.Location);
             }
