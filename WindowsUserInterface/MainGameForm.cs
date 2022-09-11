@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void AnyButtonHandler(object sender, ButtomIndexEvent e);
+    public delegate void AnyButtonHandler(object sender, ButtonIndexEvent e);
 
     public class MainGameForm : Form
     {
@@ -324,16 +324,11 @@ namespace WindowsUserInterface
         // =======================================================
         // Delegates and Events methods
         // =======================================================
-        protected virtual void MainGameForm_Load(object sender, EventArgs i_EventArgs)
-        {
-            // TODO: wht is this ?
-        }
-
         private void anyButtemInvoker(EventArgs i_EventArgs)
         {
             if(AnyButtonClick != null)
             {
-                AnyButtonClick.Invoke(this, (ButtomIndexEvent)i_EventArgs);
+                AnyButtonClick.Invoke(this, (ButtonIndexEvent)i_EventArgs);
             }
         }
 
@@ -348,7 +343,7 @@ namespace WindowsUserInterface
                 throw new FormatException("the button does not exists");
             }
 
-            OnAnyButtonClick(clickedTile, new ButtomIndexEvent(o_Row, o_Col));
+            OnAnyButtonClick(clickedTile, new ButtonIndexEvent(o_Row, o_Col));
         }
 
         protected virtual void AllButtem_Click(object sender, EventArgs i_EventArgs)

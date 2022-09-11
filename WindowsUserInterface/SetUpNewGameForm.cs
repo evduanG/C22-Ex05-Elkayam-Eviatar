@@ -269,7 +269,7 @@ namespace WindowsUserInterface
         // =======================================================
         protected virtual void ButtonAgainstAFriend_Click(object i_Sender, EventArgs e)
         {
-            if(r_IsFirstGame)
+            if (r_IsFirstGame)
             {
                 bool isTextBoxSecondPlayer = m_TextBoxSecondPlayer.Enabled;
 

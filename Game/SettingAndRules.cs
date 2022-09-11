@@ -12,10 +12,10 @@ namespace Game
         private const string k_ThrowDimensionsMsg = "The game dimensions heva a fix size";
 
         /******     number of players       ******/
-        public static readonly Rules sr_NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
+        public const int k_SleepBetweenTurns = 1500;
 
         /******     number of players       ******/
-        public const int k_SleepBetweenTurns = 1500;
+        public static readonly Rules sr_NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
 
         /****** number of Choice In players Turn ******/
         private const int k_NumOfChoiceInPlayerTurn = 2;
@@ -25,7 +25,8 @@ namespace Game
         private static readonly Rules sr_Columns = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
 
         // TODO: 2.0 :
-        /// make a arr of link to pic  or comfig how to get the resdpons link
+
+        /// make a arr of link to pix  or config how to get the resdpons link
         public struct Rules
         {
             private readonly string r_Name;
