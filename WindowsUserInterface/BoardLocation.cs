@@ -58,9 +58,29 @@ namespace WindowsUserInterface
             m_Col = i_Col;
         }
 
+        // TODO (in case of bugs): operator == and !=
+
         public override string ToString()
         {
-            return string.Format(k_ToStringFormt, sr_ABC[m_Col], m_Row);
+            return string.Format(k_ToStringFormt, m_Col, m_Row);
+        }
+
+        public static bool TryParse(string i_BoardLocString, out BoardLocation o_BoardLocation)
+        {
+            bool isRow = byte.TryParse(i_BoardLocString.Substring(0, 1), out byte o_Row);
+            bool isCol = byte.TryParse(i_BoardLocString.Substring(1, 1), out byte o_Col);
+
+            if(isCol && isRow)
+            {
+                o_BoardLocation = new BoardLocation(o_Row, o_Col);
+            }
+            else
+            {
+                o_BoardLocation = new BoardLocation(0, 0);
+                Console.WriteLine("Try parse failed " + i_BoardLocString);
+            }
+
+            return isRow && isCol;
         }
     }
 }

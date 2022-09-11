@@ -51,21 +51,18 @@ namespace MemoryCardGame
             return string.Format("{0} : {1} ", m_Name, m_Score);
         }
 
-        public virtual string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
-        {
-            string returnChosice = string.Empty;
-            // TODO : this is an empty func not a good way to do it
-            return returnChosice;
-        }
+        //public virtual string GetPlayerChoice(List<string> i_validSlotTOChase, char[,] i_BoardToDraw)
+        //{
+        //    string returnChosice = string.Empty;
+        //    return returnChosice;
+        //}
 
-        public virtual void ShowBoard(char[,] i_GameBoard)
-        {
-            // TODO : this is an empty func not a good way to do it
-        }
+        //public virtual void ShowBoard(char[,] i_GameBoard)
+        //{
+        //}
 
-        public virtual void RestartNewGame()
-        {
-            // TODO : this is an empty func not a good way to do it
-        }
+        //public virtual void RestartNewGame()
+        //{
+        //}
     }
 }
