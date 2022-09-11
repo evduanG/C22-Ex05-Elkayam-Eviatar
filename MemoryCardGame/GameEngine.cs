@@ -15,9 +15,8 @@ namespace MemoryCardGame
         private readonly byte r_TotalPLayers;
         private readonly Timer r_InbetweenTurnsTimer;
         private readonly Player[] r_AllPlayersInGame;
-        private Screen.MainGameForm m_GameForm;
-        private Screen.NumberOfPlayersBox m_NumberOfPlayersBox;
         private readonly List<BoardLocation> r_SelectedTileInTurn;
+        private Screen.MainGameForm m_GameForm;
         private GameLogic m_GameLogic;
         private byte m_TurnCounter;
 
