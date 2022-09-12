@@ -20,10 +20,7 @@ namespace WindowsUserInterface
         private const string k_TitleButtonAgainstAFriend = "Against a Friend";
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";
-
-        // TODO : sr_BoardSizes get at val form Game engine
-        private static readonly string[] sr_BoardSizes = { "4 x 4", "4 x 5", "4 x 6", "5 x 4", "5 x 6", "6 x 4", "6 x 5", "6 x 6" };
-        private static readonly BoardLocation[] sr_BoardSizesOp;
+        private BoardLocation[] m_BoardSizesOp;
         private readonly bool r_IsFirstGame;
 
         private byte m_BoardSizeIndex = 0;
@@ -41,20 +38,16 @@ namespace WindowsUserInterface
         // =======================================================
         // constructor  and methods for the constructor
         // =======================================================
-        public static SetUpNewGameForm StartGameForm()
+        public static SetUpNewGameForm StartGameForm(List<BoardLocation> i_BoardLocations)
         {
-            return new SetUpNewGameForm(k_FirstGame, string.Empty, k_TitleDefultSecondPlayer);
+            return new SetUpNewGameForm(k_FirstGame, string.Empty, k_TitleDefultSecondPlayer, i_BoardLocations);
         }
 
-        public static SetUpNewGameForm RestartGameForm(string i_FirstplayerName, string i_SecondPlayerName)
-        {
-            return new SetUpNewGameForm(!k_FirstGame, i_FirstplayerName, i_SecondPlayerName);
-        }
-
-        private SetUpNewGameForm(bool i_IsFirstGame, string i_FirstplayerName, string i_SecondPlayerName)
+        private SetUpNewGameForm(bool i_IsFirstGame, string i_FirstplayerName, string i_SecondPlayerName, List<BoardLocation> i_BoardLocations)
         {
             r_IsFirstGame = i_IsFirstGame;
             Size = new Size(380, 300);
+            m_BoardSizesOp = i_BoardLocations.ToArray();
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Text = k_TitleForm;
@@ -156,8 +149,8 @@ namespace WindowsUserInterface
         private void initilizeBoardSizesButton()
         {
             setBoardSizesText();
-            byte defaultHeight = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
-            byte defaultWidth = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
+            byte defaultHeight = m_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte defaultWidth = m_BoardSizesOp[m_BoardSizeIndex].Row;
             setBoardSizesButtonDimensions(defaultHeight, defaultWidth);
             BoardSizes.FlatStyle = FlatStyle.Popup;
             BoardSizes.BackColor = Color.LightBlue;
@@ -180,7 +173,7 @@ namespace WindowsUserInterface
         {
             get
             {
-                return m_ButtonAgainstAFriend.Enabled;
+                return !m_TextBoxSecondPlayer.Enabled;
             }
         }
 
@@ -207,8 +200,8 @@ namespace WindowsUserInterface
         private void modifyTheBoardSize()
         {
             setBoardSizesText();
-            byte nextHeight = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
-            byte nextWidth = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
+            byte nextHeight = m_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte nextWidth = m_BoardSizesOp[m_BoardSizeIndex].Row;
             setBoardSizesButtonDimensions(nextHeight, nextWidth);
         }
 
@@ -217,35 +210,19 @@ namespace WindowsUserInterface
         // =======================================================
         public void GetSelectedDimensions(out byte o_Height, out byte o_Width)
         {
-            o_Height = getDimensionHeight(sr_BoardSizes[m_BoardSizeIndex]);
-            o_Width = getDimensionWidth(sr_BoardSizes[m_BoardSizeIndex]);
-        }
-
-        public void SetListOfBordSizeOptions(byte i_HigtMin, byte i_HigtMax, byte i_WidthMin, byte i_WidthMax)
-        {
-            // TODO : get this to set the sr_BoardSizes
-            for (byte higt = i_HigtMin; higt <= i_HigtMax; higt++)
-            {
-                for(byte widt = i_WidthMin; widt <= i_WidthMax; widt++)
-                {
-                }
-            }
+            o_Height = m_BoardSizesOp[m_BoardSizeIndex].Row;
+            o_Width = m_BoardSizesOp[m_BoardSizeIndex].Col;
         }
 
         private void setBoardSizesText()
         {
-            BoardSizes.Text = sr_BoardSizes[m_BoardSizeIndex];
+            BoardSizes.Text = m_BoardSizesOp[m_BoardSizeIndex].GetStrForSetUpBord();
         }
 
         private void setBoardSizesButtonDimensions(byte i_ButtonHeight, byte i_ButtonWidth)
         {
             BoardSizes.Height = i_ButtonHeight * k_BoardSizeButtonBase;
             BoardSizes.Width = i_ButtonWidth * k_BoardSizeButtonBase;
-        }
-
-        private byte getDimensionHeight(string i_BoardSizeString)
-        {
-            return byte.Parse(i_BoardSizeString.Substring(i_BoardSizeString.Length - 1, 1));
         }
 
         private byte getDimensionWidth(string i_BoardSizeString)
@@ -306,7 +283,7 @@ namespace WindowsUserInterface
 
         protected virtual void BoardSizes_Click(object i_BoardSizesButton, EventArgs i_EventArgs)
         {
-            m_BoardSizeIndex = (byte)((m_BoardSizeIndex + 1) % sr_BoardSizes.Length);
+            m_BoardSizeIndex = (byte)((m_BoardSizeIndex + 1) % m_BoardSizesOp.Length);
             modifyTheBoardSize();
             modifyFormAndStarButtn();
         }
