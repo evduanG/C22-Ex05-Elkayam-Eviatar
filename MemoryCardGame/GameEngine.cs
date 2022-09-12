@@ -95,10 +95,9 @@ namespace MemoryCardGame
         // ===================================================================
         public void DisplaySetUpForm()
         {
-            Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm();
+            Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm(Setting.GetBoardLocations());
 
             // TODO : make this func to be from input of setting
-            form.SetListOfBordSizeOptions(4, 6, 4, 6);
             form.StartClick += ButtonStart_Click;
             form.ShowDialog();
 
@@ -123,6 +122,7 @@ namespace MemoryCardGame
                 m_GameForm.SetPlayer(player.ToString(), player.Color, player.ID);
             }
 
+            r_SelectedTileInTurn.Clear();
             m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             m_GameForm.ShowDialog();
         }
@@ -161,8 +161,8 @@ namespace MemoryCardGame
             if (!IsClickale)
             {
                 ButtonIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtonIndexEvent;
-                char v = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
-                m_GameForm.Flipped(buttomIndexEvent.Location, v);
+                string link = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
+                m_GameForm.Flipped(buttomIndexEvent.Location, link);
                 r_SelectedTileInTurn.Add(buttomIndexEvent.Location);
                 ans = true;
             }
@@ -207,6 +207,47 @@ namespace MemoryCardGame
                     r_AiTimer.Start();
                 }
             }
+            else
+            {
+                bool wantRematch = showWinner();
+                if (wantRematch)
+                {
+                    startNewGame(m_GameLogic.Rows, m_GameLogic.Columns);
+                }
+            }
+        }
+
+        private bool showWinner()
+        {
+            Player winner = CurrentPlayer;
+            bool isTie = false;
+            DialogResult dialogResult;
+
+            foreach (Player playinPlaer in r_AllPlayersInGame)
+            {
+                if(winner.Score < playinPlaer.Score )
+                {
+                    winner = playinPlaer;
+                }
+                else
+                {
+                    if (winner.Score == playinPlaer.Score)
+                    {
+                        isTie = true;
+                    }
+                }
+            }
+
+            if (isTie)
+            {
+                dialogResult = Screen.MessageBox.MessageBoxTie(winner.Score.ToString()).ShowDialog();
+            }
+            else
+            {
+                dialogResult = Screen.MessageBox.MessageBoxWinner(winner.Name, winner.Score).ShowDialog();
+            }
+
+            return dialogResult == DialogResult.Yes;
         }
 
         // =======================================================
@@ -269,7 +310,6 @@ namespace MemoryCardGame
             AIPlaying.Invoke();
         }
 
-
         protected virtual void AIPlaying_Move()
         {
             InbetweenTurnsTimer.Stop();
@@ -278,7 +318,7 @@ namespace MemoryCardGame
             {
                 ButtonIndexEvent AIChoice = (CurrentPlayer as AIPlayer).GetPlayerChoice(m_GameLogic.GetAllValidTilesForChoice(), m_GameLogic.GetBoardToDraw());
 
-                char boardSlotValue = this.m_GameLogic.Flipped(AIChoice.Location, k_FlippedTheCard);
+                string boardSlotValue = this.m_GameLogic.Flipped(AIChoice.Location, k_FlippedTheCard);
                 m_GameForm.Flipped(AIChoice.Location, boardSlotValue);
                 r_SelectedTileInTurn.Add(AIChoice.Location);
             }

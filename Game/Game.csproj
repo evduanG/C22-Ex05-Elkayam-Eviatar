@@ -41,6 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameLogic.cs" />
+    <Compile Include="ResourceImg.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResourceImg.resx</DependentUpon>
+    </Compile>
     <Compile Include="SettingAndRules.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,7 +60,74 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ResourceImg.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourceImg.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\247-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\310-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\353-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\376-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\416-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\427-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\476-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\485-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\488-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\493-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\615-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\723-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\765-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\880-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\936-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1015-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\25-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\30-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\48-80x80.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\80-80x80.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

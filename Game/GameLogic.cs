@@ -83,13 +83,11 @@ namespace Game
             this.r_NumOfCols = i_height;
             this.m_FlippedCardsCounter = 0;
 
-            char[] chars = new char[Rows * Columns];
-            for (byte j = 0; j < chars.Length; j++)
-            {
-                chars[j] = getCharForSlat(j);
-            }
+            byte size = (byte)(Rows * Columns);
+            size = (byte)(size >> 1);
+            string[] links = SettingAndRules.GetRandImgs(size);
 
-            shuffleCard(ref chars);
+            shuffleCard(ref links);
             r_GameBoard = new Card[Rows, Columns];
             byte indexInChars = 0;
 
@@ -98,8 +96,7 @@ namespace Game
                 for (int j = 0; j < Columns; j++)
                 {
                     byte k = indexInChars;
-                    r_GameBoard[i, j] = new Card(chars[indexInChars++], !k_FaceUp);
-                    Console.WriteLine(string.Format("card : {0} , row = {1} ,col = {2}", chars[k], i, j));
+                    r_GameBoard[i, j] = new Card(links[indexInChars++], !k_FaceUp);
                 }
             }
         }
@@ -127,7 +124,7 @@ namespace Game
         /// function to Shuffle array the char array before creation
         /// need to change to any array
         /// <exception cref="ArgumentNullException"></exception>
-        private char[] shuffleCard(ref char[] i_CharArrToShuffle)
+        private string[] shuffleCard(ref string[] i_CharArrToShuffle)
         {
             int len = i_CharArrToShuffle.Length;
             if (len == 0)
@@ -139,7 +136,7 @@ namespace Game
             {
                 int indexOfnewValueFor_s = generateAnotherNum(s, len); // note the range
 
-                // swap procedure: note, char h to store initial i_CharArrToShuffle[s] value
+                // swap procedure: note, char h to store initial i_CharArrToShuffle[s] i_Value
                 (i_CharArrToShuffle[indexOfnewValueFor_s], i_CharArrToShuffle[s]) = (i_CharArrToShuffle[s], i_CharArrToShuffle[indexOfnewValueFor_s]);
             }
 
@@ -247,12 +244,12 @@ namespace Game
             this[i_Index] = c;
         }
 
-        public char Flipped(BoardLocation i_Index, bool i_Value)
+        public string Flipped(BoardLocation i_Index, bool i_Value)
         {
             Card c = this[i_Index];
             c.Flipped = i_Value;
             this[i_Index] = c;
-            return this[i_Index].Value;
+            return this[i_Index].Link;
         }
 
         // return true  The player got another turn
@@ -298,14 +295,14 @@ namespace Game
         // methods that use to draw the board
         // ===================================================================
         // return board to draw
-        public char[,] GetBoardToDraw()
+        public string[,] GetBoardToDraw()
         {
-            char[,] boardToDraw = new char[Rows, Columns];
+            string[,] boardToDraw = new string[Rows, Columns];
             for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    boardToDraw[i, j] = r_GameBoard[i, j].Value;
+                    boardToDraw[i, j] = r_GameBoard[i, j].Link;
                 }
             }
 
@@ -387,34 +384,33 @@ r_GameBoard[io_rowIndex, io_colIndex]));
         private struct Card
         {
             // private const string km_formatToPrint = " {} |";
-            private const char k_Default = ' ';
 
-            private char m_Value;
+            private string m_Link;
             private bool m_Flipped;
 
             /// constructor
-            public Card(char value, bool flipped)
+            public Card(string i_Value, bool i_Flipped)
             {
-                m_Value = value;
-                m_Flipped = flipped;
+                m_Link = i_Value;
+                m_Flipped = i_Flipped;
             }
 
-            public Card(char value)
+            public Card(string value)
                 : this()
             {
-                m_Value = value;
+                m_Link = value;
                 m_Flipped = false;
             }
 
             // Properties
-            public char Value
+            public string Link
             {
                 get
                 {
-                    char retunValue = k_Default;
+                    string retunValue = string.Empty;
                     if (Flipped)
                     {
-                        retunValue = m_Value;
+                        retunValue = m_Link;
                     }
 
                     return retunValue;
@@ -422,7 +418,7 @@ r_GameBoard[io_rowIndex, io_colIndex]));
 
                 set
                 {
-                    m_Value = value;
+                    m_Link = value;
                 }
             }
 
@@ -451,15 +447,15 @@ r_GameBoard[io_rowIndex, io_colIndex]));
 
             public override bool Equals(object i_comperTo)
             {
-                return this.Value == ((Card)i_comperTo).Value;
+                return this.Link == ((Card)i_comperTo).Link;
             }
 
             public override int GetHashCode()
             {
                 int hashCode = 1148891178;
-                hashCode = (hashCode * -1521134295) + m_Value.GetHashCode();
+                hashCode = (hashCode * -1521134295) + m_Link.GetHashCode();
                 hashCode = (hashCode * -1521134295) + m_Flipped.GetHashCode();
-                hashCode = (hashCode * -1521134295) + Value.GetHashCode();
+                hashCode = (hashCode * -1521134295) + Link.GetHashCode();
                 hashCode = (hashCode * -1521134295) + Flipped.GetHashCode();
                 return hashCode;
             }
@@ -470,7 +466,7 @@ r_GameBoard[io_rowIndex, io_colIndex]));
                 {
                     clickedButton.Enabled = false;
                     Flipped = true;
-                    clickedButton.Text = Value.ToString();
+                    clickedButton.Text = Link;
                 }
             }
         }
