@@ -79,8 +79,8 @@ namespace WindowsUserInterface
         private void initilizeGameBoardButtons()
         {
             m_GameBoardButtons = new PictureBox[Rows, Columns];
-            createButtons();
-            positionButtonsOnGrid();
+            createPicBox();
+            positionPicBoxsOnGrid();
         }
 
         private void initializeMainForm()
@@ -92,7 +92,7 @@ namespace WindowsUserInterface
             MaximizeBox = false;
         }
 
-        private void positionButtonsOnGrid()
+        private void positionPicBoxsOnGrid()
         {
             // setup the rest
             int upOneSlot = 0;
@@ -151,9 +151,9 @@ namespace WindowsUserInterface
             }
         }
 
-        private void createButtons()
+        private void createPicBox()
         {
-            // create buttons
+            // create PicBox
             for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Columns; j++)

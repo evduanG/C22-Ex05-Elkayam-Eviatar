@@ -94,7 +94,6 @@ namespace MemoryCardGame
         private bool getAIFirstPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, ref BoardLocation io_Location)
         {
             r_Memory.Sort();
-            // i_ValidSlotTOChase.Sort();
             bool isItFound = false;
             MemorySlot valueFirst = r_Memory[0];
             MemorySlot valueSecond;
@@ -169,7 +168,7 @@ namespace MemoryCardGame
             return i_validSlotTOChase[randomTile];
         }
 
-        internal struct MemorySlot
+        internal struct MemorySlot : IComparable
         {
             private string m_Value;
             private BoardLocation m_BoardLocation;
@@ -205,24 +204,6 @@ namespace MemoryCardGame
                 m_BoardLocation = i_BoardLocation;
             }
 
-            // implementing CompareTo for sort()
-            //public int CompareTo(object obj)
-            //{
-
-            //    //int ans;
-
-            //    //if (this > (MemorySlot?)obj)
-            //    //{
-            //    //    ans = 1;
-            //    //}
-            //    //else
-            //    //{
-            //    //    ans = -1;
-            //    //}
-
-            //    //return ans;
-            //}
-
             public static bool operator ==(MemorySlot i_Other1, MemorySlot i_Other2)
             {
                 return i_Other1.Value == i_Other2.Value;
@@ -232,16 +213,6 @@ namespace MemoryCardGame
             {
                 return !(i_Other1 == i_Other2);
             }
-
-            //public static bool operator >(MemorySlot i_Other1, MemorySlot i_Other2)
-            //{
-            //    return i_Other1.Value > i_Other2.Value;
-            //}
-
-            //public static bool operator <(MemorySlot i_Other1, MemorySlot i_Other2)
-            //{
-            //    return !(i_Other1 > i_Other2);
-            //}
 
             public override bool Equals(object obj)
             {
@@ -256,6 +227,11 @@ namespace MemoryCardGame
             public override string ToString()
             {
                 return base.ToString();
+            }
+
+            public int CompareTo(object obj)
+            {
+                return string.Compare(Value, ((MemorySlot)obj).Value);
             }
         }
     }

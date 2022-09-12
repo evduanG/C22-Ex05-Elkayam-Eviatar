@@ -83,7 +83,8 @@ namespace Game
             this.r_NumOfCols = i_height;
             this.m_FlippedCardsCounter = 0;
 
-            byte size = (byte)(i_height * Columns);
+            byte size = (byte)(Rows * Columns);
+            size = (byte)(size >> 1);
             string[] links = SettingAndRules.GetRandImgs(size);
 
             shuffleCard(ref links);

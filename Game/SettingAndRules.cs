@@ -11,26 +11,26 @@ namespace Game
     {
         private static string[] m_Link =
         {
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\1015-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\247-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\25-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\30-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\310-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\353-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\376-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\416-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\427-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\476-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\48-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\485-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\488-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\493-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\615-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\723-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\765-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\80-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\880-80x80.jpg",
-            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\936-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\25-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\30-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\48-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\80-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\247-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\310-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\353-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\376-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\416-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\427-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\476-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\485-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\488-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\493-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\615-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\723-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\765-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\880-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\936-80x80.jpg",
+            @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\1015-80x80.jpg",
         };
 
         private static string[] m_LinkO =
@@ -80,15 +80,14 @@ namespace Game
         private static readonly Rules sr_Columns = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
 
         // TODO: 2.0 :
-        public static string[] GetRandImgs(byte i_Len)
+        public static string[] GetRandImgs(byte i_NuOfPic)
         {
             List<string> ret = new List<string>();
-            for(int i = 0; i < i_Len; i++)
+
+            for (int i = 0; i < i_NuOfPic; i++)
             {
                 ret.Add(m_Link[i]);
                 ret.Add(m_Link[i]);
-                //ret.Add(@"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTUixBnM6uZD6Rlq3rut-jfK45mMAQdefbzUzFtXONkVxxCAxon");
-                //ret.Add(@"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTUixBnM6uZD6Rlq3rut-jfK45mMAQdefbzUzFtXONkVxxCAxon");
             }
 
             return ret.ToArray();

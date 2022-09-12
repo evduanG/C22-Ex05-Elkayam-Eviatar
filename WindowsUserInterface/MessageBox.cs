@@ -11,6 +11,7 @@ namespace WindowsUserInterface
         private const int k_MessageBoxHeight = 180;
         private const int k_MessageBoxWidth = 360;
         private const string k_FormtWinnerScoreMessage = "{0} won with {1} points!";
+        private const string k_FormtTieScore = "It's a tie with {0} points!";
         private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
         // public event MessageBoxHandler Closed;
@@ -22,9 +23,19 @@ namespace WindowsUserInterface
         // =======================================================
         // constructor  and methods for the constructor
         // =======================================================
-        public MessageBox()
+        private MessageBox(string i_StrToShow)
         {
-            initializeComponents();
+            initializeComponents(i_StrToShow);
+        }
+
+        public static MessageBox MessageBoxTie(string i_TieScore)
+        {
+            return new MessageBox(string.Format(k_FormtTieScore, i_TieScore));
+        }
+
+        public static MessageBox MessageBoxWinner(string i_WinnerName, byte i_Score)
+        {
+            return new MessageBox(string.Format(k_FormtWinnerScoreMessage, i_WinnerName, i_Score));
         }
 
         private void initializeForm()
@@ -38,11 +49,11 @@ namespace WindowsUserInterface
             AcceptButton = ButtonYes;
         }
 
-        private void initializeLabels()
+        private void initializeLabels(string i_StrToShow)
         {
             GameResultsMessage = new Label
             {
-                Text = k_FormtWinnerScoreMessage,
+                Text = i_StrToShow,
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.LightGoldenrodYellow,
                 AutoSize = true,
@@ -65,10 +76,10 @@ namespace WindowsUserInterface
             Controls.Add(m_AnotherGameMessage);
         }
 
-        private void initializeComponents()
+        private void initializeComponents(string i_StrToShow)
         {
             initializeForm();
-            initializeLabels();
+            initializeLabels(i_StrToShow);
             initializeButtons();
         }
 

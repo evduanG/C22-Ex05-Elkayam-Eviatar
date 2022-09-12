@@ -122,6 +122,7 @@ namespace MemoryCardGame
                 m_GameForm.SetPlayer(player.ToString(), player.Color, player.ID);
             }
 
+            r_SelectedTileInTurn.Clear();
             m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             m_GameForm.ShowDialog();
         }
@@ -206,6 +207,47 @@ namespace MemoryCardGame
                     r_AiTimer.Start();
                 }
             }
+            else
+            {
+                bool wantRematch = showWinner();
+                if (wantRematch)
+                {
+                    startNewGame(m_GameLogic.Rows, m_GameLogic.Columns);
+                }
+            }
+        }
+
+        private bool showWinner()
+        {
+            Player winner = CurrentPlayer;
+            bool isTie = false;
+            DialogResult dialogResult;
+
+            foreach (Player playinPlaer in r_AllPlayersInGame)
+            {
+                if(winner.Score < playinPlaer.Score )
+                {
+                    winner = playinPlaer;
+                }
+                else
+                {
+                    if (winner.Score == playinPlaer.Score)
+                    {
+                        isTie = true;
+                    }
+                }
+            }
+
+            if (isTie)
+            {
+                dialogResult = Screen.MessageBox.MessageBoxTie(winner.Score.ToString()).ShowDialog();
+            }
+            else
+            {
+                dialogResult = Screen.MessageBox.MessageBoxWinner(winner.Name, winner.Score).ShowDialog();
+            }
+
+            return dialogResult == DialogResult.Yes;
         }
 
         // =======================================================
