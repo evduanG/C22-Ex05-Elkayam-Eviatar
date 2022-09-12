@@ -9,36 +9,6 @@ namespace WindowsUserInterface
 
     public class MainGameForm : Form
     {
-        private static readonly List<char> sr_ABC = new List<char>()
-        {
-            'A',
-            'B',
-            'C',
-            'D',
-            'E',
-            'F',
-            'G',
-            'H',
-            'I',
-            'J',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'Q',
-            'R',
-            'S',
-            'T',
-            'U',
-            'V',
-            'W',
-            'X',
-            'Y',
-            'Z',
-        };
-
         public const int k_Margin = 10;
         public const int k_ButtonSize = 90;
         private const int k_WindowHeightModifier = 16;
