@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Game;
@@ -10,6 +11,8 @@ using Setting = Game.SettingAndRules;
 namespace MemoryCardGame
 {
     public delegate void AIPlayerHandler();
+
+    public delegate void EndOfGameHandler();
 
     public class GameEngine
     {
@@ -25,6 +28,8 @@ namespace MemoryCardGame
 
         public event AIPlayerHandler AIPlaying;
 
+        public event EndOfGameHandler GameEnding;
+
         // ===================================================================
         //  constructor and methods that the constructor uses
         // ===================================================================
@@ -34,6 +39,7 @@ namespace MemoryCardGame
             m_TurnCounter = 0;
             r_SelectedTileInTurn = new List<BoardLocation>();
             AIPlaying += AIPlaying_Move;
+            GameEnding += GameEngine_GameEnding;
 
             /******     number of players       ******/
             r_TotalPLayers = Setting.sr_NumOfPlayers.UpperBound;
@@ -67,7 +73,7 @@ namespace MemoryCardGame
 
         public bool IsClickale
         {
-            get { return r_InbetweenTurnsTimer.Enabled || CurrentPlayer.IsHuman; }
+            get { return r_InbetweenTurnsTimer.Enabled || !CurrentPlayer.IsHuman; }
         }
 
         public byte TurnCounter
@@ -96,17 +102,8 @@ namespace MemoryCardGame
         public void DisplaySetUpForm()
         {
             Screen.SetUpNewGameForm form = Screen.SetUpNewGameForm.StartGameForm(Setting.GetBoardLocations());
-
-            // TODO : make this func to be from input of setting
             form.StartClick += ButtonStart_Click;
             form.ShowDialog();
-
-            if (form.ShowDialog() == DialogResult.Yes)
-            {
-                form.RestartGameForm();
-            }
-
-            // asq for more game ?
         }
 
         private void startNewGame(byte i_Higt, byte i_Width)
@@ -114,7 +111,6 @@ namespace MemoryCardGame
             m_GameLogic = new GameLogic(i_Higt, i_Width);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2);
 
-            // m_GameBoard.ApplyAllTheButtons(m_GameForm);
             m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
 
             foreach(Player player in r_AllPlayersInGame)
@@ -127,11 +123,26 @@ namespace MemoryCardGame
             m_GameForm.ShowDialog();
         }
 
+        private void restartNewGame(byte i_Rows, byte i_Columns)
+        {
+            m_GameLogic = new GameLogic(i_Rows, i_Columns);
+            m_GameForm.RestartGame();
+
+            foreach (Player player in r_AllPlayersInGame)
+            {
+                m_GameForm.SetPlayer(player.ToString(), player.Color, player.ID);
+            }
+
+            r_SelectedTileInTurn.Clear();
+            m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
+            switchAnyButtonClick();
+        }
+
         private void showAllPlayersTheBoard()
         {
             foreach (Player player in r_AllPlayersInGame)
             {
-                if (player.IsHuman)
+                if (!player.IsHuman)
                 {
                     (player as AIPlayer).ShowBoard(m_GameLogic.GetBoardToDraw());
                 }
@@ -161,8 +172,9 @@ namespace MemoryCardGame
             if (!IsClickale)
             {
                 ButtonIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtonIndexEvent;
-                string link = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
-                m_GameForm.Flipped(buttomIndexEvent.Location, link);
+                // string link = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
+                Image ImageOfCard = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
+                m_GameForm.Flipped(buttomIndexEvent.Location, ImageOfCard);
                 r_SelectedTileInTurn.Add(buttomIndexEvent.Location);
                 ans = true;
             }
@@ -172,6 +184,7 @@ namespace MemoryCardGame
 
         private void endOfTurn()
         {
+            InbetweenTurnsTimer.Stop();
             bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
             Console.WriteLine("in : endOfTurn" + CurrentPlayer.Name + "isThePlyerHaveAnderTurn :" + isThePlyerHaveAnderTurn.ToString());
 
@@ -194,26 +207,11 @@ namespace MemoryCardGame
 
             if(m_GameLogic.HaveMoreMoves)
             {
-                m_GameForm.AnyButtonClick -= AnyButtonClick_SecondClick;
-                if (!CurrentPlayer.IsHuman)
-                {
-                    Console.WriteLine("in !CurrentPlayer.IsHuman");
-
-                    m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
-                }
-                else
-                {
-                    Console.WriteLine("in CurrentPlayer.IsHuman");
-                    r_AiTimer.Start();
-                }
+                switchAnyButtonClick();
             }
             else
             {
-                bool wantRematch = showWinner();
-                if (wantRematch)
-                {
-                    startNewGame(m_GameLogic.Rows, m_GameLogic.Columns);
-                }
+                GameEnding.Invoke();
             }
         }
 
@@ -223,15 +221,20 @@ namespace MemoryCardGame
             bool isTie = false;
             DialogResult dialogResult;
 
-            foreach (Player playinPlaer in r_AllPlayersInGame)
+            foreach (Player playingPlayer in r_AllPlayersInGame)
             {
-                if(winner.Score < playinPlaer.Score )
+                if(winner == CurrentPlayer)
                 {
-                    winner = playinPlaer;
+                    continue;
+                }
+
+                if(winner.Score < playingPlayer.Score)
+                {
+                    winner = playingPlayer;
                 }
                 else
                 {
-                    if (winner.Score == playinPlaer.Score)
+                    if (winner.Score == playingPlayer.Score)
                     {
                         isTie = true;
                     }
@@ -248,6 +251,22 @@ namespace MemoryCardGame
             }
 
             return dialogResult == DialogResult.Yes;
+        }
+
+        private void switchAnyButtonClick()
+        {
+            m_GameForm.AnyButtonClick -= AnyButtonClick_SecondClick;
+            if (CurrentPlayer.IsHuman)
+            {
+                Console.WriteLine("in CurrentPlayer.IsHuman");
+
+                m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
+            }
+            else
+            {
+                Console.WriteLine("in !CurrentPlayer.IsHuman");
+                r_AiTimer.Start();
+            }
         }
 
         // =======================================================
@@ -300,8 +319,8 @@ namespace MemoryCardGame
         protected virtual void InbetweenTurnsTimer_TickHuman(object sender, EventArgs e)
         {
                 Console.WriteLine("in : InbetweenTurnsTimer_Tick" + CurrentPlayer.Name);
-                endOfTurn();
                 InbetweenTurnsTimer.Stop();
+                endOfTurn();
         }
 
         protected virtual void InbetweenTurnsTimer_TickNonHuman(object sender, EventArgs e)
@@ -316,15 +335,33 @@ namespace MemoryCardGame
 
             for (int i = 0; i < 2; i++)
             {
-                ButtonIndexEvent AIChoice = (CurrentPlayer as AIPlayer).GetPlayerChoice(m_GameLogic.GetAllValidTilesForChoice(), m_GameLogic.GetBoardToDraw());
+                ButtonIndexEvent choiceOfAI = (CurrentPlayer as AIPlayer).GetPlayerChoice(m_GameLogic.GetAllValidTilesForChoice(), m_GameLogic.GetBoardToDraw());
 
-                string boardSlotValue = this.m_GameLogic.Flipped(AIChoice.Location, k_FlippedTheCard);
-                m_GameForm.Flipped(AIChoice.Location, boardSlotValue);
-                r_SelectedTileInTurn.Add(AIChoice.Location);
+                Image boardSlotValue = this.m_GameLogic.Flipped(choiceOfAI.Location, k_FlippedTheCard);
+                m_GameForm.Flipped(choiceOfAI.Location, boardSlotValue);
+                r_SelectedTileInTurn.Add(choiceOfAI.Location);
             }
 
-            System.Threading.Thread.Sleep(1000);
-            endOfTurn();
+            InbetweenTurnsTimer.Start();
         }
+
+        // TODO: if the user click 'no' close the game
+        protected virtual void GameEngine_GameEnding()
+        {
+            bool wantRematch = showWinner();
+            if (wantRematch)
+            {
+                foreach(Player player in r_AllPlayersInGame)
+                {
+                    if (!player.IsHuman)
+                    {
+                        (player as AIPlayer).RestartNewGame();
+                    }
+                }
+
+                restartNewGame(m_GameLogic.Rows, m_GameLogic.Columns);
+            }
+        }
+
     }
 }

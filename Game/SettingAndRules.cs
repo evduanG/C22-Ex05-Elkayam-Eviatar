@@ -40,6 +40,19 @@ namespace Game
             @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\1015-80x80.jpg",
         };
 
+        internal static byte[] GetRandomImagesIndexes(byte i_Size)
+        {
+            Random rand = new Random();
+            List<byte> imageIndex = new List<byte>(i_Size);
+            for(byte i = 0; i < i_Size; i++)
+            {
+                imageIndex.Add(i);
+                imageIndex.Add(i);
+            }
+
+            return imageIndex.ToArray();
+        }
+
         private static readonly string[] sr_LinkO =
 {
             @"https://i.picsum.photos/id/25/80/80.jpg?hmac=pzK6FjNKpAJWffMtnj_ko5UwkYllroQ23YINkLBzDZ0",
@@ -64,13 +77,37 @@ namespace Game
             @"https://i.picsum.photos/id/1015/80/80.jpg?hmac=kN_c4gtIcr9tt2Od4uqye5EXzpPIZxGRzi_RifG8foU",
 };
 
+        private static readonly Image[] sr_Images =
+        {
+            ResourceImg.Img0_80x80,
+            ResourceImg.Img1_80x80,
+            ResourceImg.Img2_80x80,
+            ResourceImg.Img3_80x80,
+            ResourceImg.Img4_80x80,
+            ResourceImg.Img5_80x80,
+            ResourceImg.Img6_80x80,
+            ResourceImg.Img7_80x80,
+            ResourceImg.Img8_80x80,
+            ResourceImg.Img9_80x80,
+            ResourceImg.Img10_80x80,
+            ResourceImg.Img11_80x80,
+            ResourceImg.Img12_80x80,
+            ResourceImg.Img13_80x80,
+            ResourceImg.Img14_80x80,
+            ResourceImg.Img15_80x80,
+            ResourceImg.Img16_80x80,
+            ResourceImg.Img17_80x80,
+            ResourceImg.Img18_80x80,
+            ResourceImg.Img19_80x80,
+        };
+
         public static string[] Link
         {
             get { return sr_Link; }
         }
 
         /******     number of players       ******/
-        public const int k_SleepBetweenTurns = 1500;
+        public const int k_SleepBetweenTurns = 200;
 
         /******     number of players       ******/
         public static readonly Rules sr_NumOfPlayers = new Rules("Number Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
@@ -82,18 +119,15 @@ namespace Game
         private static readonly Rules sr_Rows = new Rules("Number of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
         private static readonly Rules sr_Columns = new Rules("Number of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
 
-        // TODO: 2.0 :
-        public static string[] GetRandImgs(byte i_NuOfPic)
+        // TODO: add randomness to GetImage
+        public static Image GetImage(byte i_ImageIndex)
         {
-            List<string> ret = new List<string>();
-
-            for (int i = 0; i < i_NuOfPic; i++)
+            if(i_ImageIndex < 0 || i_ImageIndex > sr_Images.Length)
             {
-                ret.Add(sr_Link[i]);
-                ret.Add(sr_Link[i]);
+                return null;
             }
 
-            return ret.ToArray();
+            return sr_Images[i_ImageIndex];
         }
 
         public static List<BoardLocation> GetBoardLocations()

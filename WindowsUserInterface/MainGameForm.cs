@@ -37,6 +37,85 @@ namespace WindowsUserInterface
             initializeComponents();
         }
 
+        public void RestartGame()
+        {
+            foreach(PictureBox pb in m_GameBoardButtons)
+            {
+                pb.Image = null;
+                pb.BackColor = DefaultColor;
+                pb.Enabled = k_Enabled;
+            }
+        }
+
+        // =======================================================
+        // Properties and Indexers
+        // =======================================================
+        public byte Rows
+        {
+            get
+            {
+                return r_NumOfRows;
+            }
+        }
+
+        public byte Columns
+        {
+            get
+            {
+                return r_NumOfCols;
+            }
+        }
+
+        public PictureBox[,] GameBoardButtons
+        {
+            get { return m_GameBoardButtons; }
+        }
+
+        public Label CurrentPlayerName
+        {
+            get { return m_CurrentPlayerName; }
+            set { m_CurrentPlayerName = value; }
+        }
+
+        public Color DefaultColor
+        {
+            get
+            {
+                return Color.LightGray;
+            }
+        }
+
+        public Label[] Players
+        {
+            get { return r_Players; }
+        }
+
+        public PictureBox this[byte i_Row, byte i_Col]
+        {
+            get
+            {
+                return m_GameBoardButtons[i_Row, i_Col];
+            }
+
+            set
+            {
+                m_GameBoardButtons[i_Row, i_Col] = value;
+            }
+        }
+
+        public PictureBox this[BoardLocation indexEvent]
+        {
+            get
+            {
+                return this[indexEvent.Row, indexEvent.Col];
+            }
+
+            set
+            {
+                this[indexEvent.Row, indexEvent.Col] = value;
+            }
+        }
+
         // Initializers:
         private void initializeComponents()
         {
@@ -131,80 +210,10 @@ namespace WindowsUserInterface
                     GameBoardButtons[i, j] = new PictureBox()
                     {
                         Size = new Size(k_ButtonSize, k_ButtonSize),
-                        BackColor = DefulltColor,
+                        BackColor = DefaultColor,
                     };
                     GameBoardButtons[i, j].Click += GameBoardTile_Click;
                 }
-            }
-        }
-
-        // =======================================================
-        // Propertys
-        // =======================================================
-        public byte Rows
-        {
-            get
-            {
-                return r_NumOfRows;
-            }
-        }
-
-        public byte Columns
-        {
-            get
-            {
-                return r_NumOfCols;
-            }
-        }
-
-        public PictureBox[,] GameBoardButtons
-        {
-            get { return m_GameBoardButtons; }
-        }
-
-        public Label CurrentPlayerName
-        {
-            get { return m_CurrentPlayerName; }
-            set { m_CurrentPlayerName = value; }
-        }
-
-        public Color DefulltColor
-        {
-            get
-            {
-                return Color.LightGray;
-            }
-        }
-
-        public Label[] Players
-        {
-            get { return r_Players; }
-        }
-
-        // Indexer:
-        public PictureBox this[byte i_Row, byte i_Col]
-        {
-            get
-            {
-                return m_GameBoardButtons[i_Row, i_Col];
-            }
-
-            set
-            {
-                m_GameBoardButtons[i_Row, i_Col] = value;
-            }
-        }
-
-        public PictureBox this[BoardLocation indexEvent]
-        {
-            get
-            {
-                return this[indexEvent.Row, indexEvent.Col];
-            }
-
-            set
-            {
-                this[indexEvent.Row, indexEvent.Col] = value;
             }
         }
 
@@ -225,9 +234,9 @@ namespace WindowsUserInterface
             r_Players[i_ID].Text = i_PlayerNameAndScore;
         }
 
-        public void Flipped(BoardLocation buttomIndexEvent, string i_LikImg)
+        public void Flipped(BoardLocation buttomIndexEvent, Image i_Image)
         {
-            this[buttomIndexEvent].Image = Image.FromFile(i_LikImg);
+            this[buttomIndexEvent].Image = i_Image;
             this[buttomIndexEvent].SizeMode = PictureBoxSizeMode.CenterImage;
             this[buttomIndexEvent].Enabled = false;
         }
@@ -247,7 +256,7 @@ namespace WindowsUserInterface
                 PictureBox picBoxClick = GameBoardButtons[choice.Row, choice.Col];
 
                 picBoxClick.Enabled = k_Enabled;
-                picBoxClick.BackColor = DefulltColor;
+                picBoxClick.BackColor = DefaultColor;
                 picBoxClick.Image = null;
             }
         }
