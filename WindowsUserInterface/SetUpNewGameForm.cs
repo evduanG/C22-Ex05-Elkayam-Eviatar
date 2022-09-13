@@ -76,9 +76,9 @@ namespace WindowsUserInterface
             // TextBox-First-player
             m_TextBoxFirstPlayer = new TextBox();
             m_TextBoxFirstPlayer.Text = i_FirstplayerName;
+            m_TextBoxFirstPlayer.TabIndex = 0;
             ElementsDesignerTool.DesignElements(m_TextBoxFirstPlayer, ePositionBy.NextToTheLeft, m_LabelFirstPlayer, k_Margin);
             ElementsDesignerTool.DesignElements(m_TextBoxFirstPlayer, ePositionBy.HorizontalCentre, m_LabelFirstPlayer);
-            m_TextBoxFirstPlayer.TabIndex = 0;
             this.Controls.Add(m_TextBoxFirstPlayer);
 
             // Label-Second-player
@@ -113,12 +113,6 @@ namespace WindowsUserInterface
             ElementsDesignerTool.DesignElements(m_LabelBordSize, ePositionBy.Left, m_LabelSecondPlayer);
             ElementsDesignerTool.DesignElements(m_LabelBordSize, ePositionBy.Under, m_LabelSecondPlayer, k_Margin);
             this.Controls.Add(m_LabelBordSize);
-
-            // ComboBox-Bord-Size
-            // m_ComboBoxBordSize = new ComboBox();
-            // ElementsDesignerTool.DesignElements(m_ComboBoxBordSize, ePositionBy.Left, m_LabelBordSize);
-            // ElementsDesignerTool.DesignElements(m_ComboBoxBordSize, ePositionBy.Under, m_LabelBordSize, k_Margin);
-            // this.Controls.Add(m_ComboBoxBordSize);
 
             // Board-Sizes
             m_BoardSizes = new Button();
@@ -156,7 +150,7 @@ namespace WindowsUserInterface
         }
 
         // =======================================================
-        // Propertys
+        // Properties
         // =======================================================
         public string FirstPlayerName
         {

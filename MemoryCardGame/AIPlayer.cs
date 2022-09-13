@@ -62,7 +62,7 @@ namespace MemoryCardGame
 
         public ButtonIndexEvent GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, string[,] i_BoardToDraw)
         {
-            BoardLocation ans = BoardLocation.Defult();
+            BoardLocation ans = BoardLocation.Default();
             bool isFind = false;
 
             if (r_Memory.Count != 0)
@@ -117,7 +117,7 @@ namespace MemoryCardGame
                 }
             }
 
-            io_Location = isItFound ? valueFirst.BoardLocation : BoardLocation.Defult();
+            io_Location = isItFound ? valueFirst.BoardLocation : BoardLocation.Default();
 
             return isItFound;
         }
@@ -149,7 +149,7 @@ namespace MemoryCardGame
                 }
             }
 
-            io_Location = isItFound ? (BoardLocation)returnedIndex.BoardLocation : BoardLocation.Defult();
+            io_Location = isItFound ? (BoardLocation)returnedIndex.BoardLocation : BoardLocation.Default();
 
             return isItFound;
         }
@@ -163,8 +163,8 @@ namespace MemoryCardGame
 
         internal struct MemorySlot : IComparable
         {
+            private readonly BoardLocation r_BoardLocation;
             private string m_Value;
-            private BoardLocation m_BoardLocation;
 
             public string Value
             {
@@ -174,12 +174,12 @@ namespace MemoryCardGame
 
             public string StrLocation
             {
-                get { return m_BoardLocation.ToString(); }
+                get { return r_BoardLocation.ToString(); }
             }
 
             public BoardLocation BoardLocation
             {
-                get { return m_BoardLocation; }
+                get { return r_BoardLocation; }
             }
 
             /// ===============================================
@@ -188,13 +188,13 @@ namespace MemoryCardGame
             public MemorySlot(string i_Value, byte i_Row, byte i_Col)
             {
                 m_Value = i_Value;
-                m_BoardLocation = new BoardLocation(i_Row, i_Col);
+                r_BoardLocation = new BoardLocation(i_Row, i_Col);
             }
 
             public MemorySlot(string i_Value, BoardLocation i_BoardLocation)
             {
                 m_Value = i_Value;
-                m_BoardLocation = i_BoardLocation;
+                r_BoardLocation = i_BoardLocation;
             }
 
             public static bool operator ==(MemorySlot i_Other1, MemorySlot i_Other2)
