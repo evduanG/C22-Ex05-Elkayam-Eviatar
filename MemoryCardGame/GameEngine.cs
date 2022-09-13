@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Game;
 using WindowsUserInterface;
@@ -42,7 +41,7 @@ namespace MemoryCardGame
             GameEnding += GameEngine_GameEnding;
 
             /******     number of players       ******/
-            r_TotalPLayers = Setting.sr_NumOfPlayers.UpperBound;
+            r_TotalPLayers = Setting.NumOfPlayers.UpperBound;
             r_AllPlayersInGame = new Player[r_TotalPLayers];
 
             /******     timer setup       ******/
@@ -110,7 +109,6 @@ namespace MemoryCardGame
         {
             m_GameLogic = new GameLogic(i_Higt, i_Width);
             m_GameForm = new Screen.MainGameForm(i_Higt, i_Width, 2);
-
             m_GameForm.AnyButtonClick += AnyButtonClick_FirstClick;
 
             foreach(Player player in r_AllPlayersInGame)
@@ -149,19 +147,6 @@ namespace MemoryCardGame
             }
         }
 
-        // show the current score
-        private string getPlayersScoreLine()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Player player in r_AllPlayersInGame)
-            {
-                sb.Append(player.ToString());
-            }
-
-            return sb.ToString();
-        }
-
         // =======================================================
         // Game Progress
         // ======================================================
@@ -172,9 +157,8 @@ namespace MemoryCardGame
             if (!IsClickale)
             {
                 ButtonIndexEvent buttomIndexEvent = i_ButtomIndexEvent as ButtonIndexEvent;
-                // string link = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
-                Image ImageOfCard = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
-                m_GameForm.Flipped(buttomIndexEvent.Location, ImageOfCard);
+                Image imageOfCard = this.m_GameLogic.Flipped(buttomIndexEvent.Location, k_FlippedTheCard);
+                m_GameForm.Flipped(buttomIndexEvent.Location, imageOfCard);
                 r_SelectedTileInTurn.Add(buttomIndexEvent.Location);
                 ans = true;
             }
@@ -187,7 +171,6 @@ namespace MemoryCardGame
             InbetweenTurnsTimer.Stop();
             bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
             Console.WriteLine("in : endOfTurn" + CurrentPlayer.Name + "isThePlyerHaveAnderTurn :" + isThePlyerHaveAnderTurn.ToString());
-
             CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
             m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
 
@@ -290,9 +273,9 @@ namespace MemoryCardGame
                 }
             }
 
-            setUpNewGameForm.GetSelectedDimensions(out byte o_Higt, out byte o_Width);
+            setUpNewGameForm.GetSelectedDimensions(out byte o_Height, out byte o_Width);
             setUpNewGameForm.HideInTaskbar();
-            startNewGame(o_Higt, o_Width);
+            startNewGame(o_Height, o_Width);
         }
 
         protected virtual void AnyButtonClick_FirstClick(object i_Sender, EventArgs i_ButtomIndexEvent)
@@ -316,14 +299,14 @@ namespace MemoryCardGame
             }
         }
 
-        protected virtual void InbetweenTurnsTimer_TickHuman(object sender, EventArgs e)
+        protected virtual void InbetweenTurnsTimer_TickHuman(object i_Sender, EventArgs i_EventArgs)
         {
                 Console.WriteLine("in : InbetweenTurnsTimer_Tick" + CurrentPlayer.Name);
                 InbetweenTurnsTimer.Stop();
                 endOfTurn();
         }
 
-        protected virtual void InbetweenTurnsTimer_TickNonHuman(object sender, EventArgs e)
+        protected virtual void InbetweenTurnsTimer_TickNonHuman(object i_Sender, EventArgs i_EventArgs)
         {
             r_AiTimer.Stop();
             AIPlaying.Invoke();
@@ -345,7 +328,6 @@ namespace MemoryCardGame
             InbetweenTurnsTimer.Start();
         }
 
-        // TODO: if the user click 'no' close the game
         protected virtual void GameEngine_GameEnding()
         {
             bool wantRematch = showWinner();
@@ -366,6 +348,5 @@ namespace MemoryCardGame
                 m_GameForm.Close();
             }
         }
-
     }
 }
