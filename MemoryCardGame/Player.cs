@@ -34,10 +34,10 @@ namespace MemoryCardGame
             }
         }
 
-        public Player(string i_name, byte i_ID)
+        public Player(string i_Name, byte i_ID)
         {
             m_Score = 0;
-            m_Name = i_name;
+            m_Name = i_Name;
             m_ID = i_ID;
         }
 

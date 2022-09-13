@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void StartClickHandler(object sender, MouseEventArgs e);
+    public delegate void StartClickHandler(object i_Sender, MouseEventArgs i_EventArgs);
 
     public class SetUpNewGameForm : Form
     {
@@ -15,13 +15,12 @@ namespace WindowsUserInterface
         private const int k_BoardSizeButtonBase = 20;
         private const string k_TitleForm = "Memory Game - Settings";
         private const string k_TitleLabelFirstplayer = "First Player Name:";
-        private const string k_TitleLabelSecondPlayer = "Second Player Name:";
         private const string k_TitleLabelBordSize = "Board Size:";
         private const string k_TitleButtonAgainstAFriend = "Against a Friend";
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";
         private readonly bool r_IsFirstGame;
-        private BoardLocation[] m_BoardSizesOp;
+        private readonly BoardLocation[] r_BoardSizesOp;
 
         private byte m_BoardSizeIndex = 0;
         private Label m_LabelFirstPlayer;
@@ -47,7 +46,7 @@ namespace WindowsUserInterface
         {
             r_IsFirstGame = i_IsFirstGame;
             Size = new Size(380, 300);
-            m_BoardSizesOp = i_BoardLocations.ToArray();
+            r_BoardSizesOp = i_BoardLocations.ToArray();
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Text = k_TitleForm;
@@ -149,8 +148,8 @@ namespace WindowsUserInterface
         private void initilizeBoardSizesButton()
         {
             setBoardSizesText();
-            byte defaultHeight = m_BoardSizesOp[m_BoardSizeIndex].Col;
-            byte defaultWidth = m_BoardSizesOp[m_BoardSizeIndex].Row;
+            byte defaultHeight = r_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte defaultWidth = r_BoardSizesOp[m_BoardSizeIndex].Row;
             setBoardSizesButtonDimensions(defaultHeight, defaultWidth);
             BoardSizes.FlatStyle = FlatStyle.Popup;
             BoardSizes.BackColor = Color.LightBlue;
@@ -200,8 +199,8 @@ namespace WindowsUserInterface
         private void modifyTheBoardSize()
         {
             setBoardSizesText();
-            byte nextHeight = m_BoardSizesOp[m_BoardSizeIndex].Col;
-            byte nextWidth = m_BoardSizesOp[m_BoardSizeIndex].Row;
+            byte nextHeight = r_BoardSizesOp[m_BoardSizeIndex].Col;
+            byte nextWidth = r_BoardSizesOp[m_BoardSizeIndex].Row;
             setBoardSizesButtonDimensions(nextHeight, nextWidth);
         }
 
@@ -210,13 +209,13 @@ namespace WindowsUserInterface
         // =======================================================
         public void GetSelectedDimensions(out byte o_Height, out byte o_Width)
         {
-            o_Height = m_BoardSizesOp[m_BoardSizeIndex].Row;
-            o_Width = m_BoardSizesOp[m_BoardSizeIndex].Col;
+            o_Height = r_BoardSizesOp[m_BoardSizeIndex].Row;
+            o_Width = r_BoardSizesOp[m_BoardSizeIndex].Col;
         }
 
         private void setBoardSizesText()
         {
-            BoardSizes.Text = m_BoardSizesOp[m_BoardSizeIndex].GetStrForSetUpBord();
+            BoardSizes.Text = r_BoardSizesOp[m_BoardSizeIndex].GetStrForSetUpBord();
         }
 
         private void setBoardSizesButtonDimensions(byte i_ButtonHeight, byte i_ButtonWidth)
@@ -225,15 +224,10 @@ namespace WindowsUserInterface
             BoardSizes.Width = i_ButtonWidth * k_BoardSizeButtonBase;
         }
 
-        private byte getDimensionWidth(string i_BoardSizeString)
-        {
-            return byte.Parse(i_BoardSizeString.Substring(0, 1));
-        }
-
         // =======================================================
         // Delegates and Events methods
         // =======================================================
-        protected virtual void ButtonAgainstAFriend_Click(object i_Sender, EventArgs e)
+        protected virtual void ButtonAgainstAFriend_Click(object i_Sender, EventArgs i_EventArgs)
         {
             if (r_IsFirstGame)
             {
@@ -252,13 +246,9 @@ namespace WindowsUserInterface
             }
         }
 
-        protected virtual void ButtonStart_Click(object i_Sender, EventArgs e)
+        protected virtual void ButtonStart_Click(object i_Sender, EventArgs i_EventArgs)
         {
-            if(!isValidForm())
-            {
-                // eror masg
-            }
-            else
+            if (isValidForm())
             {
                 this.Close();
                 OnStartClick();
@@ -283,7 +273,7 @@ namespace WindowsUserInterface
 
         protected virtual void BoardSizes_Click(object i_BoardSizesButton, EventArgs i_EventArgs)
         {
-            m_BoardSizeIndex = (byte)((m_BoardSizeIndex + 1) % m_BoardSizesOp.Length);
+            m_BoardSizeIndex = (byte)((m_BoardSizeIndex + 1) % r_BoardSizesOp.Length);
             modifyTheBoardSize();
             modifyFormAndStarButtn();
         }

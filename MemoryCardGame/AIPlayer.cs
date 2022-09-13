@@ -60,7 +60,7 @@ namespace MemoryCardGame
             }
         }
 
-        public ButtonIndexEvent GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, string[,] i_boardToDraw)
+        public ButtonIndexEvent GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, string[,] i_BoardToDraw)
         {
             BoardLocation ans = BoardLocation.Defult();
             bool isFind = false;
@@ -73,7 +73,7 @@ namespace MemoryCardGame
                 }
                 else
                 {
-                    isFind = getAISecondPlayerChoice(i_ValidSlotTOChase, i_boardToDraw, ref ans);
+                    isFind = getAISecondPlayerChoice(i_ValidSlotTOChase, i_BoardToDraw, ref ans);
                 }
             }
 
@@ -85,7 +85,7 @@ namespace MemoryCardGame
             return new ButtonIndexEvent(ans);
         }
 
-        private bool getAIFirstPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, ref BoardLocation io_Location)
+        private bool getAIFirstPlayerChoice(List<BoardLocation> i_ValidSlotToChase, ref BoardLocation io_Location)
         {
             r_Memory.Sort();
             bool isItFound = false;
@@ -104,7 +104,7 @@ namespace MemoryCardGame
 
                 if (valueSecond.Value == valueFirst.Value)
                 {
-                    if (!i_ValidSlotTOChase.Contains(valueSecond.BoardLocation))
+                    if (!i_ValidSlotToChase.Contains(valueSecond.BoardLocation))
                     {
                         r_Memory.Remove(valueFirst);
                         isItFound = false;
@@ -122,13 +122,13 @@ namespace MemoryCardGame
             return isItFound;
         }
 
-        private bool getAISecondPlayerChoice(List<BoardLocation> i_validSlotToChase, string[,] i_boardToDraw, ref BoardLocation io_Location)
+        private bool getAISecondPlayerChoice(List<BoardLocation> i_ValidSlotToChase, string[,] i_BoardToDraw, ref BoardLocation io_Location)
         {
             r_Memory.Sort();
             MemorySlot returnedIndex = default;
             bool isItFound = false;
 
-            foreach (string value in i_boardToDraw)
+            foreach (string value in i_BoardToDraw)
             {
                 foreach (MemorySlot mem in r_Memory)
                 {
@@ -140,9 +140,8 @@ namespace MemoryCardGame
 
                 if (((object)returnedIndex) != null)
                 {
-                    isItFound = i_validSlotToChase.Contains(returnedIndex.BoardLocation);
+                    isItFound = i_ValidSlotToChase.Contains(returnedIndex.BoardLocation);
 
-                    // in case of possible move
                     if (isItFound)
                     {
                         break;
@@ -155,11 +154,11 @@ namespace MemoryCardGame
             return isItFound;
         }
 
-        private BoardLocation getRandomChoice(List<BoardLocation> i_validSlotTOChase)
+        private BoardLocation getRandomChoice(List<BoardLocation> i_ValidSlotTOChase)
         {
-            int randomTile = sr_Random.Next(i_validSlotTOChase.Count);
+            int randomTile = sr_Random.Next(i_ValidSlotTOChase.Count);
 
-            return i_validSlotTOChase[randomTile];
+            return i_ValidSlotTOChase[randomTile];
         }
 
         internal struct MemorySlot : IComparable
@@ -186,10 +185,10 @@ namespace MemoryCardGame
             /// ===============================================
             // Constructors
             /// ===============================================
-            public MemorySlot(string i_Value, byte i_Row, byte i_col)
+            public MemorySlot(string i_Value, byte i_Row, byte i_Col)
             {
                 m_Value = i_Value;
-                m_BoardLocation = new BoardLocation(i_Row, i_col);
+                m_BoardLocation = new BoardLocation(i_Row, i_Col);
             }
 
             public MemorySlot(string i_Value, BoardLocation i_BoardLocation)
@@ -208,9 +207,9 @@ namespace MemoryCardGame
                 return !(i_Other1 == i_Other2);
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object i_Obj)
             {
-                return this == (MemorySlot?)obj;
+                return this == (MemorySlot?)i_Obj;
             }
 
             public override int GetHashCode()
@@ -223,9 +222,9 @@ namespace MemoryCardGame
                 return base.ToString();
             }
 
-            public int CompareTo(object obj)
+            public int CompareTo(object i_Obj)
             {
-                return string.Compare(Value, ((MemorySlot)obj).Value);
+                return string.Compare(Value, ((MemorySlot)i_Obj).Value);
             }
         }
     }

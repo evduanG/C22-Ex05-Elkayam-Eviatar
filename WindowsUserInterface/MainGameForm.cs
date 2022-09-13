@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void AnyButtonHandler(object sender, ButtonIndexEvent e);
+    public delegate void AnyButtonHandler(object i_Sender, ButtonIndexEvent i_EventArgs);
 
     public class MainGameForm : Form
     {
@@ -15,7 +15,6 @@ namespace WindowsUserInterface
         private const int k_WindowWidthModifier = 3;
         private const bool k_Enabled = true;
         private const string k_GameTitle = "Memory game";
-        private const string k_PlayerNameLabel = "{0}: {1} Pair(s)";
         private const string k_CurrentPlayerLabel = "Current Player : {0}";
         private readonly byte r_NumOfRows;
         private readonly byte r_NumOfCols;
@@ -29,11 +28,11 @@ namespace WindowsUserInterface
         // =======================================================
         // constructor  and methods for the constructor
         // =======================================================
-        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, byte i_numOfPlayers)
+        public MainGameForm(byte i_BoardHeight, byte i_BoardWidth, byte i_NumOfPlayers)
         {
             r_NumOfCols = i_BoardHeight;
             r_NumOfRows = i_BoardWidth;
-            r_Players = new Label[i_numOfPlayers];
+            r_Players = new Label[i_NumOfPlayers];
             initializeComponents();
         }
 
@@ -103,16 +102,16 @@ namespace WindowsUserInterface
             }
         }
 
-        public PictureBox this[BoardLocation indexEvent]
+        public PictureBox this[BoardLocation i_IndexEvent]
         {
             get
             {
-                return this[indexEvent.Row, indexEvent.Col];
+                return this[i_IndexEvent.Row, i_IndexEvent.Col];
             }
 
             set
             {
-                this[indexEvent.Row, indexEvent.Col] = value;
+                this[i_IndexEvent.Row, i_IndexEvent.Col] = value;
             }
         }
 
@@ -202,7 +201,7 @@ namespace WindowsUserInterface
 
         private void createPicBox()
         {
-            // create PicBox
+            // create PicBoxes
             for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Columns; j++)
@@ -234,24 +233,24 @@ namespace WindowsUserInterface
             r_Players[i_ID].Text = i_PlayerNameAndScore;
         }
 
-        public void Flipped(BoardLocation buttomIndexEvent, Image i_Image)
+        public void Flipped(BoardLocation i_ButtomIndexEvent, Image i_Image)
         {
-            this[buttomIndexEvent].Image = i_Image;
-            this[buttomIndexEvent].SizeMode = PictureBoxSizeMode.CenterImage;
-            this[buttomIndexEvent].Enabled = false;
+            this[i_ButtomIndexEvent].Image = i_Image;
+            this[i_ButtomIndexEvent].SizeMode = PictureBoxSizeMode.CenterImage;
+            this[i_ButtomIndexEvent].Enabled = false;
         }
 
-        public void ColorPair(List<BoardLocation> m_PlayerChoice, Color color)
+        public void ColorPair(List<BoardLocation> i_PlayerChoice, Color i_Color)
         {
-            foreach (BoardLocation choice in m_PlayerChoice)
+            foreach (BoardLocation choice in i_PlayerChoice)
             {
-                GameBoardButtons[choice.Row, choice.Col].BackColor = color;
+                GameBoardButtons[choice.Row, choice.Col].BackColor = i_Color;
             }
         }
 
-        public void FlippCardsToFaceDown(List<BoardLocation> m_PlayerChoice)
+        public void FlippCardsToFaceDown(List<BoardLocation> i_PlayerChoice)
         {
-            foreach (BoardLocation choice in m_PlayerChoice)
+            foreach (BoardLocation choice in i_PlayerChoice)
             {
                 PictureBox picBoxClick = GameBoardButtons[choice.Row, choice.Col];
 
@@ -326,11 +325,7 @@ namespace WindowsUserInterface
             OnAnyButtonClick(clickedTile, new ButtonIndexEvent(o_Row, o_Col));
         }
 
-        protected virtual void AllButtem_Click(object sender, EventArgs i_EventArgs)
-        {
-        }
-
-        protected virtual void OnAnyButtonClick(object sender, EventArgs i_EventArgs)
+        protected virtual void OnAnyButtonClick(object i_Sender, EventArgs i_EventArgs)
         {
             anyButtemInvoker(i_EventArgs);
         }
