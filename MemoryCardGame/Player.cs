@@ -22,7 +22,7 @@ namespace MemoryCardGame
         {
             get
             {
-                return this is AIPlayer;
+                return !(this is AIPlayer);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using WindowsUserInterface;
 using Screen = WindowsUserInterface;
@@ -84,10 +85,10 @@ namespace Game
             this.m_FlippedCardsCounter = 0;
 
             byte size = (byte)(Rows * Columns);
-            size = (byte)(size >> 1);
-            string[] links = SettingAndRules.GetRandImgs(size);
+            byte numOfPairs = (byte)(size >> 1);
+            byte[] randomImagesIndexes = SettingAndRules.GetRandomImagesIndexes(numOfPairs);
 
-            shuffleCard(ref links);
+            shuffleCard(ref randomImagesIndexes);
             r_GameBoard = new Card[Rows, Columns];
             byte indexInChars = 0;
 
@@ -95,8 +96,7 @@ namespace Game
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    byte k = indexInChars;
-                    r_GameBoard[i, j] = new Card(links[indexInChars++], !k_FaceUp);
+                    r_GameBoard[i, j] = new Card(randomImagesIndexes[indexInChars++], !k_FaceUp);
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace Game
         /// function to Shuffle array the char array before creation
         /// need to change to any array
         /// <exception cref="ArgumentNullException"></exception>
-        private string[] shuffleCard(ref string[] i_CharArrToShuffle)
+        private byte[] shuffleCard(ref byte[] i_CharArrToShuffle)
         {
             int len = i_CharArrToShuffle.Length;
             if (len == 0)
@@ -237,35 +237,29 @@ namespace Game
         }
 
         // flip a card
-        public void Flipped(string i_Index, bool i_Value)
+        public Image Flipped(BoardLocation i_Index, bool i_Value)
         {
             Card c = this[i_Index];
             c.Flipped = i_Value;
             this[i_Index] = c;
+            Console.WriteLine("index: " + i_Index);
+            return SettingAndRules.GetImage(this[i_Index].ImageIndex);
         }
 
-        public string Flipped(BoardLocation i_Index, bool i_Value)
-        {
-            Card c = this[i_Index];
-            c.Flipped = i_Value;
-            this[i_Index] = c;
-            return this[i_Index].Link;
-        }
-
-        // return true  The player got another turn
-        public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params BoardLocation[] i_argsChosenInTurn)
+        // return true if the player got another turn
+        public bool DoThePlayersChoicesMatch(out byte io_scoreForTheTurn, params BoardLocation[] i_ArgsChosenInTurn)
         {
             io_scoreForTheTurn = 0;
             bool isPair = true;
 
-            if (i_argsChosenInTurn.Length != 2)
+            if (i_ArgsChosenInTurn.Length != 2)
             {
-                throw new Exception("The number of cards does not match the format");
+                throw new Exception("The number of cards does not match the format: " + i_ArgsChosenInTurn.Length.ToString());
             }
 
-            Card firstCard = this[i_argsChosenInTurn[0]];
+            Card firstCard = this[i_ArgsChosenInTurn[0]];
 
-            foreach (BoardLocation index in i_argsChosenInTurn)
+            foreach (BoardLocation index in i_ArgsChosenInTurn)
             {
                 isPair = firstCard == this[index];
 
@@ -277,7 +271,7 @@ namespace Game
 
             if (!isPair)
             {
-                foreach (BoardLocation index in i_argsChosenInTurn)
+                foreach (BoardLocation index in i_ArgsChosenInTurn)
                 {
                     Flipped(index, !k_FaceUp);
                 }
@@ -302,7 +296,8 @@ namespace Game
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    boardToDraw[i, j] = r_GameBoard[i, j].Link;
+                    string str = r_GameBoard[i, j].Flipped ? r_GameBoard[i, j].ImageIndex.ToString() : string.Empty;
+                    boardToDraw[i, j] = str;
                 }
             }
 
@@ -332,8 +327,6 @@ namespace Game
             return validSlots;
         }
 
-        /// function to configure the index from the format
-        /// <exception cref="IndexOutOfRangeException"></exception>
         private void configIndexFormat(string i_indexFormt, out int io_rowIndex, out int io_colIndex)
         {
             io_colIndex = 0;
@@ -355,7 +348,7 @@ namespace Game
             }
 
             if (!isSuccessTryParse || !isUpper)
-            {// 1
+            {
                 throw new IndexOutOfRangeException(string.Format(
 @"Index out of range in configIndexFormat => 
 the string (index): {0}
@@ -383,34 +376,32 @@ r_GameBoard[io_rowIndex, io_colIndex]));
         // represents a game card
         private struct Card
         {
-            // private const string km_formatToPrint = " {} |";
-
-            private string m_Link;
+            private byte m_ImageIndex;
             private bool m_Flipped;
 
             /// constructor
-            public Card(string i_Value, bool i_Flipped)
+            public Card(byte i_Value, bool i_Flipped)
             {
-                m_Link = i_Value;
+                m_ImageIndex = i_Value;
                 m_Flipped = i_Flipped;
             }
 
-            public Card(string value)
+            public Card(byte value)
                 : this()
             {
-                m_Link = value;
+                m_ImageIndex = value;
                 m_Flipped = false;
             }
 
             // Properties
-            public string Link
+            public byte ImageIndex
             {
                 get
                 {
-                    string retunValue = string.Empty;
+                    byte retunValue = byte.MaxValue;
                     if (Flipped)
                     {
-                        retunValue = m_Link;
+                        retunValue = m_ImageIndex;
                     }
 
                     return retunValue;
@@ -418,7 +409,7 @@ r_GameBoard[io_rowIndex, io_colIndex]));
 
                 set
                 {
-                    m_Link = value;
+                    m_ImageIndex = value;
                 }
             }
 
@@ -447,15 +438,15 @@ r_GameBoard[io_rowIndex, io_colIndex]));
 
             public override bool Equals(object i_comperTo)
             {
-                return this.Link == ((Card)i_comperTo).Link;
+                return this.ImageIndex == ((Card)i_comperTo).ImageIndex;
             }
 
             public override int GetHashCode()
             {
                 int hashCode = 1148891178;
-                hashCode = (hashCode * -1521134295) + m_Link.GetHashCode();
+                hashCode = (hashCode * -1521134295) + m_ImageIndex.GetHashCode();
                 hashCode = (hashCode * -1521134295) + m_Flipped.GetHashCode();
-                hashCode = (hashCode * -1521134295) + Link.GetHashCode();
+                hashCode = (hashCode * -1521134295) + ImageIndex.GetHashCode();
                 hashCode = (hashCode * -1521134295) + Flipped.GetHashCode();
                 return hashCode;
             }
@@ -466,7 +457,7 @@ r_GameBoard[io_rowIndex, io_colIndex]));
                 {
                     clickedButton.Enabled = false;
                     Flipped = true;
-                    clickedButton.Text = Link;
+                    // clickedButton.Text = ImageIndex;
                 }
             }
         }
