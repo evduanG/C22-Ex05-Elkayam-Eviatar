@@ -332,8 +332,6 @@ namespace Game
             return validSlots;
         }
 
-        /// function to configure the index from the format
-        /// <exception cref="IndexOutOfRangeException"></exception>
         private void configIndexFormat(string i_indexFormt, out int io_rowIndex, out int io_colIndex)
         {
             io_colIndex = 0;
@@ -355,7 +353,7 @@ namespace Game
             }
 
             if (!isSuccessTryParse || !isUpper)
-            {// 1
+            {
                 throw new IndexOutOfRangeException(string.Format(
 @"Index out of range in configIndexFormat => 
 the string (index): {0}
@@ -383,8 +381,6 @@ r_GameBoard[io_rowIndex, io_colIndex]));
         // represents a game card
         private struct Card
         {
-            // private const string km_formatToPrint = " {} |";
-
             private string m_Link;
             private bool m_Flipped;
 

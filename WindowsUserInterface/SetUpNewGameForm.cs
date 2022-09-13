@@ -20,8 +20,8 @@ namespace WindowsUserInterface
         private const string k_TitleButtonAgainstAFriend = "Against a Friend";
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";
-        private BoardLocation[] m_BoardSizesOp;
         private readonly bool r_IsFirstGame;
+        private BoardLocation[] m_BoardSizesOp;
 
         private byte m_BoardSizeIndex = 0;
         private Label m_LabelFirstPlayer;

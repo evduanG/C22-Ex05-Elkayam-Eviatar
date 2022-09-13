@@ -26,6 +26,7 @@ namespace WindowsUserInterface
         private MessageBox(string i_StrToShow)
         {
             initializeComponents(i_StrToShow);
+            ElementsDesignerTool.FitTheSizeOfForm(this, MainGameForm.k_Margin);
         }
 
         public static MessageBox MessageBoxTie(string i_TieScore)

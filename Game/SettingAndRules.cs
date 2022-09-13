@@ -9,7 +9,14 @@ namespace Game
 {
     public static class SettingAndRules
     {
-        private static string[] m_Link =
+        private const bool k_IsFixed = true;
+        private const string k_ThrowFixedMsg = "The value is fixed";
+        private const byte k_UpperBound = 6;
+        private const byte k_LowerBound = 4;
+        private const byte k_NumOfParticipants = 2;
+        private const string k_ThrowDimensionsMsg = "The game dimensions have a fix size";
+
+        private static readonly string[] sr_Link =
         {
             @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\25-80x80.jpg",
             @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\30-80x80.jpg",
@@ -33,7 +40,7 @@ namespace Game
             @"C:\Users\eviatar\source\repos\C22-Ex05-Elkayam-Eviatar\Resources\1015-80x80.jpg",
         };
 
-        private static string[] m_LinkO =
+        private static readonly string[] sr_LinkO =
 {
             @"https://i.picsum.photos/id/25/80/80.jpg?hmac=pzK6FjNKpAJWffMtnj_ko5UwkYllroQ23YINkLBzDZ0",
             @"https://i.picsum.photos/id/30/80/80.jpg?hmac=Zgep64WdlaMQdQbL5Hima-hzvojJJP7zN4IGM2gxutU",
@@ -57,27 +64,23 @@ namespace Game
             @"https://i.picsum.photos/id/1015/80/80.jpg?hmac=kN_c4gtIcr9tt2Od4uqye5EXzpPIZxGRzi_RifG8foU",
 };
 
-        public static string[] Link { get { return m_Link; } }
-
-        private const bool k_IsFixed = true;
-        private const string k_ThrowFixedMsg = "The value is fixed";
-        private const byte k_UpperBound = 6;
-        private const byte k_LowerBound = 4;
-        private const byte k_NumOfParticipants = 2;
-        private const string k_ThrowDimensionsMsg = "The game dimensions heva a fix size";
+        public static string[] Link
+        {
+            get { return sr_Link; }
+        }
 
         /******     number of players       ******/
         public const int k_SleepBetweenTurns = 1500;
 
         /******     number of players       ******/
-        public static readonly Rules sr_NumOfPlayers = new Rules("num Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
+        public static readonly Rules sr_NumOfPlayers = new Rules("Number Of Players", k_NumOfParticipants, k_NumOfParticipants, k_IsFixed, k_ThrowFixedMsg);
 
         /****** number of Choice In players Turn ******/
         private const int k_NumOfChoiceInPlayerTurn = 2;
-        private static readonly Rules sr_NumOfChoiceInTurn = new Rules("Num Of Choice In player Turn", k_NumOfChoiceInPlayerTurn, k_NumOfChoiceInPlayerTurn, k_IsFixed, k_ThrowFixedMsg);
+        private static readonly Rules sr_NumOfChoiceInTurn = new Rules("Number Of Choice In player Turn", k_NumOfChoiceInPlayerTurn, k_NumOfChoiceInPlayerTurn, k_IsFixed, k_ThrowFixedMsg);
 
-        private static readonly Rules sr_Rows = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
-        private static readonly Rules sr_Columns = new Rules("Num of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
+        private static readonly Rules sr_Rows = new Rules("Number of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
+        private static readonly Rules sr_Columns = new Rules("Number of Rows", k_UpperBound, k_LowerBound, !k_IsFixed, k_ThrowDimensionsMsg);
 
         // TODO: 2.0 :
         public static string[] GetRandImgs(byte i_NuOfPic)
@@ -86,8 +89,8 @@ namespace Game
 
             for (int i = 0; i < i_NuOfPic; i++)
             {
-                ret.Add(m_Link[i]);
-                ret.Add(m_Link[i]);
+                ret.Add(sr_Link[i]);
+                ret.Add(sr_Link[i]);
             }
 
             return ret.ToArray();
@@ -112,7 +115,7 @@ namespace Game
             return ret;
         }
 
-        /// make a arr of link to pix  or config how to get the resdpons link
+        /// make a arr of link to pix  or configure how to get the respond link
         public struct Rules
         {
             private readonly string r_Name;

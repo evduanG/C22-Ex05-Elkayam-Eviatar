@@ -63,12 +63,6 @@ namespace WindowsUserInterface
         {
             return new BoardLocation(byte.MaxValue, byte.MaxValue);
         }
-        // TODO (in case of bugs): operator == and !=
-
-        public override string ToString()
-        {
-            return string.Format(k_ToStringFormt, m_Col, m_Row);
-        }
 
         public static bool TryParse(string i_BoardLocString, out BoardLocation o_BoardLocation)
         {
@@ -88,10 +82,14 @@ namespace WindowsUserInterface
             return isRow && isCol;
         }
 
+        public override string ToString()
+        {
+            return string.Format(k_ToStringFormt, m_Col, m_Row);
+        }
+
         public string GetStrForSetUpBord()
         {
             return string.Format(k_ToStringFormtForSetUpBord, Row, Col);
         }
-
     }
 }
