@@ -56,6 +56,29 @@ namespace WindowsUserInterface
             i_ControlToSetPosition.Top = i_ControlCompareTo.Bottom + i_Margin;
         }
 
+        internal static void DesignElementsInMidOfForm(Form i_Form, Control i_ControlToSetPosition)
+        {
+            int midOfForm = (int)i_Form.ClientSize.Width / 2;
+            int midOfControl = (int)i_ControlToSetPosition.Width / 2;
+            int position = midOfForm - midOfControl;
+            i_ControlToSetPosition.Left = position;
+        }
+
+        internal static void DesignElementsInMidOfForm(Form i_Form, Control i_ControlToSetPosition, int i_Margin)
+        {
+            DesignElementsInMidOfForm(i_Form, i_ControlToSetPosition);
+            if (i_Margin < 0)
+            {
+                i_Margin -= i_ControlToSetPosition.Width;
+            }
+            else
+
+            Console.WriteLine(string.Format("DesignElementsInMidOfForm : form = {0}", i_Form.Width));
+            Console.WriteLine(string.Format("DesignElementsInMidOfForm : control = {0}", i_ControlToSetPosition.Left));
+            Console.WriteLine(string.Format("DesignElementsInMidOfForm : i_Margin = {0}", i_Margin));
+            i_ControlToSetPosition.Left += i_Margin;
+        }
+
         private static void setControlToTheHorizontalCentre(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
             i_ControlToSetPosition.Top = i_ControlCompareTo.Top + (i_ControlCompareTo.Height / 2) - (i_ControlToSetPosition.Height / 2) + i_Margin;
@@ -63,7 +86,9 @@ namespace WindowsUserInterface
 
         private static void setControlToThVerticalCentre(Control i_ControlCompareTo, Control i_ControlToSetPosition, int i_Margin)
         {
-            i_ControlToSetPosition.Left = i_ControlCompareTo.Left + (i_ControlCompareTo.Width / 2) - (i_ControlToSetPosition.Width / 2) + i_Margin;
+            int midOfCompareTo = i_ControlCompareTo.Width / 2;
+            int midOfSetPosition = i_ControlToSetPosition.Width / 2;
+            i_ControlToSetPosition.Left = i_ControlCompareTo.Left + midOfCompareTo - midOfSetPosition + i_Margin;
         }
 
         private static void setControlToTheBottom(Control i_ControlCompareTo, Control i_ControlToSetPosition)

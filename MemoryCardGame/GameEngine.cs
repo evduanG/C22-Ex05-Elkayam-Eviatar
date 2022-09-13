@@ -361,6 +361,10 @@ namespace MemoryCardGame
 
                 restartNewGame(m_GameLogic.Rows, m_GameLogic.Columns);
             }
+            else
+            {
+                m_GameForm.Close();
+            }
         }
 
     }
