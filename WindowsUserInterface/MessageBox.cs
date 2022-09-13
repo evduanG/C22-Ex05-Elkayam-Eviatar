@@ -52,6 +52,8 @@ namespace WindowsUserInterface
 
         private void initializeLabels(string i_StrToShow)
         {
+            // TODO: fix labels to be in the center of client
+            // TODO: fix buttons to be in the center of client
             GameResultsMessage = new Label
             {
                 Text = i_StrToShow,
@@ -70,7 +72,7 @@ namespace WindowsUserInterface
                 AutoSize = true,
                 Top = GameResultsMessage.Bottom + MainGameForm.k_Margin,
             };
-            AnotherGameMessage.Left = GameResultsMessage.Left + (GameResultsMessage.Width / 2) - AnotherGameMessage.Width;
+            AnotherGameMessage.Left = (ClientSize.Width / 2) - (AnotherGameMessage.Width / 2);
 
             // ElementsDesignerTool(AnotherGameMessage, GameResultsMessage);
             Controls.Add(m_GameResultsMessage);
