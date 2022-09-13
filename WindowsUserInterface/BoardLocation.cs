@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WindowsUserInterface
 {
@@ -30,7 +26,7 @@ namespace WindowsUserInterface
             r_Col = i_Col;
         }
 
-        public static BoardLocation Defult()
+        public static BoardLocation Default()
         {
             return new BoardLocation(byte.MaxValue, byte.MaxValue);
         }
