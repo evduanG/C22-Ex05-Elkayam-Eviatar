@@ -42,15 +42,58 @@ namespace Game
 
         internal static byte[] GetRandomImagesIndexes(byte i_Size)
         {
-            Random rand = new Random();
-            List<byte> imageIndex = new List<byte>(i_Size);
-            for(byte i = 0; i < i_Size; i++)
-            {
-                imageIndex.Add(i);
-                imageIndex.Add(i);
-            }
+            //Random rand = new Random();
+            //List<byte> imageIndex = new List<byte>(i_Size);
+            //for(byte i = 0; i < i_Size; i++)
+            //{
+            //    imageIndex.Add(i);
+            //    imageIndex.Add(i);
+            //}
+            List<byte> indexes = new List<byte>();
+            recImagesIndexes(ref indexes, i_Size);
+            return indexes.ToArray();
+        }
 
-            return imageIndex.ToArray();
+        private static void recImagesIndexes(ref List<byte> io_ListOfIndex, byte i)
+        {
+            if(io_ListOfIndex == null)
+            {
+                throw new Exception("recImagesIndexes list id null null");
+            }
+            switch(i % 3)
+            {
+                case 0:
+                    if (i != 0)
+                    {
+                        io_ListOfIndex.Add(i);
+                        io_ListOfIndex.Add(i);
+                        i--;
+                        recImagesIndexes(ref io_ListOfIndex, i);
+                    }
+
+                    break;
+                case 1:
+                    io_ListOfIndex.Add(i);
+                    i--;
+                    recImagesIndexes(ref io_ListOfIndex, i);
+                    i++;
+                    io_ListOfIndex.Add(i);
+                    break;
+                case 2:
+
+                    byte j = i;
+                    i--;
+                    io_ListOfIndex.Add(i);
+                    i--;
+                    io_ListOfIndex.Add(j);
+                    recImagesIndexes(ref io_ListOfIndex, i);
+                    i++;
+                    io_ListOfIndex.Add(i);
+                    io_ListOfIndex.Add(j);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private static readonly string[] sr_LinkO =

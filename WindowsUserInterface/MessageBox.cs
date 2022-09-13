@@ -26,7 +26,6 @@ namespace WindowsUserInterface
         private MessageBox(string i_StrToShow)
         {
             initializeComponents(i_StrToShow);
-            ElementsDesignerTool.FitTheSizeOfForm(this, MainGameForm.k_Margin);
         }
 
         public static MessageBox MessageBoxTie(string i_TieScore)
@@ -62,7 +61,7 @@ namespace WindowsUserInterface
                 AutoSize = true,
                 Top = MainGameForm.k_Margin * 2,
             };
-            GameResultsMessage.Left = (ClientSize.Width / 2) - (GameResultsMessage.Width / 2);
+            ElementsDesignerTool.DesignElementsInMidOfForm(this, GameResultsMessage);
 
             AnotherGameMessage = new Label
             {
@@ -70,11 +69,9 @@ namespace WindowsUserInterface
                 TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = Color.LightGoldenrodYellow,
                 AutoSize = true,
-                Top = GameResultsMessage.Bottom + MainGameForm.k_Margin,
             };
-            AnotherGameMessage.Left = (ClientSize.Width / 2) - (AnotherGameMessage.Width / 2);
-
-            // ElementsDesignerTool(AnotherGameMessage, GameResultsMessage);
+            ElementsDesignerTool.DesignElementsInMidOfForm(this, AnotherGameMessage);
+            ElementsDesignerTool.DesignElements(AnotherGameMessage, ePositionBy.Under, GameResultsMessage);
             Controls.Add(m_GameResultsMessage);
             Controls.Add(m_AnotherGameMessage);
         }
@@ -84,6 +81,7 @@ namespace WindowsUserInterface
             initializeForm();
             initializeLabels(i_StrToShow);
             initializeButtons();
+            ElementsDesignerTool.FitTheSizeOfForm(this, MainGameForm.k_Margin);
         }
 
         private void initializeButtons()
@@ -91,9 +89,9 @@ namespace WindowsUserInterface
             ButtonYes = new Button
             {
                 Text = "Yes",
-                Top = AnotherGameMessage.Bottom + (2 * MainGameForm.k_Margin),
-                Left = AnotherGameMessage.Left + (2 * MainGameForm.k_Margin),
             };
+            ElementsDesignerTool.DesignElementsInMidOfForm(this, ButtonYes, -MainGameForm.k_Margin);
+            ElementsDesignerTool.DesignElements(ButtonYes, ePositionBy.Under, AnotherGameMessage, MainGameForm.k_Margin);
             ButtonYes.Click += Yes_Click;
 
             ButtonNo = new Button
@@ -102,6 +100,9 @@ namespace WindowsUserInterface
                 Top = ButtonYes.Top,
                 Left = ButtonYes.Right + (MainGameForm.k_Margin * 2),
             };
+            ElementsDesignerTool.DesignElements(ButtonNo, ePositionBy.NextToTheLeft, ButtonNo, MainGameForm.k_Margin);
+            ElementsDesignerTool.DesignElements(ButtonNo, ePositionBy.Bottom, ButtonNo);
+
             ButtonNo.Click += No_Click;
 
             Controls.Add(ButtonYes);
