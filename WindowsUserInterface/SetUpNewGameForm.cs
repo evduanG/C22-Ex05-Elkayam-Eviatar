@@ -17,6 +17,7 @@ namespace WindowsUserInterface
         private const string k_TitleLabelFirstplayer = "First Player Name:";
         private const string k_TitleLabelBordSize = "Board Size:";
         private const string k_TitleButtonAgainstAFriend = "Against a Friend";
+        private const string k_TitleButtonAgainstPC = "Against PC";
         private const string k_TitleButtonStart = "Start!";
         private const string k_TitleDefultSecondPlayer = "-computer-";
         private readonly bool r_IsFirstGame;
@@ -241,6 +242,7 @@ namespace WindowsUserInterface
                     m_TextBoxSecondPlayer.Text = string.Empty;
                 }
 
+                m_ButtonAgainstAFriend.Text = IsSecondPlayerComputer ? k_TitleButtonAgainstPC : k_TitleButtonAgainstAFriend;
                 m_TextBoxSecondPlayer.Enabled = !isTextBoxSecondPlayer;
             }
         }
