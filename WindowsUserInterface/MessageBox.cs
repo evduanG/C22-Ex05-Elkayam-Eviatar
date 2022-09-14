@@ -37,6 +37,14 @@ namespace WindowsUserInterface
             return new MessageBox(string.Format(k_FormtWinnerScoreMessage, i_WinnerName, i_Score));
         }
 
+        private void initializeComponents(string i_StrToShow)
+        {
+            initializeForm();
+            initializeLabels(i_StrToShow);
+            initializeButtons();
+            ElementsDesignerTool.FitTheSizeOfForm(this, MainGameForm.k_Margin);
+        }
+
         private void initializeForm()
         {
             Text = "GAME OVER";
@@ -54,7 +62,6 @@ namespace WindowsUserInterface
             {
                 Text = i_StrToShow,
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.LightGoldenrodYellow,
                 AutoSize = true,
                 Top = MainGameForm.k_Margin * 2,
             };
@@ -64,21 +71,12 @@ namespace WindowsUserInterface
             {
                 Text = k_FormtAnotherGameMessage,
                 TextAlign = ContentAlignment.MiddleCenter,
-                BackColor = Color.LightGoldenrodYellow,
                 AutoSize = true,
             };
             ElementsDesignerTool.DesignElementsInMidOfForm(this, AnotherGameMessage);
             ElementsDesignerTool.DesignElements(AnotherGameMessage, ePositionBy.Under, GameResultsMessage);
             Controls.Add(m_GameResultsMessage);
             Controls.Add(m_AnotherGameMessage);
-        }
-
-        private void initializeComponents(string i_StrToShow)
-        {
-            initializeForm();
-            initializeLabels(i_StrToShow);
-            initializeButtons();
-            ElementsDesignerTool.FitTheSizeOfForm(this, MainGameForm.k_Margin);
         }
 
         private void initializeButtons()

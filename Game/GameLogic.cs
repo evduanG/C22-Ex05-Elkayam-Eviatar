@@ -83,6 +83,7 @@ namespace Game
             byte[] randomImagesIndexes = SettingAndRules.GetRandomImagesIndexes(numOfPairs);
             shuffleCard(ref randomImagesIndexes);
             byte indexInChars = 0;
+            this.m_FlippedCardsCounter = 0;
 
             for (int i = 0; i < Rows; i++)
             {

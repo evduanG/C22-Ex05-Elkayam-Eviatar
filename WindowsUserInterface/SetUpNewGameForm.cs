@@ -45,12 +45,17 @@ namespace WindowsUserInterface
         private SetUpNewGameForm(bool i_IsFirstGame, string i_FirstplayerName, string i_SecondPlayerName, List<BoardLocation> i_BoardLocations)
         {
             r_IsFirstGame = i_IsFirstGame;
-            Size = new Size(380, 300);
             r_BoardSizesOp = i_BoardLocations.ToArray();
+            initializeSetUpForm();
+            initializeContorls(i_FirstplayerName, i_SecondPlayerName);
+        }
+
+        private void initializeSetUpForm()
+        {
+            Size = new Size(380, 300);
             StartPosition = FormStartPosition.CenterScreen;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Text = k_TitleForm;
-            initiationForm(i_FirstplayerName, i_SecondPlayerName);
             MaximizeBox = false;
             MinimizeBox = false;
             AcceptButton = m_ButtonStart;
@@ -64,7 +69,7 @@ namespace WindowsUserInterface
             m_TextBoxSecondPlayer.Enabled = !k_Enable;
         }
 
-        private void initiationForm(string i_FirstplayerName, string i_SecondPlayerName)
+        private void initializeContorls(string i_FirstplayerName, string i_SecondPlayerName)
         {
             // Label-First-player
             m_LabelFirstPlayer = new Label();
@@ -251,7 +256,7 @@ namespace WindowsUserInterface
 
         protected virtual void OnStartClick()
         {
-            if(StartClick != null)
+            if (StartClick != null)
             {
                 StartClick.Invoke(this, null);
             }
