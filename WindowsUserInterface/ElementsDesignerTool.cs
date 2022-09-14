@@ -71,11 +71,7 @@ namespace WindowsUserInterface
             {
                 i_Margin -= i_ControlToSetPosition.Width;
             }
-            else
 
-            Console.WriteLine(string.Format("DesignElementsInMidOfForm : form = {0}", i_Form.Width));
-            Console.WriteLine(string.Format("DesignElementsInMidOfForm : control = {0}", i_ControlToSetPosition.Left));
-            Console.WriteLine(string.Format("DesignElementsInMidOfForm : i_Margin = {0}", i_Margin));
             i_ControlToSetPosition.Left += i_Margin;
         }
 
@@ -116,14 +112,14 @@ namespace WindowsUserInterface
             i_FormToHid.ShowInTaskbar = i_IsShowingInToolBar;
         }
 
-        public static void ShowInTaskbar(Form i_FormToHid)
+        public static void ShowInTaskbar(Form i_FormToHide)
         {
-            displayInTaskbar(i_FormToHid, k_Show);
+            displayInTaskbar(i_FormToHide, k_Show);
         }
 
-        public static void HideInTaskbar(Form i_FormToHid)
+        public static void HideInTaskbar(Form i_FormToHide)
         {
-            displayInTaskbar(i_FormToHid, !k_Show);
+            displayInTaskbar(i_FormToHide, !k_Show);
         }
 
         public static void FitTheSizeOfForm(Form i_FormToFit, int i_Margin)

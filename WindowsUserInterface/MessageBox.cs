@@ -4,7 +4,7 @@ using System;
 
 namespace WindowsUserInterface
 {
-    public delegate void MessageBoxHandler(object sender, MouseEventArgs e);
+    public delegate void MessageBoxHandler(object i_Sender, MouseEventArgs i_EventArgs);
 
     public class MessageBox : Form
     {
@@ -14,7 +14,6 @@ namespace WindowsUserInterface
         private const string k_FormtTieScore = "It's a tie with {0} points!";
         private const string k_FormtAnotherGameMessage = "Do you want to play another game?";
 
-        // public event MessageBoxHandler Closed;
         private Label m_GameResultsMessage;
         private Label m_AnotherGameMessage;
         private Button m_ButtonYes;
@@ -51,8 +50,6 @@ namespace WindowsUserInterface
 
         private void initializeLabels(string i_StrToShow)
         {
-            // TODO: fix labels to be in the center of client
-            // TODO: fix buttons to be in the center of client
             GameResultsMessage = new Label
             {
                 Text = i_StrToShow,

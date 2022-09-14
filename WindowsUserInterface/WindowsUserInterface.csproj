@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{139FF620-D8D2-487C-BC77-CBA374F16FEC}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>WindowsUserInterface</RootNamespace>
     <AssemblyName>WindowsUserInterface</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -51,26 +51,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardLocation.cs" />
-    <Compile Include="ButtomIndexEvent.cs" />
+    <Compile Include="BoardLocationEventArgs.cs" />
     <Compile Include="ElementsDesignerTool.cs" />
     <Compile Include="ePositionBy.cs" />
-    <Compile Include="ErrorBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="List.cs" />
     <Compile Include="MainGameForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NumberOfPlayersBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="SetUpNewGameForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tester.cs" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
@@ -82,6 +74,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SetUpNewGameForm.resx">
       <DependentUpon>SetUpNewGameForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

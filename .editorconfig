@@ -208,7 +208,7 @@ dotnet_naming_symbols.regular_field_members.required_modifiers =
 
 dotnet_naming_symbols.delegate.applicable_kinds = delegate
 dotnet_naming_symbols.delegate.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.delegate.required_modifiers = 
+dotnet_naming_symbols.delegate.required_modifiers =
 
 # Naming styles
 
