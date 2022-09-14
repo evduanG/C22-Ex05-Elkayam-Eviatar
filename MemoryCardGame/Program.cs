@@ -4,8 +4,7 @@
     {
         public static void Main()
         {
-            GameEngine game = new GameEngine();
-            game.DisplaySetUpForm();
+            new GameEngine().DisplaySetUpForm();
         }
     }
 }

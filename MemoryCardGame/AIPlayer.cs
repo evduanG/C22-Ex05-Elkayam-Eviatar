@@ -64,10 +64,13 @@ namespace MemoryCardGame
         {
             BoardLocation ans = BoardLocation.Default();
             bool isFind = false;
+            bool isMemoryEmpty = r_Memory.Count == 0;
 
-            if (r_Memory.Count != 0)
+            if (!isMemoryEmpty)
             {
-                if (i_ValidSlotTOChase.Count % 2 == 0)
+                bool isFirstMove = i_ValidSlotTOChase.Count % 2 == 0;
+
+                if (isFirstMove)
                 {
                     isFind = getAIFirstPlayerChoice(i_ValidSlotTOChase, ref ans);
                 }
@@ -138,7 +141,9 @@ namespace MemoryCardGame
                     }
                 }
 
-                if (((object)returnedIndex) != null)
+                bool isReturnedIndexEmpty = ((object)returnedIndex) == null;
+
+                if (!isReturnedIndexEmpty)
                 {
                     isItFound = i_ValidSlotToChase.Contains(returnedIndex.BoardLocation);
 
