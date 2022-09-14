@@ -125,7 +125,7 @@ namespace MemoryCardGame
             m_GameForm.ShowDialog();
         }
 
-        private void restartNewGame(byte i_Rows, byte i_Columns)
+        private void restartNewGame()
         {
             m_GameLogic.InitGameBoardCards();
             m_GameForm.RestartGame();
@@ -175,7 +175,7 @@ namespace MemoryCardGame
 
             endOfTurnAnywhere();
 
-            if(m_GameLogic.HaveMoreMoves)
+            if (m_GameLogic.HaveMoreMoves)
             {
                 switchAnyButtonClick();
             }
@@ -236,12 +236,12 @@ namespace MemoryCardGame
 
             foreach (Player playingPlayer in r_AllPlayersInGame)
             {
-                if(winner == CurrentPlayer)
+                if (winner == CurrentPlayer)
                 {
                     continue;
                 }
 
-                if(winner.Score < playingPlayer.Score)
+                if (winner.Score < playingPlayer.Score)
                 {
                     winner = playingPlayer;
                 }
@@ -291,7 +291,7 @@ namespace MemoryCardGame
             {
                 r_AllPlayersInGame[0] = new Player(setUpNewGameForm.FirstPlayerName, 0);
 
-                if(setUpNewGameForm.IsSecondPlayerComputer)
+                if (setUpNewGameForm.IsSecondPlayerComputer)
                 {
                     r_AllPlayersInGame[1] = new AIPlayer(1);
                 }
@@ -310,7 +310,7 @@ namespace MemoryCardGame
         {
             bool isGameAction = doGameAction(i_BoardLocationEventArgs);
 
-            if(isGameAction)
+            if (isGameAction)
             {
                 m_GameForm.AnyPictureBoxClick -= AnyPictureBoxClick_FirstClick;
                 m_GameForm.AnyPictureBoxClick += AnyPictureBoxClick_SecondClick;
@@ -321,7 +321,7 @@ namespace MemoryCardGame
         {
             bool isGameAction = doGameAction(i_BoardLocationEventArgs);
 
-            if(isGameAction)
+            if (isGameAction)
             {
                 InbetweenTurnsTimer.Start();
             }
@@ -356,7 +356,7 @@ namespace MemoryCardGame
 
         protected virtual void OnGameEnding()
         {
-            if(GameEnding != null)
+            if (GameEnding != null)
             {
                 GameEnding.Invoke();
             }
@@ -375,7 +375,7 @@ namespace MemoryCardGame
                     }
                 }
 
-                restartNewGame(m_GameLogic.Rows, m_GameLogic.Columns);
+                restartNewGame();
             }
             else
             {

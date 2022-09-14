@@ -36,7 +36,7 @@ namespace WindowsUserInterface
             bool isRow = byte.TryParse(i_BoardLocString.Substring(0, 1), out byte o_Row);
             bool isCol = byte.TryParse(i_BoardLocString.Substring(1, 1), out byte o_Col);
 
-            if(isCol && isRow)
+            if (isCol && isRow)
             {
                 o_BoardLocation = new BoardLocation(o_Row, o_Col);
             }

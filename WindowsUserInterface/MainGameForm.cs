@@ -307,7 +307,7 @@ namespace WindowsUserInterface
             PictureBox clickedTile = i_ClickedButton as PictureBox;
             bool isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
 
-            if(!isButtomExists)
+            if (!isButtomExists)
             {
                 throw new FormatException("the button does not exists");
             }

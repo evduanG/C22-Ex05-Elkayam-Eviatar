@@ -92,7 +92,7 @@ namespace Game
 
         private static void recImagesIndexes(ref List<byte> io_ListOfIndex, byte i_Index)
         {
-            if(io_ListOfIndex == null)
+            if (io_ListOfIndex == null)
             {
                 throw new Exception("recImagesIndexes list is null");
             }
