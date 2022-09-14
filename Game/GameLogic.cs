@@ -8,36 +8,6 @@ namespace Game
     public class GameLogic
     {
         private const bool k_FaceUp = true;
-        private static readonly char[] sr_ABC =
-        {
-            'A',
-            'B',
-            'C',
-            'D',
-            'E',
-            'F',
-            'G',
-            'H',
-            'I',
-            'J',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'Q',
-            'R',
-            'S',
-            'T',
-            'U',
-            'V',
-            'W',
-            'X',
-            'Y',
-            'Z',
-        };
-
         private readonly byte r_NumOfCols;
         private readonly byte r_NumOfRows;
         private readonly Card[,] r_GameBoard;
@@ -78,22 +48,8 @@ namespace Game
             this.r_NumOfRows = i_Width;
             this.r_NumOfCols = i_Height;
             this.m_FlippedCardsCounter = 0;
-
-            byte size = (byte)(Rows * Columns);
-            byte numOfPairs = (byte)(size >> 1);
-            byte[] randomImagesIndexes = SettingAndRules.GetRandomImagesIndexes(numOfPairs);
-
-            shuffleCard(ref randomImagesIndexes);
             r_GameBoard = new Card[Rows, Columns];
-            byte indexInChars = 0;
-
-            for (int i = 0; i < Rows; i++)
-            {
-                for (int j = 0; j < Columns; j++)
-                {
-                    r_GameBoard[i, j] = new Card(randomImagesIndexes[indexInChars++], !k_FaceUp);
-                }
-            }
+            InitGameBoardCards();
         }
 
         // ===================================================================
@@ -120,6 +76,23 @@ namespace Game
             return io_CharArrToShuffle;
         }
 
+        public void InitGameBoardCards()
+        {
+            byte size = (byte)(Rows * Columns);
+            byte numOfPairs = (byte)(size >> 1);
+            byte[] randomImagesIndexes = SettingAndRules.GetRandomImagesIndexes(numOfPairs);
+            shuffleCard(ref randomImagesIndexes);
+            byte indexInChars = 0;
+
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    r_GameBoard[i, j] = new Card(randomImagesIndexes[indexInChars++], !k_FaceUp);
+                }
+            }
+        }
+
         private int generateAnotherNum(int i_LowerLimit, int i_UpperLimit)
         {
             Random random = new Random();
@@ -142,21 +115,6 @@ namespace Game
             get
             {
                 return Length - FlippedCardsCounter > 0;
-            }
-        }
-
-        private Card this[string i_IndexFormt]
-        {
-            get
-            {
-                configIndexFormat(i_IndexFormt, out int io_rowIndex, out int io_colIndex);
-                return this[(byte)io_rowIndex, (byte)io_colIndex];
-            }
-
-            set
-            {
-                configIndexFormat(i_IndexFormt, out int io_rowIndex, out int io_colIndex);
-                this[(byte)io_rowIndex, (byte)io_colIndex] = value;
             }
         }
 
@@ -286,52 +244,6 @@ namespace Game
             }
 
             return validSlots;
-        }
-
-        private void configIndexFormat(string i_IndexFormt, out int o_RowIndex, out int o_ColIndex)
-        {
-            o_ColIndex = 0;
-            bool isUpper = false;
-            char charToFindTheIndex = char.ToUpper(i_IndexFormt[0]);
-            string charToReplaceTheIndex = i_IndexFormt.Substring(1);
-            bool isSuccessTryParse = int.TryParse(charToReplaceTheIndex, out o_RowIndex);
-            o_RowIndex--;
-
-            // check if col exists
-            for (int i = 0; i < Columns; i++)
-            {
-                if (charToFindTheIndex == sr_ABC[i])
-                {
-                    o_ColIndex = i;
-                    isUpper = true;
-                    break;
-                }
-            }
-
-            if (!isSuccessTryParse || !isUpper)
-            {
-                throw new IndexOutOfRangeException(string.Format(
-@"Index out of range in configIndexFormat => 
-the string (index): {0}
- subStrOfNum :{1} 
-charToFindTheIndex : {2} 
-isSuccessTryParse : {3} 
-isUpper : {4}
-m_GameBoard[io_rowIndex, io_colIndex] : {5}",
-i_IndexFormt,
-charToReplaceTheIndex,
-charToFindTheIndex,
-isSuccessTryParse,
-isUpper,
-r_GameBoard[o_RowIndex, o_ColIndex]));
-            }
-
-            bool isInvalueRow = o_RowIndex < 0 || o_RowIndex >= Rows;
-            bool isInvalueCol = o_ColIndex < 0 || o_ColIndex >= Columns;
-            if (isInvalueRow || isInvalueCol)
-            {
-                throw new IndexOutOfRangeException("Index out of range in configIndexFormat");
-            }
         }
     }
 }

@@ -39,10 +39,12 @@ namespace MemoryCardGame
             m_GameLogic = null;
             m_TurnCounter = 0;
             r_SelectedTileInTurn = new List<BoardLocation>();
+
+            /******     delegates       ******/
             AIPlaying += AIPlaying_Move;
             GameEnding += GameEngine_GameEnding;
 
-            /******     number of players       ******/
+           /******     number of players       ******/
             r_TotalPLayers = Setting.NumOfPlayers.UpperBound;
             r_AllPlayersInGame = new Player[r_TotalPLayers];
 
@@ -125,7 +127,7 @@ namespace MemoryCardGame
 
         private void restartNewGame(byte i_Rows, byte i_Columns)
         {
-            m_GameLogic = new GameLogic(i_Rows, i_Columns);
+            m_GameLogic.InitGameBoardCards();
             m_GameForm.RestartGame();
 
             foreach (Player player in r_AllPlayersInGame)
@@ -136,17 +138,6 @@ namespace MemoryCardGame
             r_SelectedTileInTurn.Clear();
             m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
             switchAnyButtonClick();
-        }
-
-        private void showAllPlayersTheBoard()
-        {
-            foreach (Player player in r_AllPlayersInGame)
-            {
-                if (!player.IsHuman)
-                {
-                    (player as AIPlayer).ShowBoard(m_GameLogic.GetBoardToDraw());
-                }
-            }
         }
 
         // =======================================================
@@ -171,23 +162,18 @@ namespace MemoryCardGame
         private void endOfTurn()
         {
             InbetweenTurnsTimer.Stop();
-            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
-            CurrentPlayer.IncreaseScore(o_ScoreForTheTurn);
-            m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
+            bool isThePlyerHaveAnderTurn = endOfTurnConfigPair();
 
             if (!isThePlyerHaveAnderTurn)
             {
-                TurnCounter++;
-                m_GameForm.FlippCardsToFaceDown(r_SelectedTileInTurn);
-                m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
+                endOfTurnPairNotFund();
             }
             else
             {
-                m_GameForm.ColorPair(r_SelectedTileInTurn, CurrentPlayer.Color);
+                endOfTurnPairFund();
             }
 
-            showAllPlayersTheBoard();
-            r_SelectedTileInTurn.Clear();
+            endOfTurnAnywhere();
 
             if(m_GameLogic.HaveMoreMoves)
             {
@@ -195,7 +181,50 @@ namespace MemoryCardGame
             }
             else
             {
-                GameEnding.Invoke();
+                OnGameEnding();
+            }
+        }
+
+        private bool endOfTurnConfigPair()
+        {
+            bool isThePlyerHaveAnderTurn = m_GameLogic.DoThePlayersChoicesMatch(out byte o_ScoreForTheTurn, r_SelectedTileInTurn.ToArray());
+            setCurrentPlayerIncScore(o_ScoreForTheTurn);
+
+            return isThePlyerHaveAnderTurn;
+        }
+
+        private void endOfTurnPairNotFund()
+        {
+            TurnCounter++;
+            m_GameForm.FlippCardsToFaceDown(r_SelectedTileInTurn);
+            m_GameForm.SetCurrentPlayer(CurrentPlayer.Name, CurrentPlayer.Color);
+        }
+
+        private void endOfTurnPairFund()
+        {
+            showAllPlayersTheBoard();
+        }
+
+        private void endOfTurnAnywhere()
+        {
+            m_GameForm.ColorPair(r_SelectedTileInTurn, CurrentPlayer.Color);
+            r_SelectedTileInTurn.Clear();
+        }
+
+        private void setCurrentPlayerIncScore(byte i_ScoreForTheTurn)
+        {
+            CurrentPlayer.IncreaseScore(i_ScoreForTheTurn);
+            m_GameForm.SetPlayerNamesAndScore(CurrentPlayer.ToString(), CurrentPlayer.ID);
+        }
+
+        private void showAllPlayersTheBoard()
+        {
+            foreach (Player player in r_AllPlayersInGame)
+            {
+                if (!player.IsHuman)
+                {
+                    (player as AIPlayer).ShowBoard(m_GameLogic.GetBoardToDraw());
+                }
             }
         }
 
@@ -323,6 +352,14 @@ namespace MemoryCardGame
             }
 
             InbetweenTurnsTimer.Start();
+        }
+
+        protected virtual void OnGameEnding()
+        {
+            if(GameEnding != null)
+            {
+                GameEnding.Invoke();
+            }
         }
 
         protected virtual void GameEngine_GameEnding()
