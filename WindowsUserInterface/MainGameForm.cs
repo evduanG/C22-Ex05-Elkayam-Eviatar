@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace WindowsUserInterface
 {
-    public delegate void AnyButtonHandler(object i_Sender, ButtonIndexEvent i_EventArgs);
+    public delegate void AnyPictureBoxHandler(object i_Sender, BoardLocationEventArgs i_EventArgs);
 
     public class MainGameForm : Form
     {
         public const int k_Margin = 10;
-        public const int k_ButtonSize = 90;
+        public const int k_PictureBoxSize = 90;
         private const int k_WindowHeightModifier = 16;
         private const int k_WindowWidthModifier = 3;
         private const bool k_Enabled = true;
@@ -19,11 +19,11 @@ namespace WindowsUserInterface
         private readonly byte r_NumOfRows;
         private readonly byte r_NumOfCols;
 
-        public event AnyButtonHandler AnyButtonClick;
+        public event AnyPictureBoxHandler AnyPictureBoxClick;
 
         private readonly Label[] r_Players;
         private Label m_CurrentPlayerName;
-        private PictureBox[,] m_GameBoardButtons;
+        private PictureBox[,] m_GameBoardCards;
 
         // =======================================================
         // constructor  and methods for the constructor
@@ -38,7 +38,7 @@ namespace WindowsUserInterface
 
         public void RestartGame()
         {
-            foreach(PictureBox pb in m_GameBoardButtons)
+            foreach(PictureBox pb in m_GameBoardCards)
             {
                 pb.Image = null;
                 pb.BackColor = DefaultColor;
@@ -65,9 +65,9 @@ namespace WindowsUserInterface
             }
         }
 
-        public PictureBox[,] GameBoardButtons
+        public PictureBox[,] GameBoardCards
         {
-            get { return m_GameBoardButtons; }
+            get { return m_GameBoardCards; }
         }
 
         public Label CurrentPlayerName
@@ -93,25 +93,25 @@ namespace WindowsUserInterface
         {
             get
             {
-                return m_GameBoardButtons[i_Row, i_Col];
+                return m_GameBoardCards[i_Row, i_Col];
             }
 
             set
             {
-                m_GameBoardButtons[i_Row, i_Col] = value;
+                m_GameBoardCards[i_Row, i_Col] = value;
             }
         }
 
-        public PictureBox this[BoardLocation i_IndexEvent]
+        public PictureBox this[BoardLocation i_BoardLocation]
         {
             get
             {
-                return this[i_IndexEvent.Row, i_IndexEvent.Col];
+                return this[i_BoardLocation.Row, i_BoardLocation.Col];
             }
 
             set
             {
-                this[i_IndexEvent.Row, i_IndexEvent.Col] = value;
+                this[i_BoardLocation.Row, i_BoardLocation.Col] = value;
             }
         }
 
@@ -119,14 +119,14 @@ namespace WindowsUserInterface
         private void initializeComponents()
         {
             initializeMainForm();
-            initilizeGameBoardButtons();
+            initilizeGameBoardCards();
             initializeLabels();
             ElementsDesignerTool.FitTheSizeOfForm(this, k_Margin);
         }
 
-        private void initilizeGameBoardButtons()
+        private void initilizeGameBoardCards()
         {
-            m_GameBoardButtons = new PictureBox[Rows, Columns];
+            m_GameBoardCards = new PictureBox[Rows, Columns];
             createPicBox();
             positionPicBoxsOnGrid();
         }
@@ -152,26 +152,26 @@ namespace WindowsUserInterface
                 Control controlToPlace;
                 if (isTopLeft)
                 {
-                    GameBoardButtons[0, 0].Top = k_Margin;
-                    GameBoardButtons[0, 0].Left = k_Margin;
-                    Controls.Add(GameBoardButtons[0, 0]);
+                    GameBoardCards[0, 0].Top = k_Margin;
+                    GameBoardCards[0, 0].Left = k_Margin;
+                    Controls.Add(GameBoardCards[0, 0]);
                 }
                 else
                 {
                     upOneSlot = i - 1;
-                    controlToPlace = GameBoardButtons[i, 0];
-                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.Left, GameBoardButtons[upOneSlot, 0]);
-                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.Under, GameBoardButtons[upOneSlot, 0], k_Margin);
-                    Controls.Add(GameBoardButtons[i, 0]);
+                    controlToPlace = GameBoardCards[i, 0];
+                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.Left, GameBoardCards[upOneSlot, 0]);
+                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.Under, GameBoardCards[upOneSlot, 0], k_Margin);
+                    Controls.Add(GameBoardCards[i, 0]);
                 }
 
                 for (int j = 1; j < Columns; j++)
                 {
-                    controlToPlace = GameBoardButtons[i, j];
+                    controlToPlace = GameBoardCards[i, j];
                     ePositionBy topPositionBy = i == 0 ? ePositionBy.Top : ePositionBy.Under;
-                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.NextToTheLeft, GameBoardButtons[i, j - 1], k_Margin);
-                    ElementsDesignerTool.DesignElements(controlToPlace, topPositionBy, GameBoardButtons[upOneSlot, j], k_Margin);
-                    Controls.Add(GameBoardButtons[i, j]);
+                    ElementsDesignerTool.DesignElements(controlToPlace, ePositionBy.NextToTheLeft, GameBoardCards[i, j - 1], k_Margin);
+                    ElementsDesignerTool.DesignElements(controlToPlace, topPositionBy, GameBoardCards[upOneSlot, j], k_Margin);
+                    Controls.Add(GameBoardCards[i, j]);
                 }
             }
         }
@@ -180,9 +180,9 @@ namespace WindowsUserInterface
         {
             // setup current player
             CurrentPlayerName = new Label();
-            PictureBox lastButton = GameBoardButtons[GameBoardButtons.GetLength(0) - 1, 0];
-            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Under, lastButton, k_Margin);
-            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Left, lastButton);
+            PictureBox lastPicBox = GameBoardCards[GameBoardCards.GetLength(0) - 1, 0];
+            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Under, lastPicBox, k_Margin);
+            ElementsDesignerTool.DesignElements(CurrentPlayerName, ePositionBy.Left, lastPicBox);
             CurrentPlayerName.AutoSize = true;
             Controls.Add(CurrentPlayerName);
 
@@ -206,19 +206,19 @@ namespace WindowsUserInterface
             {
                 for (int j = 0; j < Columns; j++)
                 {
-                    GameBoardButtons[i, j] = new PictureBox()
+                    GameBoardCards[i, j] = new PictureBox()
                     {
-                        Size = new Size(k_ButtonSize, k_ButtonSize),
+                        Size = new Size(k_PictureBoxSize, k_PictureBoxSize),
                         BackColor = DefaultColor,
                     };
-                    GameBoardButtons[i, j].Click += GameBoardTile_Click;
+                    GameBoardCards[i, j].Click += GameBoardPictureBox_Click;
                 }
             }
         }
 
         private Size getWindowSize()
         {
-            int buttonSizeAndMargin = k_ButtonSize + k_Margin;
+            int buttonSizeAndMargin = k_PictureBoxSize + k_Margin;
             int formHeight = (buttonSizeAndMargin * Rows) + (k_WindowHeightModifier * k_Margin);
             int formWidth = (buttonSizeAndMargin * Columns) + (k_WindowWidthModifier * k_Margin);
 
@@ -233,18 +233,18 @@ namespace WindowsUserInterface
             r_Players[i_ID].Text = i_PlayerNameAndScore;
         }
 
-        public void Flipped(BoardLocation i_ButtomIndexEvent, Image i_Image)
+        public void FlippCardToFaceUp(BoardLocation i_PicBoxLocationInGrid, Image i_CardImage)
         {
-            this[i_ButtomIndexEvent].Image = i_Image;
-            this[i_ButtomIndexEvent].SizeMode = PictureBoxSizeMode.CenterImage;
-            this[i_ButtomIndexEvent].Enabled = false;
+            this[i_PicBoxLocationInGrid].Image = i_CardImage;
+            this[i_PicBoxLocationInGrid].SizeMode = PictureBoxSizeMode.CenterImage;
+            this[i_PicBoxLocationInGrid].Enabled = false;
         }
 
-        public void ColorPair(List<BoardLocation> i_PlayerChoice, Color i_Color)
+        public void ColorPair(List<BoardLocation> i_PlayerChoice, Color i_PlayerColor)
         {
             foreach (BoardLocation choice in i_PlayerChoice)
             {
-                GameBoardButtons[choice.Row, choice.Col].BackColor = i_Color;
+                GameBoardCards[choice.Row, choice.Col].BackColor = i_PlayerColor;
             }
         }
 
@@ -252,8 +252,7 @@ namespace WindowsUserInterface
         {
             foreach (BoardLocation choice in i_PlayerChoice)
             {
-                PictureBox picBoxClick = GameBoardButtons[choice.Row, choice.Col];
-
+                PictureBox picBoxClick = GameBoardCards[choice.Row, choice.Col];
                 picBoxClick.Enabled = k_Enabled;
                 picBoxClick.BackColor = DefaultColor;
                 picBoxClick.Image = null;
@@ -266,25 +265,25 @@ namespace WindowsUserInterface
             CurrentPlayerName.BackColor = i_PlayerColor;
         }
 
-        public void SetPlayer(string i_PlayerName, Color i_PlayerColor, byte i_ID)
+        public void SetPlayer(string i_PlayerName, Color i_PlayerColor, byte i_PlayerID)
         {
-            setColor(i_PlayerColor, i_ID);
-            SetPlayerNamesAndScore(i_PlayerName, i_ID);
+            setColor(i_PlayerColor, i_PlayerID);
+            SetPlayerNamesAndScore(i_PlayerName, i_PlayerID);
         }
 
-        public bool GetCoordinates(PictureBox i_ClickedButton, out byte o_Row, out byte o_Col)
+        public bool GetCoordinates(PictureBox i_ClickedPictureBox, out byte o_Row, out byte o_Col)
         {
-            bool buttonExist = false;
+            bool pictureBoxExist = false;
             o_Row = 0;
             o_Col = 0;
 
-            for (byte row = 0; row < GameBoardButtons.GetLength(0); row++)
+            for (byte row = 0; row < GameBoardCards.GetLength(0); row++)
             {
-                for(byte col = 0; col < GameBoardButtons.GetLength(1); col++)
+                for(byte col = 0; col < GameBoardCards.GetLength(1); col++)
                 {
-                    if (GameBoardButtons[row, col] == i_ClickedButton)
+                    if (GameBoardCards[row, col] == i_ClickedPictureBox)
                     {
-                        buttonExist = true;
+                        pictureBoxExist = true;
                         o_Row = row;
                         o_Col = col;
                         break;
@@ -292,42 +291,36 @@ namespace WindowsUserInterface
                 }
             }
 
-            return buttonExist;
+            return pictureBoxExist;
         }
 
-        private void setColor(Color i_Color, byte i_ID)
+        private void setColor(Color i_Color, byte i_PlayerID)
         {
-            r_Players[i_ID].BackColor = i_Color;
+            r_Players[i_PlayerID].BackColor = i_Color;
         }
 
         // =======================================================
         // Delegates and Events methods
         // =======================================================
-        private void anyButtemInvoker(EventArgs i_EventArgs)
-        {
-            if(AnyButtonClick != null)
-            {
-                AnyButtonClick.Invoke(this, (ButtonIndexEvent)i_EventArgs);
-            }
-        }
-
-        protected virtual void GameBoardTile_Click(object i_ClickedButton, EventArgs i_EventArgs)
+        protected virtual void GameBoardPictureBox_Click(object i_ClickedButton, EventArgs i_EventArgs)
         {
             PictureBox clickedTile = i_ClickedButton as PictureBox;
-            bool isButtomExists;
-            isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
+            bool isButtomExists = GetCoordinates(clickedTile, out byte o_Row, out byte o_Col);
 
             if(!isButtomExists)
             {
                 throw new FormatException("the button does not exists");
             }
 
-            OnAnyButtonClick(clickedTile, new ButtonIndexEvent(o_Row, o_Col));
+            OnAnyPictureBoxClick(clickedTile, new BoardLocationEventArgs(o_Row, o_Col));
         }
 
-        protected virtual void OnAnyButtonClick(object i_Sender, EventArgs i_EventArgs)
+        protected virtual void OnAnyPictureBoxClick(object i_Sender, EventArgs i_EventArgs)
         {
-            anyButtemInvoker(i_EventArgs);
+            if (AnyPictureBoxClick != null)
+            {
+                AnyPictureBoxClick.Invoke(this, (BoardLocationEventArgs)i_EventArgs);
+            }
         }
     }
 }

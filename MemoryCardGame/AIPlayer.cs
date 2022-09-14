@@ -6,7 +6,7 @@ using WindowsUserInterface;
 
 namespace MemoryCardGame
 {
-    public delegate void AIGameMoveHandler(ButtonIndexEvent i_ButtonIndexEvent);
+    public delegate void AIGameMoveHandler(BoardLocationEventArgs i_BoardLocationEventArgs);
 
     internal class AIPlayer : Player
     {
@@ -60,7 +60,7 @@ namespace MemoryCardGame
             }
         }
 
-        public ButtonIndexEvent GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, string[,] i_BoardToDraw)
+        public BoardLocationEventArgs GetPlayerChoice(List<BoardLocation> i_ValidSlotTOChase, string[,] i_BoardToDraw)
         {
             BoardLocation ans = BoardLocation.Default();
             bool isFind = false;
@@ -82,7 +82,7 @@ namespace MemoryCardGame
                 ans = getRandomChoice(i_ValidSlotTOChase);
             }
 
-            return new ButtonIndexEvent(ans);
+            return new BoardLocationEventArgs(ans);
         }
 
         private bool getAIFirstPlayerChoice(List<BoardLocation> i_ValidSlotToChase, ref BoardLocation io_Location)
