@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using WindowsUserInterface;
-using Screen = WindowsUserInterface;
 
 namespace Game
 {
@@ -74,7 +73,6 @@ namespace Game
             }
         }
 
-        /// constructor
         public GameLogic(byte i_Height, byte i_Width)
         {
             this.r_NumOfRows = i_Width;
@@ -101,16 +99,6 @@ namespace Game
         // ===================================================================
         // methods that the constructor uses
         // ===================================================================
-        public void ApplyAllTheButtons(Screen.MainGameForm i_GameForm)
-        {
-            for(byte i = 0; i < Rows; i++)
-            {
-                for(byte j = 0; j < Columns; j++)
-                {
-                    i_GameForm[i, j].Click += r_GameBoard[i, j].Card_Clicked;
-                }
-            }
-        }
 
         /// function to Shuffle array the char array before creation
         /// <exception cref="ArgumentNullException"></exception>

@@ -100,15 +100,15 @@ namespace Game
             switch(i_Index % 3)
             {
                 case 0:
-                    firstCase(ref io_ListOfIndex, ref i_Index);
+                    preOrderEnterCard(ref io_ListOfIndex, ref i_Index);
                     break;
 
                 case 1:
-                    secondCase(ref io_ListOfIndex, ref i_Index);
+                    inOrderEnterCard(ref io_ListOfIndex, ref i_Index);
                     break;
 
                 case 2:
-                    thirdCase(ref io_ListOfIndex, ref i_Index);
+                    mixOrderEnterCard(ref io_ListOfIndex, ref i_Index);
                     break;
 
                 default:
@@ -116,7 +116,7 @@ namespace Game
             }
         }
 
-        private static void thirdCase(ref List<byte> io_ListOfIndex, ref byte io_Index)
+        private static void mixOrderEnterCard(ref List<byte> io_ListOfIndex, ref byte io_Index)
         {
             byte j = io_Index;
             io_Index--;
@@ -129,7 +129,7 @@ namespace Game
             io_ListOfIndex.Add(j);
         }
 
-        private static void secondCase(ref List<byte> io_ListOfIndex, ref byte io_Index)
+        private static void inOrderEnterCard(ref List<byte> io_ListOfIndex, ref byte io_Index)
         {
             io_ListOfIndex.Add(io_Index);
             io_Index--;
@@ -138,7 +138,7 @@ namespace Game
             io_ListOfIndex.Add(io_Index);
         }
 
-        private static void firstCase(ref List<byte> io_ListOfIndex, ref byte io_Index)
+        private static void preOrderEnterCard(ref List<byte> io_ListOfIndex, ref byte io_Index)
         {
             if (io_Index != 0)
             {

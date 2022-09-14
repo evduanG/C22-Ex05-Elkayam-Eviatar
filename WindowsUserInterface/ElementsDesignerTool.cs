@@ -72,9 +72,6 @@ namespace WindowsUserInterface
                 i_Margin -= i_ControlToSetPosition.Width;
             }
 
-            Console.WriteLine(string.Format("DesignElementsInMidOfForm : form = {0}", i_Form.Width));
-            Console.WriteLine(string.Format("DesignElementsInMidOfForm : control = {0}", i_ControlToSetPosition.Left));
-            Console.WriteLine(string.Format("DesignElementsInMidOfForm : i_Margin = {0}", i_Margin));
             i_ControlToSetPosition.Left += i_Margin;
         }
 
